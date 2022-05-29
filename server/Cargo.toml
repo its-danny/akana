@@ -1,0 +1,18 @@
+[package]
+name = "server"
+version = "0.0.0"
+edition = "2021"
+
+[dependencies]
+api = { path = "../api" }
+bevy = { version = "0.7.0", default-features = false }
+crossbeam-channel = "0.5.4"
+dashmap = "5.2.0"
+dotenv = "0.15.0"
+reqwest = { version = "0.11.10", features = ["blocking", "json"] }
+serde = { version = "1.0.137", features = [ "derive" ] }
+thiserror = "1.0.30"
+tokio = { version = "1.18.0", features = [ "full" ] }
+
+[dev-dependencies]
+rusty-hook = "0.11.2"
