@@ -1,6 +1,6 @@
 use std::env;
 
-use api::auth::{SignInRequest, UserExistsRequest};
+use api::auth::handlers::{SignInRequest, UserExistsRequest};
 use reqwest::blocking::Response;
 
 pub(crate) fn user_exists(name: String) -> Response {

@@ -1,31 +1,10 @@
-use std::env;
-
-use axum::response::IntoResponse;
-use axum::{http::StatusCode, Json};
+use axum::{http::StatusCode, response::IntoResponse, Json};
 use bcrypt::{hash, verify, DEFAULT_COST};
-use database::establish_connection;
-use database::models::User;
-use database::schema::users::dsl::*;
-use diesel::prelude::*;
-use diesel::result::Error::NotFound;
-use jsonwebtoken::{encode, EncodingKey, Header};
+use database::{establish_connection, models::User, schema::users::dsl::*};
+use diesel::{prelude::*, result::Error::NotFound};
 use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize, Debug)]
-struct Claims {
-    pub name: String,
-}
-
-fn generate_jwt(claims: &Claims) -> String {
-    let secret = env::var("JWT_SECRET").expect("Could not read JWT_SECRET from env");
-
-    encode(
-        &Header::default(),
-        &claims,
-        &EncodingKey::from_secret(secret.as_bytes()),
-    )
-    .expect("Could not generate JWT")
-}
+use super::jwt::{generate_jwt, Claims};
 
 #[derive(Serialize, Deserialize)]
 pub struct UserExistsRequest {

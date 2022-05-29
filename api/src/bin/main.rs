@@ -1,4 +1,4 @@
-use api::auth::{sign_in, user_exists};
+use api::auth::handlers::{sign_in, user_exists};
 use axum::{routing::post, Router};
 use dotenv::dotenv;
 use std::{env, net::SocketAddr, str::FromStr};
