@@ -45,9 +45,7 @@ pub async fn sign_in(Json(input): Json<SignInRequest>) -> Result<Json<SignInResp
         Ok(user) => {
             if let Ok(verified) = verify(input.password, &user.password) {
                 if verified {
-                    let token = generate_jwt(&Claims {
-                        name: input.name.clone(),
-                    });
+                    let token = generate_jwt(&Claims { name: input.name });
 
                     Ok(Json(SignInResponse { token }))
                 } else {
@@ -65,9 +63,7 @@ pub async fn sign_in(Json(input): Json<SignInRequest>) -> Result<Json<SignInResp
 
                 match result {
                     Ok(_) => {
-                        let token = generate_jwt(&Claims {
-                            name: input.name.clone(),
-                        });
+                        let token = generate_jwt(&Claims { name: input.name });
 
                         Ok(Json(SignInResponse { token }))
                     }
