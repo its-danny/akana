@@ -15,6 +15,8 @@ Very, _very_, **very** early stages.
 
 ## Development
 
+Install Rust if you don't have it already. Easiest way is via [rustup](https://rustup.rs/).
+
 A few extra tools are necessary for development.
 
 - [cargo-bump](https://github.com/wraithan/cargo-bump)
@@ -24,6 +26,8 @@ A few extra tools are necessary for development.
 - [koji](https://github.com/its-danny/koji)
 
 ### Get it running
+
+Start all the necessary services.
 
 ```bash
 $ cp .env.example .env # The defaults should work fine
