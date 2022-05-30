@@ -12,8 +12,8 @@ use crate::{
 };
 
 use super::{
+    api::{sign_in, user_exists},
     components::{AuthState, Authenticating, Online},
-    utils::{sign_in, user_exists},
 };
 
 /// When a user first connects, we give them the [`Authenticating`]

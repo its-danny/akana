@@ -1,6 +1,6 @@
+mod api;
 pub(crate) mod components;
 mod systems;
-mod utils;
 
 use bevy::prelude::*;
 
