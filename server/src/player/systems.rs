@@ -46,21 +46,24 @@ pub(crate) fn handle_network_events(
 pub(crate) fn handle_network_message(
     mut message_events: EventReader<NetworkMessage>,
     mut prompt_events: EventWriter<SendPrompt>,
-    players: Query<(&Client, &Character, &Online)>,
+    players: Query<(&Client, &Character), With<Online>>,
 ) {
     for event in message_events.iter() {
         if let Some(player) = players.iter().find(|p| p.0 .0 == event.id) {
-            prompt_events.send(SendPrompt {
-                id: player.0 .0,
-                name: player.1.name.clone(),
-            });
+            prompt_events.send(SendPrompt(player.0 .0));
         }
     }
 }
 
 /// Send a prompt to anyone who needs it.
-pub(crate) fn handle_send_prompt(server: Res<NetworkServer>, mut events: EventReader<SendPrompt>) {
+pub(crate) fn handle_send_prompt(
+    server: Res<NetworkServer>,
+    mut events: EventReader<SendPrompt>,
+    players: Query<(&Client, &Character), With<Online>>,
+) {
     for event in events.iter() {
-        server.send(&format!("{} >", event.name), event.id);
+        if let Some(player) = players.iter().find(|p| p.0 .0 == event.0) {
+            server.send(&format!("{} >", player.1.name), event.0);
+        }
     }
 }

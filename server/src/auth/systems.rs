@@ -8,7 +8,11 @@ use crate::{
         server::NetworkServer,
         server::TelnetCommand::{Echo, Iac, Will, Wont},
     },
-    player::components::{Account, Character, Client},
+    player::{
+        components::{Account, Character, Client},
+        events::SendPrompt,
+    },
+    spatial::components::Position,
 };
 
 use super::{
@@ -38,6 +42,7 @@ pub(crate) fn handle_network_message(
     mut commands: Commands,
     server: Res<NetworkServer>,
     mut messages: EventReader<NetworkMessage>,
+    mut prompt_events: EventWriter<SendPrompt>,
     mut players: Query<(Entity, &Client, &mut Authenticating)>,
 ) {
     for message in messages.iter() {
@@ -101,6 +106,9 @@ pub(crate) fn handle_network_message(
                             server.send_command([Iac as u8, Wont as u8, Echo as u8], player.0);
                             server.send("Authenticated.", player.0);
 
+                            // Send the prompt.
+                            prompt_events.send(SendPrompt(player.0));
+
                             // Remove `Authenticating` now that we're done.
                             commands.entity(entity).remove::<Authenticating>();
 
@@ -109,6 +117,7 @@ pub(crate) fn handle_network_message(
                                 Online,
                                 Account(json.id),
                                 Character { name: json.name },
+                                Position((0, 0, 0)),
                             ));
                         }
                         StatusCode::FORBIDDEN => {

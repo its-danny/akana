@@ -24,6 +24,7 @@ A few things will need to be installed first:
 - [diesel_cli](https://github.com/diesel-rs/diesel) for generating migrations
 - [docker-compose](https://docs.docker.com/compose/) to handle PostgreSQL
 - [koji](https://github.com/its-danny/koji) to keep commits nice and tidy
+- [ldtk](https://ldtk.io/) for editing the world
 
 ### Get it running
 
