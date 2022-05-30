@@ -3,7 +3,7 @@ use std::env;
 use jsonwebtoken::{encode, EncodingKey, Header};
 use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize)]
 pub(crate) struct Claims {
     pub(crate) name: String,
 }

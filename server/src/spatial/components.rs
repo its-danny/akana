@@ -1,4 +1,4 @@
 use bevy::prelude::*;
 
-#[derive(Component, Debug, Clone, Copy)]
+#[derive(Component, Debug)]
 pub(crate) struct Position(pub(crate) IVec3);
