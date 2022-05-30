@@ -9,7 +9,7 @@ use crate::{
 
 use super::components::Position;
 
-/// Handles the `look` command
+/// Handles the `look` command.
 pub(crate) fn look(
     server: Res<NetworkServer>,
     mut messages: EventReader<NetworkMessage>,

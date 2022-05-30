@@ -10,7 +10,7 @@ use crate::{
 
 use super::{
     components::{Character, Client},
-    events::SendPrompt,
+    events::PromptEvent,
 };
 
 /// Spawn a new entity with a [`Player`] component when a new connection
@@ -43,25 +43,25 @@ pub(crate) fn handle_network_events(
 
 /// Any time we get new input from a player, we want to send
 /// them their prompt.
-pub(crate) fn handle_network_message(
-    mut message_events: EventReader<NetworkMessage>,
-    mut prompt_events: EventWriter<SendPrompt>,
+pub(crate) fn send_prompt_on_input(
+    mut messages: EventReader<NetworkMessage>,
+    mut prompts: EventWriter<PromptEvent>,
     players: Query<(&Client, &Character), With<Online>>,
 ) {
-    for event in message_events.iter() {
+    for event in messages.iter() {
         if let Some(player) = players.iter().find(|p| p.0 .0 == event.id) {
-            prompt_events.send(SendPrompt(player.0 .0));
+            prompts.send(PromptEvent(player.0 .0));
         }
     }
 }
 
 /// Send a prompt to anyone who needs it.
-pub(crate) fn handle_send_prompt(
+pub(crate) fn send_prompt(
     server: Res<NetworkServer>,
-    mut events: EventReader<SendPrompt>,
+    mut prompts: EventReader<PromptEvent>,
     players: Query<(&Client, &Character), With<Online>>,
 ) {
-    for event in events.iter() {
+    for event in prompts.iter() {
         if let Some(player) = players.iter().find(|p| p.0 .0 == event.0) {
             server.send(&format!("{} >", player.1.name), event.0);
         }

@@ -10,7 +10,7 @@ use crate::{
     },
     player::{
         components::{Account, Character, Client},
-        events::SendPrompt,
+        events::PromptEvent,
     },
     spatial::components::Position,
 };
@@ -38,11 +38,11 @@ pub(crate) fn start_authenticating_new_clients(
 
 /// Intercept all [`NetworkMessage`] for any user that's currently
 /// authenticating and handle authentication.
-pub(crate) fn handle_network_message(
+pub(crate) fn perform_authentication(
     mut commands: Commands,
     server: Res<NetworkServer>,
     mut messages: EventReader<NetworkMessage>,
-    mut prompt_events: EventWriter<SendPrompt>,
+    mut prompts: EventWriter<PromptEvent>,
     mut players: Query<(Entity, &Client, &mut Authenticating)>,
 ) {
     for message in messages.iter() {
@@ -107,7 +107,7 @@ pub(crate) fn handle_network_message(
                             server.send("Authenticated.", player.0);
 
                             // Send the prompt.
-                            prompt_events.send(SendPrompt(player.0));
+                            prompts.send(PromptEvent(player.0));
 
                             // Remove `Authenticating` now that we're done.
                             commands.entity(entity).remove::<Authenticating>();

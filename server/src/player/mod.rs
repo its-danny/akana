@@ -5,17 +5,17 @@ pub(crate) mod systems;
 use bevy::prelude::*;
 
 use self::{
-    events::SendPrompt,
-    systems::{handle_network_events, handle_network_message, handle_send_prompt},
+    events::PromptEvent,
+    systems::{handle_network_events, send_prompt, send_prompt_on_input},
 };
 
 pub(crate) struct PlayerPlugin;
 
 impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
-        app.add_event::<SendPrompt>();
+        app.add_event::<PromptEvent>();
         app.add_system(handle_network_events);
-        app.add_system(handle_network_message);
-        app.add_system(handle_send_prompt);
+        app.add_system(send_prompt_on_input);
+        app.add_system(send_prompt);
     }
 }
