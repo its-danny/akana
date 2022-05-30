@@ -31,9 +31,11 @@ pub(crate) fn setup_world(mut commands: Commands) {
                 None => "No `name` set.".to_string(),
             };
 
+            debug!("Spawning tile {name} at {x}, {y}, 0");
+
             commands
                 .spawn()
-                .insert_bundle((Tile { name }, Position((*x, *y, 0))));
+                .insert_bundle((Tile { name }, Position(IVec3::new(*x as i32, *y as i32, 0))));
         }
     }
 }

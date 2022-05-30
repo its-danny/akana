@@ -117,7 +117,7 @@ pub(crate) fn perform_authentication(
                                 Online,
                                 Account(json.id),
                                 Character { name: json.name },
-                                Position((0, 0, 0)),
+                                Position(IVec3::new(4, 4, 0)),
                             ));
                         }
                         StatusCode::FORBIDDEN => {

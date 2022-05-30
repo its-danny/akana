@@ -95,11 +95,11 @@
 					"uid": 2,
 					"type": "F_String",
 					"isArray": false,
-					"canBeNull": true,
+					"canBeNull": false,
 					"arrayMinLength": null,
 					"arrayMaxLength": null,
 					"editorDisplayMode": "ValueOnly",
-					"editorDisplayPos": "Above",
+					"editorDisplayPos": "Center",
 					"editorAlwaysShow": false,
 					"editorCutLongValues": true,
 					"editorTextSuffix": null,
@@ -192,7 +192,7 @@
 					"entityInstances": [
 						{
 							"__identifier": "Tile",
-							"__grid": [0,0],
+							"__grid": [4,4],
 							"__pivot": [0,0],
 							"__tags": [],
 							"__tile": { "tilesetUid": 4, "x": 0, "y": 288, "w": 16, "h": 16 },
@@ -201,10 +201,146 @@
 							"width": 16,
 							"height": 16,
 							"defUid": 1,
-							"px": [0,0],
-							"fieldInstances": [{ "__identifier": "name", "__value": "A Room", "__type": "String", "__tile": null, "defUid": 2, "realEditorValues": [{
+							"px": [64,64],
+							"fieldInstances": [{ "__identifier": "name", "__value": "Central Room", "__type": "String", "__tile": null, "defUid": 2, "realEditorValues": [{
 								"id": "V_String",
-								"params": ["A Room"]
+								"params": ["Central Room"]
+							}] }]
+						},
+						{
+							"__identifier": "Tile",
+							"__grid": [4,5],
+							"__pivot": [0,0],
+							"__tags": [],
+							"__tile": { "tilesetUid": 4, "x": 0, "y": 288, "w": 16, "h": 16 },
+							"__smartColor": "#94D9B3",
+							"iid": "4554d110-dbe0-11ec-98f5-3b8f57feaf15",
+							"width": 16,
+							"height": 16,
+							"defUid": 1,
+							"px": [64,80],
+							"fieldInstances": [{ "__identifier": "name", "__value": "S Room", "__type": "String", "__tile": null, "defUid": 2, "realEditorValues": [{
+								"id": "V_String",
+								"params": ["S Room"]
+							}] }]
+						},
+						{
+							"__identifier": "Tile",
+							"__grid": [5,5],
+							"__pivot": [0,0],
+							"__tags": [],
+							"__tile": { "tilesetUid": 4, "x": 0, "y": 288, "w": 16, "h": 16 },
+							"__smartColor": "#94D9B3",
+							"iid": "ecf26dc0-dbe0-11ec-98f5-cd9b9a0d234a",
+							"width": 16,
+							"height": 16,
+							"defUid": 1,
+							"px": [80,80],
+							"fieldInstances": [{ "__identifier": "name", "__value": "SE Room", "__type": "String", "__tile": null, "defUid": 2, "realEditorValues": [{
+								"id": "V_String",
+								"params": ["SE Room"]
+							}] }]
+						},
+						{
+							"__identifier": "Tile",
+							"__grid": [5,4],
+							"__pivot": [0,0],
+							"__tags": [],
+							"__tile": { "tilesetUid": 4, "x": 0, "y": 288, "w": 16, "h": 16 },
+							"__smartColor": "#94D9B3",
+							"iid": "ed604ac0-dbe0-11ec-98f5-b1d7285f3aa8",
+							"width": 16,
+							"height": 16,
+							"defUid": 1,
+							"px": [80,64],
+							"fieldInstances": [{ "__identifier": "name", "__value": "E Room", "__type": "String", "__tile": null, "defUid": 2, "realEditorValues": [{
+								"id": "V_String",
+								"params": ["E Room"]
+							}] }]
+						},
+						{
+							"__identifier": "Tile",
+							"__grid": [5,3],
+							"__pivot": [0,0],
+							"__tags": [],
+							"__tile": { "tilesetUid": 4, "x": 0, "y": 288, "w": 16, "h": 16 },
+							"__smartColor": "#94D9B3",
+							"iid": "edbfcfe0-dbe0-11ec-98f5-23f439dc8bc6",
+							"width": 16,
+							"height": 16,
+							"defUid": 1,
+							"px": [80,48],
+							"fieldInstances": [{ "__identifier": "name", "__value": "NE Room", "__type": "String", "__tile": null, "defUid": 2, "realEditorValues": [{
+								"id": "V_String",
+								"params": ["NE Room"]
+							}] }]
+						},
+						{
+							"__identifier": "Tile",
+							"__grid": [4,3],
+							"__pivot": [0,0],
+							"__tags": [],
+							"__tile": { "tilesetUid": 4, "x": 0, "y": 288, "w": 16, "h": 16 },
+							"__smartColor": "#94D9B3",
+							"iid": "ee511360-dbe0-11ec-98f5-a7cf71cf002b",
+							"width": 16,
+							"height": 16,
+							"defUid": 1,
+							"px": [64,48],
+							"fieldInstances": [{ "__identifier": "name", "__value": "N Room", "__type": "String", "__tile": null, "defUid": 2, "realEditorValues": [{
+								"id": "V_String",
+								"params": ["N Room"]
+							}] }]
+						},
+						{
+							"__identifier": "Tile",
+							"__grid": [3,4],
+							"__pivot": [0,0],
+							"__tags": [],
+							"__tile": { "tilesetUid": 4, "x": 0, "y": 288, "w": 16, "h": 16 },
+							"__smartColor": "#94D9B3",
+							"iid": "eeb49020-dbe0-11ec-98f5-07a8fbd231a3",
+							"width": 16,
+							"height": 16,
+							"defUid": 1,
+							"px": [48,64],
+							"fieldInstances": [{ "__identifier": "name", "__value": "W Room", "__type": "String", "__tile": null, "defUid": 2, "realEditorValues": [{
+								"id": "V_String",
+								"params": ["W Room"]
+							}] }]
+						},
+						{
+							"__identifier": "Tile",
+							"__grid": [3,3],
+							"__pivot": [0,0],
+							"__tags": [],
+							"__tile": { "tilesetUid": 4, "x": 0, "y": 288, "w": 16, "h": 16 },
+							"__smartColor": "#94D9B3",
+							"iid": "efa0ebf0-dbe0-11ec-98f5-4f5e4243e26c",
+							"width": 16,
+							"height": 16,
+							"defUid": 1,
+							"px": [48,48],
+							"fieldInstances": [{ "__identifier": "name", "__value": "NW Room", "__type": "String", "__tile": null, "defUid": 2, "realEditorValues": [{
+								"id": "V_String",
+								"params": ["NW Room"]
+							}] }]
+						},
+						{
+							"__identifier": "Tile",
+							"__grid": [3,5],
+							"__pivot": [0,0],
+							"__tags": [],
+							"__tile": { "tilesetUid": 4, "x": 0, "y": 288, "w": 16, "h": 16 },
+							"__smartColor": "#94D9B3",
+							"iid": "f0079d00-dbe0-11ec-98f5-c3a964e47b18",
+							"width": 16,
+							"height": 16,
+							"defUid": 1,
+							"px": [48,80],
+							"fieldInstances": [{ "__identifier": "name", "__value": "SW Room", "__type": "String", "__tile": null, "defUid": 2, "realEditorValues": [{
+								"id": "V_String",
+								"params": ["SW Room"]
 							}] }]
 						}
 					]
