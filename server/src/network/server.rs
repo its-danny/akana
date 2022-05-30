@@ -11,7 +11,7 @@ use tokio::{
 
 use super::{
     errors::NetworkError,
-    events::{IncomingConnection, NetworkEvent, NetworkMessage},
+    events::{IncomingConnection, NetworkCommand, NetworkEvent, NetworkMessage},
     SyncChannel,
 };
 
@@ -34,7 +34,7 @@ struct ClientConnection {
     #[allow(dead_code)]
     write_task: JoinHandle<()>,
     /// Messages to be sent out
-    outbox: SyncChannel<NetworkMessage>,
+    outbox: SyncChannel<(Option<NetworkCommand>, Option<NetworkMessage>)>,
 }
 
 pub(crate) struct NetworkServer {
@@ -106,7 +106,8 @@ impl NetworkServer {
     }
 
     pub(crate) fn setup_client(&self, connection: IncomingConnection) {
-        let outbox: SyncChannel<NetworkMessage> = SyncChannel::new();
+        let outbox: SyncChannel<(Option<NetworkCommand>, Option<NetworkMessage>)> =
+            SyncChannel::new();
 
         let lost_sender = self.lost.sender.clone();
         let read_events_sender = self.events.sender.clone();
@@ -163,22 +164,20 @@ impl NetworkServer {
                             .to_string();
 
                         if !message.is_empty() {
-                            if let Err(error) = inbox_sender.send(NetworkMessage {
-                                id,
-                                command: None,
-                                body: message,
-                            }) {
+                            if let Err(error) =
+                                inbox_sender.send(NetworkMessage { id, body: message })
+                            {
                                 error!("Could not send to inbox: {error}");
                             }
                         }
                     }
                 }),
                 write_task: self.runtime.spawn(async move {
-                    while let Ok(message) = outbox_receiver.recv() {
-                        debug!("Writing message to socket {message:?}");
+                    while let Ok(output) = outbox_receiver.recv() {
+                        if let Some(command) = output.0 {
+                            debug!("Writing command to socket {command:?}");
 
-                        if let Some(command) = message.command {
-                            match write_socket.write_all(&command).await {
+                            match write_socket.write_all(&command.command).await {
                                 Ok(_) => (),
                                 Err(error) => {
                                     if let Err(error) = write_events_sender.send(
@@ -192,16 +191,20 @@ impl NetworkServer {
                             }
                         }
 
-                        match write_socket.write_all(message.body.as_bytes()).await {
-                            Ok(_) => (),
-                            Err(error) => {
-                                if let Err(error) = write_events_sender
-                                    .send(NetworkEvent::Error(NetworkError::SocketWrite(error, id)))
-                                {
-                                    error!("Could not send error: {error}");
-                                };
+                        if let Some(message) = output.1 {
+                            debug!("Writing message to socket {message:?}");
 
-                                return;
+                            match write_socket.write_all(message.body.as_bytes()).await {
+                                Ok(_) => (),
+                                Err(error) => {
+                                    if let Err(error) = write_events_sender.send(
+                                        NetworkEvent::Error(NetworkError::SocketWrite(error, id)),
+                                    ) {
+                                        error!("Could not send error: {error}");
+                                    };
+
+                                    return;
+                                }
                             }
                         }
                     }
@@ -224,11 +227,13 @@ impl NetworkServer {
         info!("Sending message to {id:?}: {message:?}");
 
         if let Some(client) = self.clients.get(&id) {
-            if let Err(error) = client.value().outbox.sender.send(NetworkMessage {
-                id,
-                command: None,
-                body: format!("{message}\r\n"),
-            }) {
+            if let Err(error) = client.value().outbox.sender.send((
+                None,
+                Some(NetworkMessage {
+                    id,
+                    body: format!("{message}\r\n"),
+                }),
+            )) {
                 error!("Could not send to outbox: {error}");
             }
         }
@@ -238,11 +243,12 @@ impl NetworkServer {
         info!("Sending command to {id:?}: {command:?}");
 
         if let Some(client) = self.clients.get(&id) {
-            if let Err(error) = client.value().outbox.sender.send(NetworkMessage {
-                id,
-                command: Some(command),
-                body: "".to_string(),
-            }) {
+            if let Err(error) = client
+                .value()
+                .outbox
+                .sender
+                .send((Some(NetworkCommand { command }), None))
+            {
                 error!("Could not send to outbox: {error}");
             }
         }

@@ -12,9 +12,13 @@ pub(crate) enum NetworkEvent {
 }
 
 #[derive(Debug)]
+pub(crate) struct NetworkCommand {
+    pub(crate) command: [u8; 3],
+}
+
+#[derive(Debug)]
 pub(crate) struct NetworkMessage {
     pub(crate) id: ConnectionId,
-    pub(crate) command: Option<[u8; 3]>,
     pub(crate) body: String,
 }
 
