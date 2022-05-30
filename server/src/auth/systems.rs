@@ -7,7 +7,7 @@ use crate::{
         server::NetworkServer,
         server::TelnetCommand::{Echo, Iac, Will, Wont},
     },
-    player::components::Player,
+    player::components::Client,
 };
 
 use super::{
@@ -20,7 +20,7 @@ use super::{
 /// and begins the authentication process.
 pub(crate) fn start_authenticating(
     server: Res<NetworkServer>,
-    mut players: Query<(&Player, &mut Authenticating)>,
+    mut players: Query<(&Client, &mut Authenticating)>,
 ) {
     for (player, mut authenticating) in players.iter_mut() {
         if authenticating.state == AuthState::Initial {
@@ -37,7 +37,7 @@ pub(crate) fn handle_network_messages(
     mut commands: Commands,
     server: Res<NetworkServer>,
     mut messages: EventReader<NetworkMessage>,
-    mut players: Query<(Entity, &Player, &mut Authenticating)>,
+    mut players: Query<(Entity, &Client, &mut Authenticating)>,
 ) {
     for message in messages.iter() {
         if let Some((entity, player, mut authenticating)) =
