@@ -13,6 +13,7 @@ use crate::{
         events::PromptEvent,
     },
     spatial::components::Position,
+    world::resources::NewPlayerSpawn,
 };
 
 use super::{
@@ -41,6 +42,7 @@ pub(crate) fn start_authenticating_new_clients(
 pub(crate) fn perform_authentication(
     mut commands: Commands,
     server: Res<NetworkServer>,
+    new_player_spawn: Res<NewPlayerSpawn>,
     mut messages: EventReader<NetworkMessage>,
     mut prompts: EventWriter<PromptEvent>,
     mut players: Query<(Entity, &Client, &mut Authenticating)>,
@@ -117,7 +119,7 @@ pub(crate) fn perform_authentication(
                                 Online,
                                 Account(json.id),
                                 Character { name: json.name },
-                                Position(IVec3::new(4, 4, 0)),
+                                Position(new_player_spawn.0),
                             ));
                         }
                         StatusCode::FORBIDDEN => {

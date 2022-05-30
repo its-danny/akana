@@ -3,39 +3,45 @@ use ldtk_rust::Project;
 
 use crate::{spatial::components::Position, world::components::Tile};
 
+use super::resources::NewPlayerSpawn;
+
 /// Load `assets/world.ldtk` and spawn a whole lot of entitites.
-pub(crate) fn setup_world(mut commands: Commands) {
+///
+/// We `unwrap` all over the place because we don't really care if this panics,
+/// big trouble if the world can't load in.
+pub(crate) fn setup_world(mut commands: Commands, mut new_player_spawn: ResMut<NewPlayerSpawn>) {
     let project = Project::new("server/assets/world.ldtk");
-    let level = project.get_level(0).expect("Could not get level");
-    let layers = level
-        .layer_instances
-        .as_ref()
-        .expect("Could not get layer instance");
+    let level = project.get_level(0).unwrap();
+    let layers = level.layer_instances.as_ref().unwrap();
 
     for layer in layers.iter().rev() {
-        for entity in &layer.entity_instances {
-            let x = entity.grid.get(0).expect("Could not get X position");
-            let y = entity.grid.get(1).expect("Could not get Y position");
+        if layer.identifier == "Tiles" {
+            for entity in &layer.entity_instances {
+                let x = *entity.grid.get(0).unwrap() as i32;
+                let y = *entity.grid.get(1).unwrap() as i32;
 
-            let name_field = entity
-                .field_instances
-                .iter()
-                .find(|f| f.identifier == "name");
-
-            let name = match name_field {
-                Some(name) => name
+                let name = entity
+                    .field_instances
+                    .get(0)
+                    .unwrap()
                     .value
                     .as_ref()
-                    .expect("Could not get name value")
-                    .to_string(),
-                None => "No `name` set.".to_string(),
-            };
+                    .unwrap()
+                    .to_string();
 
-            debug!("Spawning tile {name} at {x}, {y}, 0");
+                commands
+                    .spawn()
+                    .insert_bundle((Tile { name }, Position(IVec3::new(x, y, 0))));
+            }
+        }
 
-            commands
-                .spawn()
-                .insert_bundle((Tile { name }, Position(IVec3::new(*x as i32, *y as i32, 0))));
+        if layer.identifier == "New_Player_Spawn" {
+            let entity = &layer.entity_instances.get(0).unwrap();
+
+            let x = *entity.grid.get(0).unwrap() as i32;
+            let y = *entity.grid.get(1).unwrap() as i32;
+
+            new_player_spawn.0 = IVec3::new(x, y, 0);
         }
     }
 }
