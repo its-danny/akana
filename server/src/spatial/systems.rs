@@ -1,4 +1,6 @@
 use bevy::prelude::*;
+use lazy_static::lazy_static;
+use regex::Regex;
 
 use crate::{
     auth::components::Online,
@@ -16,8 +18,12 @@ pub(crate) fn look(
     players: Query<((&Client, &Position), With<Online>)>,
     tiles: Query<(&Tile, &Position)>,
 ) {
+    lazy_static! {
+        static ref CMD: Regex = Regex::new("^(look|l)$").unwrap();
+    }
+
     for message in messages.iter() {
-        if message.body.to_lowercase() == "look" {
+        if CMD.is_match(&message.body.to_lowercase()) {
             if let Some(player) = players.iter().find(|p| p.0 .0 .0 == message.id) {
                 if let Some(tile) = tiles.iter().find(|t| t.1 .0 == player.0 .1 .0) {
                     server.send(&tile.0.name, message.id);
@@ -34,62 +40,45 @@ pub(crate) fn movement(
     mut players: Query<(&Client, &mut Position), With<Online>>,
     tiles: Query<(&Tile, &Position), Without<Client>>,
 ) {
+    lazy_static! {
+        static ref CMD: Regex = Regex::new(
+            "^(north|n|northeast|ne|east|e|southeast|se|south|s|southwest|sw|west|w|northwest|nw)$"
+        )
+        .unwrap();
+    }
+
     for message in messages.iter() {
         if let Some(mut player) = players.iter_mut().find(|p| p.0 .0 == message.id) {
-            let result_if_direction = match message.body.to_lowercase().as_str() {
-                "north" | "n" => Some(
-                    tiles
+            if let Some(captures) = CMD.captures(&message.body.to_lowercase()) {
+                let wanted_tile = match captures.get(0).unwrap().as_str() {
+                    "north" | "n" => tiles
                         .iter()
                         .find(|t| t.1 .0 == player.1 .0 + IVec3::new(0, -1, 0)),
-                ),
-                "northeast" | "ne" => Some(
-                    tiles
+                    "northeast" | "ne" => tiles
                         .iter()
                         .find(|t| t.1 .0 == player.1 .0 + IVec3::new(1, -1, 0)),
-                ),
-                "east" | "e" => Some(
-                    tiles
+                    "east" | "e" => tiles
                         .iter()
                         .find(|t| t.1 .0 == player.1 .0 + IVec3::new(1, 0, 0)),
-                ),
-                "southeast" | "se" => Some(
-                    tiles
+                    "southeast" | "se" => tiles
                         .iter()
                         .find(|t| t.1 .0 == player.1 .0 + IVec3::new(1, 1, 0)),
-                ),
-                "south" | "s" => Some(
-                    tiles
+                    "south" | "s" => tiles
                         .iter()
                         .find(|t| t.1 .0 == player.1 .0 + IVec3::new(0, 1, 0)),
-                ),
-                "southwest" | "sw" => Some(
-                    tiles
+                    "southwest" | "sw" => tiles
                         .iter()
                         .find(|t| t.1 .0 == player.1 .0 + IVec3::new(-1, 1, 0)),
-                ),
-                "west" | "w" => Some(
-                    tiles
+                    "west" | "w" => tiles
                         .iter()
                         .find(|t| t.1 .0 == player.1 .0 + IVec3::new(-1, 0, 0)),
-                ),
-                "northwest" | "nw" => Some(
-                    tiles
+                    "northwest" | "nw" => tiles
                         .iter()
                         .find(|t| t.1 .0 == player.1 .0 + IVec3::new(-1, -1, 0)),
-                ),
-                _ => None,
-            };
+                    _ => None,
+                };
 
-            // This code is pretty bad, but I couldn't think of a better way
-            // to do it.
-            //
-            // `result_if_direction` is Some if they sent a directional command,
-            // `None` if not.
-            //
-            // `found_tile` is Some if we find a tile in the direction they want to go,
-            // `None` if not.
-            if let Some(found_tile) = result_if_direction {
-                if let Some(tile) = found_tile {
+                if let Some(tile) = wanted_tile {
                     debug!("Moving {:?} to {:?}", player.0 .0, tile.1);
 
                     player.1 .0 = tile.1 .0;

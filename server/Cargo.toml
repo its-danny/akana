@@ -9,7 +9,9 @@ bevy = { version = "0.7.0", default-features = false }
 crossbeam-channel = "0.5.4"
 dashmap = "5.2.0"
 dotenv = "0.15.0"
+lazy_static = "1.4.0"
 ldtk_rust = "0.6.0"
+regex = "1.5.6"
 reqwest = { version = "0.11.10", features = ["blocking", "json"] }
 serde = { version = "1.0.137", features = [ "derive" ] }
 thiserror = "1.0.30"
