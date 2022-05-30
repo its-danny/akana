@@ -1,15 +1,15 @@
 mod errors;
 pub(crate) mod events;
-pub(crate) mod messages;
 pub(crate) mod server;
 mod systems;
 
 use bevy::prelude::*;
 use crossbeam_channel::{unbounded, Receiver, Sender};
 use events::NetworkEvent;
-use messages::NetworkMessage;
 use server::NetworkServer;
 use systems::{handle_events, handle_inbox, handle_incoming, handle_lost};
+
+use self::events::NetworkMessage;
 
 pub(crate) struct SyncChannel<T> {
     sender: Sender<T>,

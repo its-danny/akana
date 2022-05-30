@@ -1,8 +1,17 @@
 use bevy::prelude::*;
 
-use crate::{auth::components::Authenticating, network::events::NetworkEvent};
+use crate::{
+    auth::components::{Authenticating, Online},
+    network::{
+        events::{NetworkEvent, NetworkMessage},
+        server::NetworkServer,
+    },
+};
 
-use super::components::Client;
+use super::{
+    components::{Character, Client},
+    events::SendPrompt,
+};
 
 /// Spawn a new entity with a [`Player`] component when a new connection
 /// comes in, an despawn it when the connection is lost.
@@ -29,5 +38,29 @@ pub(crate) fn handle_network_events(
                 error!("{error}");
             }
         };
+    }
+}
+
+/// Any time we get new input from a player, we want to send
+/// them their prompt.
+pub(crate) fn handle_network_message(
+    mut message_events: EventReader<NetworkMessage>,
+    mut prompt_events: EventWriter<SendPrompt>,
+    players: Query<(&Client, &Character, &Online)>,
+) {
+    for event in message_events.iter() {
+        if let Some(player) = players.iter().find(|p| p.0 .0 == event.id) {
+            prompt_events.send(SendPrompt {
+                id: player.0 .0,
+                name: player.1.name.clone(),
+            });
+        }
+    }
+}
+
+/// Send a prompt to anyone who needs it.
+pub(crate) fn handle_send_prompt(server: Res<NetworkServer>, mut events: EventReader<SendPrompt>) {
+    for event in events.iter() {
+        server.send(&format!("{} >", event.name), event.id);
     }
 }

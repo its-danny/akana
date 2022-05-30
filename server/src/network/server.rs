@@ -11,8 +11,7 @@ use tokio::{
 
 use super::{
     errors::NetworkError,
-    events::{IncomingConnection, NetworkEvent},
-    messages::NetworkMessage,
+    events::{IncomingConnection, NetworkEvent, NetworkMessage},
     SyncChannel,
 };
 

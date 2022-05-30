@@ -1,6 +1,9 @@
 use bevy::prelude::*;
 
-use super::{events::NetworkEvent, messages::NetworkMessage, server::NetworkServer};
+use super::{
+    events::{NetworkEvent, NetworkMessage},
+    server::NetworkServer,
+};
 
 pub(crate) fn handle_incoming(server: Res<NetworkServer>) {
     for connection in server.incoming.receiver.try_iter() {

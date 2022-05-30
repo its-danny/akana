@@ -1,13 +1,14 @@
+use api::auth::handlers::SignInResponse;
 use bevy::prelude::*;
 use reqwest::StatusCode;
 
 use crate::{
     network::{
-        messages::NetworkMessage,
+        events::NetworkMessage,
         server::NetworkServer,
         server::TelnetCommand::{Echo, Iac, Will, Wont},
     },
-    player::components::Client,
+    player::components::{Account, Character, Client},
 };
 
 use super::{
@@ -18,7 +19,7 @@ use super::{
 /// When a user first connects, we give them the [`Authenticating`]
 /// component. This system gets anyone with that component
 /// and begins the authentication process.
-pub(crate) fn start_authenticating(
+pub(crate) fn start_authenticating_new_clients(
     server: Res<NetworkServer>,
     mut players: Query<(&Client, &mut Authenticating)>,
 ) {
@@ -33,7 +34,7 @@ pub(crate) fn start_authenticating(
 
 /// Intercept all [`NetworkMessage`] for any user that's currently
 /// authenticating and handle authentication.
-pub(crate) fn handle_network_messages(
+pub(crate) fn handle_network_message(
     mut commands: Commands,
     server: Res<NetworkServer>,
     mut messages: EventReader<NetworkMessage>,
@@ -86,17 +87,29 @@ pub(crate) fn handle_network_messages(
                         break;
                     }
 
-                    match sign_in(authenticating.name.clone(), message.body.clone()).status() {
+                    let response = sign_in(authenticating.name.clone(), message.body.clone());
+
+                    match response.status() {
                         StatusCode::OK => {
+                            let json = response
+                                .json::<SignInResponse>()
+                                .expect("Could not parse response");
+
                             // If the user's password is correct, let them know and
                             // send another telnet command letting their client know it's
                             // ok to echo input again.
                             server.send_command([Iac as u8, Wont as u8, Echo as u8], player.0);
                             server.send("Authenticated.", player.0);
 
-                            // Finish up the authentication process.
+                            // Remove `Authenticating` now that we're done.
                             commands.entity(entity).remove::<Authenticating>();
-                            commands.entity(entity).insert(Online);
+
+                            // Set the player up.
+                            commands.entity(entity).insert_bundle((
+                                Online,
+                                Account(json.id),
+                                Character { name: json.name },
+                            ));
                         }
                         StatusCode::FORBIDDEN => {
                             // If their password was not correct, let them try again.

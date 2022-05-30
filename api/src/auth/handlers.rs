@@ -30,9 +30,11 @@ pub struct SignInRequest {
     pub password: String,
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Deserialize)]
 pub struct SignInResponse {
     token: String,
+    pub id: i32,
+    pub name: String,
 }
 
 pub async fn sign_in(Json(input): Json<SignInRequest>) -> Result<Json<SignInResponse>, StatusCode> {
@@ -47,7 +49,11 @@ pub async fn sign_in(Json(input): Json<SignInRequest>) -> Result<Json<SignInResp
                 if verified {
                     let token = generate_jwt(&Claims { name: input.name });
 
-                    Ok(Json(SignInResponse { token }))
+                    Ok(Json(SignInResponse {
+                        token,
+                        id: user.id,
+                        name: user.name,
+                    }))
                 } else {
                     Err(StatusCode::FORBIDDEN)
                 }
@@ -59,13 +65,17 @@ pub async fn sign_in(Json(input): Json<SignInRequest>) -> Result<Json<SignInResp
             if let Ok(hashed) = hash(input.password, DEFAULT_COST) {
                 let result = diesel::insert_into(users)
                     .values((name.eq(&input.name), password.eq(hashed)))
-                    .execute(&connection);
+                    .get_results::<User>(&connection);
 
                 match result {
-                    Ok(_) => {
+                    Ok(new_user) => {
                         let token = generate_jwt(&Claims { name: input.name });
 
-                        Ok(Json(SignInResponse { token }))
+                        Ok(Json(SignInResponse {
+                            token,
+                            id: new_user.first().unwrap().id,
+                            name: new_user.first().unwrap().name.clone(),
+                        }))
                     }
                     Err(_) => Err(StatusCode::INTERNAL_SERVER_ERROR),
                 }

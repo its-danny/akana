@@ -1,6 +1,5 @@
 [hooks]
-pre-commit = "cargo test --locked"
-pre-push = "cargo check --locked && cargo clippy --locked -- -D warnings && cargo fmt --all -- --check"
+pre-commit = "cargo check --locked && cargo clippy --locked -- -D warnings && cargo fmt --all -- --check && cargo test --locked"
 prepare-commit-msg = "exec < /dev/tty && koji --hook -a || true"
 
 [logging]
