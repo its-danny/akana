@@ -67,7 +67,7 @@ pub(crate) fn perform_authentication(
                             // for their password. We send this telnet command along with it
                             // so that their client won't echo back their passwor.
                             server.send_command([Iac as u8, Will as u8, Echo as u8], player.id);
-                            server.send("What's your your password?", player.id);
+                            server.send("What's your password?", player.id);
                         }
                         StatusCode::NOT_FOUND => {
                             // If the user is not found, we do the same, but letting them

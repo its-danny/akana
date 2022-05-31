@@ -66,7 +66,7 @@ pub(crate) fn send_prompt(
 ) {
     for event in prompts.iter() {
         if let Some(player) = players.iter().find(|p| p.0.id == event.0) {
-            let name = player.1.name.white();
+            let name = player.1.name.white().bold();
             let time = world_time.time.format("%-l:%M%P").to_string();
 
             let world_status = "[{time}] >";
@@ -74,13 +74,13 @@ pub(crate) fn send_prompt(
 
             let world_status_colored = format!(
                 "{}{}{} {}",
-                "[".bright_black(),
+                "[",
                 match world_time.part {
                     WorldTimePart::Dawn | WorldTimePart::Day => time.yellow(),
                     WorldTimePart::Dusk | WorldTimePart::Night => time.blue(),
                 },
-                "]".bright_black(),
-                ">".bright_black()
+                "]",
+                ">"
             );
 
             server.send(&format!("{:width$}{world_status_colored}", name,), event.0);

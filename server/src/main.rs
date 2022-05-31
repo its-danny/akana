@@ -1,6 +1,7 @@
 mod auth;
 mod network;
 mod player;
+mod social;
 mod spatial;
 mod world;
 
@@ -11,6 +12,7 @@ use bevy::{app::ScheduleRunnerSettings, log::LogPlugin, prelude::*, utils::Durat
 use dotenv::dotenv;
 use network::{server::NetworkServer, NetworkPlugin};
 use player::PlayerPlugin;
+use social::SocialPlugin;
 use spatial::SpatialPlugin;
 use world::WorldPlugin;
 
@@ -28,6 +30,7 @@ fn main() {
         .add_plugin(AuthPlugin)
         .add_plugin(PlayerPlugin)
         .add_plugin(SpatialPlugin)
+        .add_plugin(SocialPlugin)
         .add_startup_system(setup_network)
         .run();
 }
