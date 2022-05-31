@@ -11,11 +11,14 @@ pub(crate) enum NetworkEvent {
     Error(NetworkError),
 }
 
+/// An array of [`TelnetCommand`]s to be sent to a client.
 #[derive(Debug)]
 pub(crate) struct NetworkCommand {
     pub(crate) command: [u8; 3],
 }
 
+/// Both inbound and outbound messages between the
+/// game server and a client.
 #[derive(Debug)]
 pub(crate) struct NetworkMessage {
     pub(crate) id: ConnectionId,

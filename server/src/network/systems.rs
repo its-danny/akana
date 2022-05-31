@@ -1,9 +1,17 @@
+use std::env;
+
 use bevy::prelude::*;
 
 use super::{
     events::{NetworkEvent, NetworkMessage},
     server::NetworkServer,
 };
+
+pub(crate) fn setup_network(server: Res<NetworkServer>) {
+    let server_url = env::var("SERVER_URL").expect("Could not read SERVER_URL from env");
+
+    server.listen(server_url);
+}
 
 pub(crate) fn handle_incoming(server: Res<NetworkServer>) {
     for connection in server.incoming.receiver.try_iter() {

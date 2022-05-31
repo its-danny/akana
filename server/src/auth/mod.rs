@@ -10,7 +10,11 @@ pub(crate) struct AuthPlugin;
 
 impl Plugin for AuthPlugin {
     fn build(&self, app: &mut App) {
-        app.add_system(start_authenticating_new_clients);
-        app.add_system(perform_authentication);
+        app.add_system_set(
+            SystemSet::new()
+                .label("auth")
+                .with_system(start_authenticating_new_clients)
+                .with_system(perform_authentication),
+        );
     }
 }

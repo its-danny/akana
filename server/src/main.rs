@@ -5,12 +5,10 @@ mod social;
 mod spatial;
 mod world;
 
-use std::env;
-
 use auth::AuthPlugin;
 use bevy::{app::ScheduleRunnerSettings, log::LogPlugin, prelude::*, utils::Duration};
 use dotenv::dotenv;
-use network::{server::NetworkServer, NetworkPlugin};
+use network::NetworkPlugin;
 use player::PlayerPlugin;
 use social::SocialPlugin;
 use spatial::SpatialPlugin;
@@ -31,12 +29,5 @@ fn main() {
         .add_plugin(PlayerPlugin)
         .add_plugin(SpatialPlugin)
         .add_plugin(SocialPlugin)
-        .add_startup_system(setup_network)
         .run();
-}
-
-fn setup_network(server: Res<NetworkServer>) {
-    let server_url = env::var("SERVER_URL").expect("Could not read SERVER_URL from env");
-
-    server.listen(server_url);
 }

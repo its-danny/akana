@@ -9,7 +9,7 @@ use events::NetworkEvent;
 use server::NetworkServer;
 use systems::{handle_events, handle_inbox, handle_incoming, handle_lost};
 
-use self::events::NetworkMessage;
+use self::{events::NetworkMessage, systems::setup_network};
 
 pub(crate) struct SyncChannel<T> {
     sender: Sender<T>,
@@ -29,11 +29,16 @@ pub(crate) struct NetworkPlugin;
 impl Plugin for NetworkPlugin {
     fn build(&self, app: &mut App) {
         app.insert_resource(NetworkServer::new());
+
         app.add_event::<NetworkEvent>();
         app.add_event::<NetworkMessage>();
+
+        app.add_startup_system(setup_network);
+
         app.add_system_set_to_stage(
             CoreStage::PreUpdate,
             SystemSet::new()
+                .label("network")
                 .with_system(handle_incoming)
                 .with_system(handle_lost)
                 .with_system(handle_events)
