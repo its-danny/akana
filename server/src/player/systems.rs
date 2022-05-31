@@ -1,4 +1,5 @@
 use bevy::prelude::*;
+use colored::Colorize;
 
 use crate::{
     auth::components::{Authenticating, Online},
@@ -6,6 +7,7 @@ use crate::{
         events::{NetworkEvent, NetworkMessage},
         server::NetworkServer,
     },
+    world::resources::{WorldTime, WorldTimePart},
 };
 
 use super::{
@@ -23,12 +25,12 @@ pub(crate) fn handle_network_events(
     for event in events.iter() {
         match event {
             NetworkEvent::Connected(id) => {
-                commands.spawn_bundle((Client(*id), Authenticating::default()));
+                commands.spawn_bundle((Client { id: *id, width: 80 }, Authenticating::default()));
 
                 info!("Player spawned for {id:?}");
             }
             NetworkEvent::Disconnected(id) => {
-                if let Some((entity, _)) = players.iter().find(|p| p.1 .0 == *id) {
+                if let Some((entity, _)) = players.iter().find(|p| p.1.id == *id) {
                     commands.entity(entity).despawn();
 
                     info!("Player despawned {id:?}");
@@ -49,8 +51,8 @@ pub(crate) fn send_prompt_on_input(
     players: Query<(&Client, &Character), With<Online>>,
 ) {
     for event in messages.iter() {
-        if let Some(player) = players.iter().find(|p| p.0 .0 == event.id) {
-            prompts.send(PromptEvent(player.0 .0));
+        if let Some(player) = players.iter().find(|p| p.0.id == event.id) {
+            prompts.send(PromptEvent(player.0.id));
         }
     }
 }
@@ -58,12 +60,30 @@ pub(crate) fn send_prompt_on_input(
 /// Send a prompt to anyone who needs it.
 pub(crate) fn send_prompt(
     server: Res<NetworkServer>,
+    world_time: Res<WorldTime>,
     mut prompts: EventReader<PromptEvent>,
     players: Query<(&Client, &Character), With<Online>>,
 ) {
     for event in prompts.iter() {
-        if let Some(player) = players.iter().find(|p| p.0 .0 == event.0) {
-            server.send(&format!("{} >", player.1.name), event.0);
+        if let Some(player) = players.iter().find(|p| p.0.id == event.0) {
+            let name = player.1.name.white();
+            let time = world_time.time.format("%-l:%M%P").to_string();
+
+            let world_status = "[{time}] >";
+            let width = player.0.width as usize - player.1.name.len() - world_status.len();
+
+            let world_status_colored = format!(
+                "{}{}{} {}",
+                "[".bright_black(),
+                match world_time.part {
+                    WorldTimePart::Dawn | WorldTimePart::Day => time.yellow(),
+                    WorldTimePart::Dusk | WorldTimePart::Night => time.blue(),
+                },
+                "]".bright_black(),
+                ">".bright_black()
+            );
+
+            server.send(&format!("{:width$}{world_status_colored}", name,), event.0);
         }
     }
 }

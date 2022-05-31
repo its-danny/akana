@@ -24,7 +24,7 @@ pub(crate) fn look(
 
     for message in messages.iter() {
         if CMD.is_match(&message.body.to_lowercase()) {
-            if let Some(player) = players.iter().find(|p| p.0 .0 .0 == message.id) {
+            if let Some(player) = players.iter().find(|p| p.0 .0.id == message.id) {
                 if let Some(tile) = tiles.iter().find(|t| t.1 .0 == player.0 .1 .0) {
                     server.send(&tile.0.name, message.id);
                 }
@@ -48,7 +48,7 @@ pub(crate) fn movement(
     }
 
     for message in messages.iter() {
-        if let Some(mut player) = players.iter_mut().find(|p| p.0 .0 == message.id) {
+        if let Some(mut player) = players.iter_mut().find(|p| p.0.id == message.id) {
             if let Some(captures) = CMD.captures(&message.body.to_lowercase()) {
                 let wanted_tile = match captures.get(0).unwrap().as_str() {
                     "north" | "n" => tiles
@@ -79,11 +79,11 @@ pub(crate) fn movement(
                 };
 
                 if let Some(tile) = wanted_tile {
-                    debug!("Moving {:?} to {:?}", player.0 .0, tile.1);
+                    debug!("Moving {:?} to {:?}", player.0.id, tile.1);
 
                     player.1 .0 = tile.1 .0;
                 } else {
-                    server.send("You can't go that direction.", player.0 .0);
+                    server.send("You can't go that direction.", player.0.id);
                 }
             }
         }

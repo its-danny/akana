@@ -32,7 +32,7 @@ pub(crate) fn start_authenticating_new_clients(
         if authenticating.state == AuthState::Initial {
             authenticating.state = AuthState::AwaitingName;
 
-            server.send("What's your name?", player.0);
+            server.send("What's your name?", player.id);
         }
     }
 }
@@ -49,14 +49,14 @@ pub(crate) fn perform_authentication(
 ) {
     for message in messages.iter() {
         if let Some((entity, player, mut authenticating)) =
-            players.iter_mut().find(|p| p.1 .0 == message.id)
+            players.iter_mut().find(|p| p.1.id == message.id)
         {
             match authenticating.state {
                 AuthState::AwaitingName => {
                     // Validate the name. Currently, that just means it's
                     // more than 3 letters long.
                     if message.body.len() < 3 {
-                        server.send("That's not a valid name. Try again!", player.0);
+                        server.send("That's not a valid name. Try again!", player.id);
 
                         break;
                     }
@@ -66,17 +66,17 @@ pub(crate) fn perform_authentication(
                             // If the user already exists we want to skip straight to asking
                             // for their password. We send this telnet command along with it
                             // so that their client won't echo back their passwor.
-                            server.send_command([Iac as u8, Will as u8, Echo as u8], player.0);
-                            server.send("What's your your password?", player.0);
+                            server.send_command([Iac as u8, Will as u8, Echo as u8], player.id);
+                            server.send("What's your your password?", player.id);
                         }
                         StatusCode::NOT_FOUND => {
                             // If the user is not found, we do the same, but letting them
                             // know this will be a new account.
-                            server.send_command([Iac as u8, Will as u8, Echo as u8], player.0);
-                            server.send("Looks like this is a new character. What password would you like to use?", player.0);
+                            server.send_command([Iac as u8, Will as u8, Echo as u8], player.id);
+                            server.send("Looks like this is a new character. What password would you like to use?", player.id);
                         }
                         _ => {
-                            server.send("Uh oh, something broke!", player.0);
+                            server.send("Uh oh, something broke!", player.id);
                         }
                     }
 
@@ -89,7 +89,7 @@ pub(crate) fn perform_authentication(
                     // Validate the name. Currently, that just means it's
                     // more than 3 letters long.
                     if message.body.len() < 3 {
-                        server.send("That's not a valid password. Try again!", player.0);
+                        server.send("That's not a valid password. Try again!", player.id);
 
                         break;
                     }
@@ -105,11 +105,11 @@ pub(crate) fn perform_authentication(
                             // If the user's password is correct, let them know and
                             // send another telnet command letting their client know it's
                             // ok to echo input again.
-                            server.send_command([Iac as u8, Wont as u8, Echo as u8], player.0);
-                            server.send("Authenticated.", player.0);
+                            server.send_command([Iac as u8, Wont as u8, Echo as u8], player.id);
+                            server.send("Authenticated.", player.id);
 
                             // Send the prompt.
-                            prompts.send(PromptEvent(player.0));
+                            prompts.send(PromptEvent(player.id));
 
                             // Remove `Authenticating` now that we're done.
                             commands.entity(entity).remove::<Authenticating>();
@@ -124,10 +124,10 @@ pub(crate) fn perform_authentication(
                         }
                         StatusCode::FORBIDDEN => {
                             // If their password was not correct, let them try again.
-                            server.send("Incorrect password. Try again!", player.0);
+                            server.send("Incorrect password. Try again!", player.id);
                         }
                         _ => {
-                            server.send("Uh oh, something broke!", player.0);
+                            server.send("Uh oh, something broke!", player.id);
                         }
                     }
                 }

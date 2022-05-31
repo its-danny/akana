@@ -1,9 +1,10 @@
 use bevy::prelude::*;
+use chrono::{Local as LocalTime, Timelike};
 use ldtk_rust::Project;
 
 use crate::{spatial::components::Position, world::components::Tile};
 
-use super::resources::NewPlayerSpawn;
+use super::resources::{NewPlayerSpawn, WorldTime, WorldTimePart};
 
 /// Load `assets/world.ldtk` and spawn a whole lot of entitites.
 ///
@@ -44,4 +45,19 @@ pub(crate) fn setup_world(mut commands: Commands, mut new_player_spawn: ResMut<N
             new_player_spawn.0 = IVec3::new(x, y, 0);
         }
     }
+}
+
+pub(crate) fn update_world_time(mut time: ResMut<WorldTime>) {
+    time.time = LocalTime::now();
+
+    time.part = match time.time.hour() {
+        // 5am - 6am is Dawn
+        5 => WorldTimePart::Dawn,
+        // 6am - 7pm is Day
+        6..=19 => WorldTimePart::Day,
+        // 8pm is Dusk
+        20 => WorldTimePart::Dusk,
+        // 8pm - 4am is Night
+        _ => WorldTimePart::Night,
+    };
 }

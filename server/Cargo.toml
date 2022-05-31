@@ -6,6 +6,8 @@ edition = "2021"
 [dependencies]
 api = { path = "../api" }
 bevy = { version = "0.7.0", default-features = false }
+chrono = "0.4.19"
+colored = "2.0.0"
 crossbeam-channel = "0.5.4"
 dashmap = "5.2.0"
 dotenv = "0.15.0"
