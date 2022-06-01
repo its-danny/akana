@@ -1,5 +1,5 @@
 use bevy::prelude::*;
-use colored::Colorize;
+use yansi::Paint;
 
 use crate::{
     auth::components::{Authenticating, Online},
@@ -66,7 +66,7 @@ pub(crate) fn send_prompt(
 ) {
     for event in prompts.iter() {
         if let Some(player) = players.iter().find(|p| p.0.id == event.0) {
-            let name = player.1.name.white().bold();
+            let name = Paint::white(&player.1.name).bold();
             let time = world_time.time.format("%-l:%M%P").to_string();
 
             let world_status = "[{time}] >";
@@ -76,8 +76,8 @@ pub(crate) fn send_prompt(
                 "{}{}{} {}",
                 "[",
                 match world_time.part {
-                    WorldTimePart::Dawn | WorldTimePart::Day => time.yellow(),
-                    WorldTimePart::Dusk | WorldTimePart::Night => time.blue(),
+                    WorldTimePart::Dawn | WorldTimePart::Day => Paint::yellow(time),
+                    WorldTimePart::Dusk | WorldTimePart::Night => Paint::blue(time),
                 },
                 "]",
                 ">"

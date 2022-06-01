@@ -10,7 +10,7 @@
 	},
 	"jsonVersion": "1.1.3",
 	"appBuildId": 458364,
-	"nextUid": 7,
+	"nextUid": 10,
 	"identifierStyle": "Capitalize",
 	"worldLayout": "Free",
 	"worldGridWidth": 256,
@@ -95,20 +95,20 @@
 			"tags": [],
 			"width": 16,
 			"height": 16,
-			"resizableX": false,
-			"resizableY": false,
+			"resizableX": true,
+			"resizableY": true,
 			"keepAspectRatio": false,
 			"tileOpacity": 1,
-			"fillOpacity": 0.08,
-			"lineOpacity": 0,
+			"fillOpacity": 1,
+			"lineOpacity": 1,
 			"hollow": false,
-			"color": "#94D9B3",
-			"renderMode": "Tile",
+			"color": "#282828",
+			"renderMode": "Rectangle",
 			"showName": true,
-			"tilesetId": 4,
-			"tileId": 288,
+			"tilesetId": null,
+			"tileId": null,
 			"tileRenderMode": "FitInside",
-			"tileRect": { "tilesetUid": 4, "x": 0, "y": 288, "w": 16, "h": 16 },
+			"tileRect": null,
 			"nineSliceBorders": [],
 			"maxCount": 0,
 			"limitScope": "PerLevel",
@@ -125,8 +125,98 @@
 					"canBeNull": false,
 					"arrayMinLength": null,
 					"arrayMaxLength": null,
+					"editorDisplayMode": "Hidden",
+					"editorDisplayPos": "Center",
+					"editorAlwaysShow": false,
+					"editorCutLongValues": true,
+					"editorTextSuffix": null,
+					"editorTextPrefix": null,
+					"useForSmartColor": false,
+					"min": null,
+					"max": null,
+					"regex": null,
+					"acceptFileTypes": null,
+					"defaultOverride": null,
+					"textLanguageMode": null,
+					"symmetricalRef": false,
+					"autoChainRef": true,
+					"allowOutOfLevelRef": true,
+					"allowedRefs": "OnlySame",
+					"allowedRefTags": [],
+					"tilesetUid": null
+				},
+				{
+					"identifier": "description",
+					"__type": "String",
+					"uid": 7,
+					"type": "F_String",
+					"isArray": false,
+					"canBeNull": true,
+					"arrayMinLength": null,
+					"arrayMaxLength": null,
+					"editorDisplayMode": "Hidden",
+					"editorDisplayPos": "Above",
+					"editorAlwaysShow": false,
+					"editorCutLongValues": true,
+					"editorTextSuffix": null,
+					"editorTextPrefix": null,
+					"useForSmartColor": false,
+					"min": null,
+					"max": null,
+					"regex": null,
+					"acceptFileTypes": null,
+					"defaultOverride": null,
+					"textLanguageMode": null,
+					"symmetricalRef": false,
+					"autoChainRef": true,
+					"allowOutOfLevelRef": true,
+					"allowedRefs": "OnlySame",
+					"allowedRefTags": [],
+					"tilesetUid": null
+				},
+				{
+					"identifier": "sprite",
+					"__type": "String",
+					"uid": 8,
+					"type": "F_String",
+					"isArray": false,
+					"canBeNull": true,
+					"arrayMinLength": null,
+					"arrayMaxLength": null,
 					"editorDisplayMode": "ValueOnly",
 					"editorDisplayPos": "Center",
+					"editorAlwaysShow": false,
+					"editorCutLongValues": true,
+					"editorTextSuffix": null,
+					"editorTextPrefix": null,
+					"useForSmartColor": false,
+					"min": null,
+					"max": null,
+					"regex": null,
+					"acceptFileTypes": null,
+					"defaultOverride": {
+						"id": "V_String",
+						"params": ["."]
+					},
+					"textLanguageMode": null,
+					"symmetricalRef": false,
+					"autoChainRef": true,
+					"allowOutOfLevelRef": true,
+					"allowedRefs": "OnlySame",
+					"allowedRefTags": [],
+					"tilesetUid": null
+				},
+				{
+					"identifier": "color",
+					"__type": "String",
+					"uid": 9,
+					"type": "F_String",
+					"isArray": false,
+					"canBeNull": true,
+					"arrayMinLength": null,
+					"arrayMaxLength": null,
+					"editorDisplayMode": "Hidden",
+					"editorDisplayPos": "Above",
 					"editorAlwaysShow": false,
 					"editorCutLongValues": true,
 					"editorTextSuffix": null,
@@ -157,18 +247,18 @@
 			"resizableY": false,
 			"keepAspectRatio": false,
 			"tileOpacity": 1,
-			"fillOpacity": 0.08,
-			"lineOpacity": 0,
-			"hollow": false,
-			"color": "#43F377",
-			"renderMode": "Tile",
+			"fillOpacity": 1,
+			"lineOpacity": 1,
+			"hollow": true,
+			"color": "#2CD1A6",
+			"renderMode": "Rectangle",
 			"showName": true,
-			"tilesetId": 4,
-			"tileId": 240,
+			"tilesetId": null,
+			"tileId": null,
 			"tileRenderMode": "FitInside",
-			"tileRect": { "tilesetUid": 4, "x": 0, "y": 240, "w": 16, "h": 16 },
+			"tileRect": null,
 			"nineSliceBorders": [],
-			"maxCount": 0,
+			"maxCount": 1,
 			"limitScope": "PerLevel",
 			"limitBehavior": "MoveLastOne",
 			"pivotX": 0,
@@ -204,11 +294,11 @@
 			"identifier": "Level_0",
 			"iid": "f2959250-dbe0-11ec-ac7b-f7dcc3e0c2da",
 			"uid": 0,
-			"worldX": 0,
-			"worldY": 0,
+			"worldX": -48,
+			"worldY": -48,
 			"worldDepth": 0,
-			"pxWid": 160,
-			"pxHei": 144,
+			"pxWid": 240,
+			"pxHei": 240,
 			"__bgColor": "#696A79",
 			"bgColor": null,
 			"useAutoIdentifier": true,
@@ -224,8 +314,8 @@
 				{
 					"__identifier": "New_Player_Spawn",
 					"__type": "Entities",
-					"__cWid": 10,
-					"__cHei": 9,
+					"__cWid": 15,
+					"__cHei": 15,
 					"__gridSize": 16,
 					"__opacity": 1,
 					"__pxTotalOffsetX": 0,
@@ -247,16 +337,16 @@
 					"entityInstances": [
 						{
 							"__identifier": "New_Player_Spawn",
-							"__grid": [3,5],
+							"__grid": [5,9],
 							"__pivot": [0,0],
 							"__tags": [],
-							"__tile": { "tilesetUid": 4, "x": 0, "y": 240, "w": 16, "h": 16 },
-							"__smartColor": "#43F377",
-							"iid": "589306c0-dbe0-11ec-98f5-f330bd804b8a",
+							"__tile": null,
+							"__smartColor": "#2CD1A6",
+							"iid": "95f87c50-dbe0-11ec-84fe-6d82a90f2525",
 							"width": 16,
 							"height": 16,
 							"defUid": 5,
-							"px": [48,80],
+							"px": [80,144],
 							"fieldInstances": []
 						}
 					]
@@ -264,8 +354,8 @@
 				{
 					"__identifier": "Tiles",
 					"__type": "Entities",
-					"__cWid": 10,
-					"__cHei": 9,
+					"__cWid": 15,
+					"__cHei": 15,
 					"__gridSize": 16,
 					"__opacity": 1,
 					"__pxTotalOffsetX": 0,
@@ -287,156 +377,251 @@
 					"entityInstances": [
 						{
 							"__identifier": "Tile",
-							"__grid": [4,4],
+							"__grid": [0,4],
 							"__pivot": [0,0],
 							"__tags": [],
-							"__tile": { "tilesetUid": 4, "x": 0, "y": 288, "w": 16, "h": 16 },
-							"__smartColor": "#94D9B3",
-							"iid": "b093a030-dbe0-11ec-98f5-a98c16c13f09",
-							"width": 16,
-							"height": 16,
+							"__tile": null,
+							"__smartColor": "#282828",
+							"iid": "4767b5f0-dbe0-11ec-84fe-677d493ae662",
+							"width": 128,
+							"height": 112,
 							"defUid": 1,
-							"px": [64,64],
-							"fieldInstances": [{ "__identifier": "name", "__value": "Central Room", "__type": "String", "__tile": null, "defUid": 2, "realEditorValues": [{
-								"id": "V_String",
-								"params": ["Central Room"]
-							}] }]
+							"px": [0,64],
+							"fieldInstances": [
+								{ "__identifier": "name", "__value": "Outside", "__type": "String", "__tile": null, "defUid": 2, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["Outside"]
+								}] },
+								{ "__identifier": "description", "__value": "Outside of some building.", "__type": "String", "__tile": null, "defUid": 7, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["Outside of some building."]
+								}] },
+								{ "__identifier": "sprite", "__value": ".", "__type": "String", "__tile": null, "defUid": 8, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["."]
+								}] },
+								{ "__identifier": "color", "__value": "black_bold", "__type": "String", "__tile": null, "defUid": 9, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["black_bold"]
+								}] }
+							]
 						},
 						{
 							"__identifier": "Tile",
-							"__grid": [4,5],
+							"__grid": [8,7],
 							"__pivot": [0,0],
 							"__tags": [],
-							"__tile": { "tilesetUid": 4, "x": 0, "y": 288, "w": 16, "h": 16 },
-							"__smartColor": "#94D9B3",
-							"iid": "4554d110-dbe0-11ec-98f5-3b8f57feaf15",
+							"__tile": null,
+							"__smartColor": "#282828",
+							"iid": "dab02650-dbe0-11ec-84fe-edc853212947",
 							"width": 16,
 							"height": 16,
 							"defUid": 1,
-							"px": [64,80],
-							"fieldInstances": [{ "__identifier": "name", "__value": "S Room", "__type": "String", "__tile": null, "defUid": 2, "realEditorValues": [{
-								"id": "V_String",
-								"params": ["S Room"]
-							}] }]
+							"px": [128,112],
+							"fieldInstances": [
+								{ "__identifier": "name", "__value": "Door", "__type": "String", "__tile": null, "defUid": 2, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["Door"]
+								}] },
+								{ "__identifier": "description", "__value": "N/A", "__type": "String", "__tile": null, "defUid": 7, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["N/A"]
+								}] },
+								{ "__identifier": "sprite", "__value": "|", "__type": "String", "__tile": null, "defUid": 8, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["|"]
+								}] },
+								{ "__identifier": "color", "__value": "white_bold", "__type": "String", "__tile": null, "defUid": 9, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["white_bold"]
+								}] }
+							]
 						},
 						{
 							"__identifier": "Tile",
-							"__grid": [5,5],
+							"__grid": [8,8],
 							"__pivot": [0,0],
 							"__tags": [],
-							"__tile": { "tilesetUid": 4, "x": 0, "y": 288, "w": 16, "h": 16 },
-							"__smartColor": "#94D9B3",
-							"iid": "ecf26dc0-dbe0-11ec-98f5-cd9b9a0d234a",
+							"__tile": null,
+							"__smartColor": "#282828",
+							"iid": "db5bcfa0-dbe0-11ec-84fe-7bc95d76945f",
 							"width": 16,
-							"height": 16,
+							"height": 48,
 							"defUid": 1,
-							"px": [80,80],
-							"fieldInstances": [{ "__identifier": "name", "__value": "SE Room", "__type": "String", "__tile": null, "defUid": 2, "realEditorValues": [{
-								"id": "V_String",
-								"params": ["SE Room"]
-							}] }]
+							"px": [128,128],
+							"fieldInstances": [
+								{ "__identifier": "name", "__value": "Wall", "__type": "String", "__tile": null, "defUid": 2, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["Wall"]
+								}] },
+								{ "__identifier": "description", "__value": "N/A", "__type": "String", "__tile": null, "defUid": 7, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["N/A"]
+								}] },
+								{ "__identifier": "sprite", "__value": "#", "__type": "String", "__tile": null, "defUid": 8, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["#"]
+								}] },
+								{ "__identifier": "color", "__value": "black_bold", "__type": "String", "__tile": null, "defUid": 9, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["black_bold"]
+								}] }
+							]
 						},
 						{
 							"__identifier": "Tile",
-							"__grid": [5,4],
+							"__grid": [8,4],
 							"__pivot": [0,0],
 							"__tags": [],
-							"__tile": { "tilesetUid": 4, "x": 0, "y": 288, "w": 16, "h": 16 },
-							"__smartColor": "#94D9B3",
-							"iid": "ed604ac0-dbe0-11ec-98f5-b1d7285f3aa8",
+							"__tile": null,
+							"__smartColor": "#282828",
+							"iid": "0925c3f0-dbe0-11ec-84fe-c5909f43cca9",
 							"width": 16,
-							"height": 16,
+							"height": 48,
 							"defUid": 1,
-							"px": [80,64],
-							"fieldInstances": [{ "__identifier": "name", "__value": "E Room", "__type": "String", "__tile": null, "defUid": 2, "realEditorValues": [{
-								"id": "V_String",
-								"params": ["E Room"]
-							}] }]
+							"px": [128,64],
+							"fieldInstances": [
+								{ "__identifier": "name", "__value": "Wall", "__type": "String", "__tile": null, "defUid": 2, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["Wall"]
+								}] },
+								{ "__identifier": "description", "__value": "N/A", "__type": "String", "__tile": null, "defUid": 7, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["N/A"]
+								}] },
+								{ "__identifier": "sprite", "__value": "#", "__type": "String", "__tile": null, "defUid": 8, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["#"]
+								}] },
+								{ "__identifier": "color", "__value": "black_bold", "__type": "String", "__tile": null, "defUid": 9, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["black_bold"]
+								}] }
+							]
 						},
 						{
 							"__identifier": "Tile",
-							"__grid": [5,3],
+							"__grid": [9,4],
 							"__pivot": [0,0],
 							"__tags": [],
-							"__tile": { "tilesetUid": 4, "x": 0, "y": 288, "w": 16, "h": 16 },
-							"__smartColor": "#94D9B3",
-							"iid": "edbfcfe0-dbe0-11ec-98f5-23f439dc8bc6",
-							"width": 16,
+							"__tile": null,
+							"__smartColor": "#282828",
+							"iid": "6943efa0-dbe0-11ec-84fe-99510a381bd5",
+							"width": 48,
 							"height": 16,
 							"defUid": 1,
-							"px": [80,48],
-							"fieldInstances": [{ "__identifier": "name", "__value": "NE Room", "__type": "String", "__tile": null, "defUid": 2, "realEditorValues": [{
-								"id": "V_String",
-								"params": ["NE Room"]
-							}] }]
+							"px": [144,64],
+							"fieldInstances": [
+								{ "__identifier": "name", "__value": "Wall", "__type": "String", "__tile": null, "defUid": 2, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["Wall"]
+								}] },
+								{ "__identifier": "description", "__value": "N/A", "__type": "String", "__tile": null, "defUid": 7, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["N/A"]
+								}] },
+								{ "__identifier": "sprite", "__value": "#", "__type": "String", "__tile": null, "defUid": 8, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["#"]
+								}] },
+								{ "__identifier": "color", "__value": "black_bold", "__type": "String", "__tile": null, "defUid": 9, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["black_bold"]
+								}] }
+							]
 						},
 						{
 							"__identifier": "Tile",
-							"__grid": [4,3],
+							"__grid": [11,5],
 							"__pivot": [0,0],
 							"__tags": [],
-							"__tile": { "tilesetUid": 4, "x": 0, "y": 288, "w": 16, "h": 16 },
-							"__smartColor": "#94D9B3",
-							"iid": "ee511360-dbe0-11ec-98f5-a7cf71cf002b",
+							"__tile": null,
+							"__smartColor": "#282828",
+							"iid": "6d55a750-dbe0-11ec-84fe-ad8983affaee",
 							"width": 16,
-							"height": 16,
+							"height": 80,
 							"defUid": 1,
-							"px": [64,48],
-							"fieldInstances": [{ "__identifier": "name", "__value": "N Room", "__type": "String", "__tile": null, "defUid": 2, "realEditorValues": [{
-								"id": "V_String",
-								"params": ["N Room"]
-							}] }]
+							"px": [176,80],
+							"fieldInstances": [
+								{ "__identifier": "name", "__value": "Wall", "__type": "String", "__tile": null, "defUid": 2, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["Wall"]
+								}] },
+								{ "__identifier": "description", "__value": "N/A", "__type": "String", "__tile": null, "defUid": 7, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["N/A"]
+								}] },
+								{ "__identifier": "sprite", "__value": "#", "__type": "String", "__tile": null, "defUid": 8, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["#"]
+								}] },
+								{ "__identifier": "color", "__value": "black_bold", "__type": "String", "__tile": null, "defUid": 9, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["black_bold"]
+								}] }
+							]
 						},
 						{
 							"__identifier": "Tile",
-							"__grid": [3,4],
+							"__grid": [9,10],
 							"__pivot": [0,0],
 							"__tags": [],
-							"__tile": { "tilesetUid": 4, "x": 0, "y": 288, "w": 16, "h": 16 },
-							"__smartColor": "#94D9B3",
-							"iid": "eeb49020-dbe0-11ec-98f5-07a8fbd231a3",
-							"width": 16,
+							"__tile": null,
+							"__smartColor": "#282828",
+							"iid": "6f1d47f0-dbe0-11ec-84fe-8bb0da68f49e",
+							"width": 48,
 							"height": 16,
 							"defUid": 1,
-							"px": [48,64],
-							"fieldInstances": [{ "__identifier": "name", "__value": "W Room", "__type": "String", "__tile": null, "defUid": 2, "realEditorValues": [{
-								"id": "V_String",
-								"params": ["W Room"]
-							}] }]
+							"px": [144,160],
+							"fieldInstances": [
+								{ "__identifier": "name", "__value": "Wall", "__type": "String", "__tile": null, "defUid": 2, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["Wall"]
+								}] },
+								{ "__identifier": "description", "__value": "N/A", "__type": "String", "__tile": null, "defUid": 7, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["N/A"]
+								}] },
+								{ "__identifier": "sprite", "__value": "#", "__type": "String", "__tile": null, "defUid": 8, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["#"]
+								}] },
+								{ "__identifier": "color", "__value": "black_bold", "__type": "String", "__tile": null, "defUid": 9, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["black_bold"]
+								}] }
+							]
 						},
 						{
 							"__identifier": "Tile",
-							"__grid": [3,3],
+							"__grid": [9,5],
 							"__pivot": [0,0],
 							"__tags": [],
-							"__tile": { "tilesetUid": 4, "x": 0, "y": 288, "w": 16, "h": 16 },
-							"__smartColor": "#94D9B3",
-							"iid": "efa0ebf0-dbe0-11ec-98f5-4f5e4243e26c",
-							"width": 16,
-							"height": 16,
+							"__tile": null,
+							"__smartColor": "#282828",
+							"iid": "700c89f0-dbe0-11ec-84fe-95c7cfd2b4ca",
+							"width": 32,
+							"height": 80,
 							"defUid": 1,
-							"px": [48,48],
-							"fieldInstances": [{ "__identifier": "name", "__value": "NW Room", "__type": "String", "__tile": null, "defUid": 2, "realEditorValues": [{
-								"id": "V_String",
-								"params": ["NW Room"]
-							}] }]
-						},
-						{
-							"__identifier": "Tile",
-							"__grid": [3,5],
-							"__pivot": [0,0],
-							"__tags": [],
-							"__tile": { "tilesetUid": 4, "x": 0, "y": 288, "w": 16, "h": 16 },
-							"__smartColor": "#94D9B3",
-							"iid": "f0079d00-dbe0-11ec-98f5-c3a964e47b18",
-							"width": 16,
-							"height": 16,
-							"defUid": 1,
-							"px": [48,80],
-							"fieldInstances": [{ "__identifier": "name", "__value": "SW Room", "__type": "String", "__tile": null, "defUid": 2, "realEditorValues": [{
-								"id": "V_String",
-								"params": ["SW Room"]
-							}] }]
+							"px": [144,80],
+							"fieldInstances": [
+								{ "__identifier": "name", "__value": "Inside", "__type": "String", "__tile": null, "defUid": 2, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["Inside"]
+								}] },
+								{ "__identifier": "description", "__value": "Inside of some building.", "__type": "String", "__tile": null, "defUid": 7, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["Inside of some building."]
+								}] },
+								{ "__identifier": "sprite", "__value": ".", "__type": "String", "__tile": null, "defUid": 8, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["."]
+								}] },
+								{ "__identifier": "color", "__value": "black_bold", "__type": "String", "__tile": null, "defUid": 9, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["black_bold"]
+								}] }
+							]
 						}
 					]
 				}

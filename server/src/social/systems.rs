@@ -1,7 +1,7 @@
 use bevy::prelude::*;
-use colored::Colorize;
 use lazy_static::lazy_static;
 use regex::Regex;
+use yansi::Paint;
 
 use crate::{
     auth::components::Online,
@@ -25,7 +25,7 @@ pub(crate) fn say(
             if let Some(captures) = CMD.captures(&message.body.to_lowercase()) {
                 if let Some(phrase) = captures.get(3) {
                     server.send(
-                        &format!("You say \"{}\"", phrase.as_str().white().bold()),
+                        &format!("You say \"{}\"", Paint::white(phrase.as_str()).bold()),
                         player.0.id,
                     );
 
@@ -36,8 +36,8 @@ pub(crate) fn say(
                             server.send(
                                 &format!(
                                     "{} said \"{}\"",
-                                    player.2.name.cyan(),
-                                    phrase.as_str().trim().white().bold()
+                                    Paint::cyan(&player.2.name),
+                                    Paint::white(phrase.as_str().trim()).bold()
                                 ),
                                 p.0.id,
                             )
