@@ -2,7 +2,10 @@ use bevy::prelude::*;
 use chrono::{Local as LocalTime, Timelike};
 use ldtk_rust::Project;
 
-use crate::{spatial::components::Position, world::components::Tile};
+use crate::{
+    spatial::components::{Collider, Position},
+    world::components::Tile,
+};
 
 use super::resources::{NewPlayerSpawn, WorldTime, WorldTimePart};
 
@@ -15,7 +18,21 @@ pub(crate) fn setup_world(mut commands: Commands, mut new_player_spawn: ResMut<N
     for layer in layers.iter().rev() {
         if layer.identifier == "Tiles" {
             for entity in &layer.entity_instances {
-                let fields: [&str; 4] = ["name", "description", "sprite", "color"].map(|field| {
+                let str_fields: [&str; 4] =
+                    ["name", "description", "sprite", "color"].map(|field| {
+                        entity
+                            .field_instances
+                            .iter()
+                            .find(|f| f.identifier == field)
+                            .unwrap_or_else(|| panic!("Could not find `{field}` field"))
+                            .value
+                            .as_ref()
+                            .unwrap_or_else(|| panic!("Could not get `{field}` value"))
+                            .as_str()
+                            .unwrap_or_else(|| panic!("Could not get `{field}` as str"))
+                    });
+
+                let bool_fields: [bool; 1] = ["collision"].map(|field| {
                     entity
                         .field_instances
                         .iter()
@@ -24,8 +41,8 @@ pub(crate) fn setup_world(mut commands: Commands, mut new_player_spawn: ResMut<N
                         .value
                         .as_ref()
                         .unwrap_or_else(|| panic!("Could not get `{field}` value"))
-                        .as_str()
-                        .unwrap_or_else(|| panic!("Could not get `{field}` as str"))
+                        .as_bool()
+                        .unwrap_or_else(|| panic!("Could not get `{field}` as bool"))
                 });
 
                 // An entity in LDTK can span multiple grid points.
@@ -36,15 +53,21 @@ pub(crate) fn setup_world(mut commands: Commands, mut new_player_spawn: ResMut<N
                         let x: i32 = (x + entity.grid.get(0).unwrap()).try_into().unwrap();
                         let y: i32 = (y + entity.grid.get(1).unwrap()).try_into().unwrap();
 
-                        commands.spawn().insert_bundle((
+                        let mut entity = commands.spawn();
+
+                        entity.insert_bundle((
                             Tile {
-                                name: fields[0].to_string(),
-                                description: fields[1].to_string(),
-                                sprite: fields[2].to_string(),
-                                color: fields[3].to_string(),
+                                name: str_fields[0].to_string(),
+                                description: str_fields[1].to_string(),
+                                sprite: str_fields[2].to_string(),
+                                color: str_fields[3].to_string(),
                             },
                             Position(IVec3::new(x, y, 0)),
                         ));
+
+                        if bool_fields[0] {
+                            entity.insert(Collider);
+                        }
                     }
                 }
             }

@@ -10,7 +10,7 @@ use crate::{
     world::components::{Tile, TilePaint},
 };
 
-use super::components::Position;
+use super::components::{Collider, Position};
 
 /// Handles the `look` command.
 pub(crate) fn look(
@@ -95,11 +95,12 @@ pub(crate) fn map(
 }
 
 /// Handles movement commands.
+#[allow(clippy::type_complexity)]
 pub(crate) fn movement(
     server: Res<NetworkServer>,
     mut message_reader: EventReader<NetworkMessage>,
     mut players: Query<(&Client, &mut Position), With<Online>>,
-    tiles: Query<(&Tile, &Position), Without<Client>>,
+    tiles: Query<(&Tile, &Position), (Without<Client>, Without<Collider>)>,
 ) {
     lazy_static! {
         static ref CMD: Regex = Regex::new(

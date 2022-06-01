@@ -10,7 +10,7 @@
 	},
 	"jsonVersion": "1.1.3",
 	"appBuildId": 458364,
-	"nextUid": 10,
+	"nextUid": 11,
 	"identifierStyle": "Capitalize",
 	"worldLayout": "Free",
 	"worldGridWidth": 256,
@@ -151,7 +151,7 @@
 					"uid": 7,
 					"type": "F_String",
 					"isArray": false,
-					"canBeNull": true,
+					"canBeNull": false,
 					"arrayMinLength": null,
 					"arrayMaxLength": null,
 					"editorDisplayMode": "Hidden",
@@ -213,6 +213,35 @@
 					"type": "F_String",
 					"isArray": false,
 					"canBeNull": true,
+					"arrayMinLength": null,
+					"arrayMaxLength": null,
+					"editorDisplayMode": "Hidden",
+					"editorDisplayPos": "Above",
+					"editorAlwaysShow": false,
+					"editorCutLongValues": true,
+					"editorTextSuffix": null,
+					"editorTextPrefix": null,
+					"useForSmartColor": false,
+					"min": null,
+					"max": null,
+					"regex": null,
+					"acceptFileTypes": null,
+					"defaultOverride": null,
+					"textLanguageMode": null,
+					"symmetricalRef": false,
+					"autoChainRef": true,
+					"allowOutOfLevelRef": true,
+					"allowedRefs": "OnlySame",
+					"allowedRefTags": [],
+					"tilesetUid": null
+				},
+				{
+					"identifier": "collision",
+					"__type": "Bool",
+					"uid": 10,
+					"type": "F_Bool",
+					"isArray": false,
+					"canBeNull": false,
 					"arrayMinLength": null,
 					"arrayMaxLength": null,
 					"editorDisplayMode": "Hidden",
@@ -403,7 +432,8 @@
 								{ "__identifier": "color", "__value": "black_bold", "__type": "String", "__tile": null, "defUid": 9, "realEditorValues": [{
 									"id": "V_String",
 									"params": ["black_bold"]
-								}] }
+								}] },
+								{ "__identifier": "collision", "__value": false, "__type": "Bool", "__tile": null, "defUid": 10, "realEditorValues": [] }
 							]
 						},
 						{
@@ -434,7 +464,8 @@
 								{ "__identifier": "color", "__value": "white_bold", "__type": "String", "__tile": null, "defUid": 9, "realEditorValues": [{
 									"id": "V_String",
 									"params": ["white_bold"]
-								}] }
+								}] },
+								{ "__identifier": "collision", "__value": false, "__type": "Bool", "__tile": null, "defUid": 10, "realEditorValues": [] }
 							]
 						},
 						{
@@ -465,6 +496,10 @@
 								{ "__identifier": "color", "__value": "black_bold", "__type": "String", "__tile": null, "defUid": 9, "realEditorValues": [{
 									"id": "V_String",
 									"params": ["black_bold"]
+								}] },
+								{ "__identifier": "collision", "__value": true, "__type": "Bool", "__tile": null, "defUid": 10, "realEditorValues": [{
+									"id": "V_Bool",
+									"params": [ true ]
 								}] }
 							]
 						},
@@ -496,6 +531,10 @@
 								{ "__identifier": "color", "__value": "black_bold", "__type": "String", "__tile": null, "defUid": 9, "realEditorValues": [{
 									"id": "V_String",
 									"params": ["black_bold"]
+								}] },
+								{ "__identifier": "collision", "__value": true, "__type": "Bool", "__tile": null, "defUid": 10, "realEditorValues": [{
+									"id": "V_Bool",
+									"params": [ true ]
 								}] }
 							]
 						},
@@ -527,6 +566,10 @@
 								{ "__identifier": "color", "__value": "black_bold", "__type": "String", "__tile": null, "defUid": 9, "realEditorValues": [{
 									"id": "V_String",
 									"params": ["black_bold"]
+								}] },
+								{ "__identifier": "collision", "__value": true, "__type": "Bool", "__tile": null, "defUid": 10, "realEditorValues": [{
+									"id": "V_Bool",
+									"params": [ true ]
 								}] }
 							]
 						},
@@ -558,6 +601,10 @@
 								{ "__identifier": "color", "__value": "black_bold", "__type": "String", "__tile": null, "defUid": 9, "realEditorValues": [{
 									"id": "V_String",
 									"params": ["black_bold"]
+								}] },
+								{ "__identifier": "collision", "__value": true, "__type": "Bool", "__tile": null, "defUid": 10, "realEditorValues": [{
+									"id": "V_Bool",
+									"params": [ true ]
 								}] }
 							]
 						},
@@ -589,6 +636,10 @@
 								{ "__identifier": "color", "__value": "black_bold", "__type": "String", "__tile": null, "defUid": 9, "realEditorValues": [{
 									"id": "V_String",
 									"params": ["black_bold"]
+								}] },
+								{ "__identifier": "collision", "__value": true, "__type": "Bool", "__tile": null, "defUid": 10, "realEditorValues": [{
+									"id": "V_Bool",
+									"params": [ true ]
 								}] }
 							]
 						},
@@ -620,7 +671,8 @@
 								{ "__identifier": "color", "__value": "black_bold", "__type": "String", "__tile": null, "defUid": 9, "realEditorValues": [{
 									"id": "V_String",
 									"params": ["black_bold"]
-								}] }
+								}] },
+								{ "__identifier": "collision", "__value": false, "__type": "Bool", "__tile": null, "defUid": 10, "realEditorValues": [] }
 							]
 						}
 					]
