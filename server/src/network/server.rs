@@ -164,9 +164,11 @@ impl NetworkServer {
                             .to_string();
 
                         if !message.is_empty() {
-                            if let Err(error) =
-                                inbox_sender.send(NetworkMessage { id, body: message })
-                            {
+                            if let Err(error) = inbox_sender.send(NetworkMessage {
+                                id,
+                                body: message,
+                                internal: false,
+                            }) {
                                 error!("Could not send to inbox: {error}");
                             }
                         }
@@ -232,6 +234,7 @@ impl NetworkServer {
                 Some(NetworkMessage {
                     id,
                     body: format!("{message}\r\n"),
+                    internal: false,
                 }),
             )) {
                 error!("Could not send to outbox: {error}");

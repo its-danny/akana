@@ -25,7 +25,7 @@ pub fn map(
         if CMD.is_match(&message.body.to_lowercase()) {
             if let Some((client, position)) = players.iter().find(|(c, _)| c.id == message.id) {
                 const MAP_WIDTH: i32 = 80;
-                const MAP_HEIGHT: i32 = 20;
+                const MAP_HEIGHT: i32 = 10;
 
                 let mut map: [[Paint<&str>; MAP_WIDTH as usize]; MAP_HEIGHT as usize] =
                     [[Paint::new(" "); MAP_WIDTH as usize]; MAP_HEIGHT as usize];

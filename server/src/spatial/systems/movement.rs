@@ -3,7 +3,10 @@ use lazy_static::lazy_static;
 use regex::Regex;
 
 use crate::{
-    network::{events::NetworkMessage, server::NetworkServer},
+    network::{
+        events::NetworkMessage,
+        server::{ConnectionId, NetworkServer},
+    },
     player::components::{client::Client, online::Online},
     spatial::components::{collider::Collider, position::Position},
     world::components::tile::Tile,
@@ -13,7 +16,7 @@ use crate::{
 #[allow(clippy::type_complexity)]
 pub fn movement(
     server: Res<NetworkServer>,
-    mut messages: EventReader<NetworkMessage>,
+    mut messages: ParamSet<(EventReader<NetworkMessage>, EventWriter<NetworkMessage>)>,
     mut players: Query<(&Client, &mut Position), With<Online>>,
     tiles: Query<&Position, (With<Tile>, Without<Client>)>,
     colliders: Query<&Position, (With<Collider>, Without<Client>)>,
@@ -25,7 +28,9 @@ pub fn movement(
         .unwrap();
     }
 
-    for message in messages.iter() {
+    let mut moved: Vec<ConnectionId> = Vec::new();
+
+    for message in messages.p0().iter() {
         if let Some((client, mut position)) = players.iter_mut().find(|p| p.0.id == message.id) {
             if let Some(captures) = CMD.captures(&message.body.to_lowercase()) {
                 let wanted_tile = match captures.get(0).unwrap().as_str() {
@@ -55,11 +60,23 @@ pub fn movement(
                         debug!("Moving {:?} to {:?}", client.id, tile);
 
                         position.0 = tile.0;
+
+                        moved.push(client.id);
                     }
                 } else {
                     server.send("You can't go that direction.", client.id);
                 }
             }
         }
+    }
+
+    for id in moved {
+        messages.p1().send({
+            NetworkMessage {
+                id,
+                body: "look".to_string(),
+                internal: true,
+            }
+        });
     }
 }
