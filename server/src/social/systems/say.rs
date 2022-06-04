@@ -4,14 +4,13 @@ use regex::Regex;
 use yansi::Paint;
 
 use crate::{
-    auth::components::Online,
     network::{events::NetworkMessage, server::NetworkServer},
-    player::components::{Character, Client},
-    spatial::components::Position,
+    player::components::{character::Character, client::Client, online::Online},
+    spatial::components::position::Position,
 };
 
 /// Broadcasts a message to anyone on the same tile as the sender.
-pub(crate) fn say(
+pub fn say(
     server: Res<NetworkServer>,
     mut messages: EventReader<NetworkMessage>,
     players: Query<(&Client, &Position, &Character), With<Online>>,
@@ -21,29 +20,31 @@ pub(crate) fn say(
     }
 
     for message in messages.iter() {
-        if let Some(player) = players.iter().find(|p| p.0.id == message.id) {
+        if let Some((client, position, character)) =
+            players.iter().find(|(c, _, _)| c.id == message.id)
+        {
             if let Some(captures) = CMD.captures(&message.body.to_lowercase()) {
                 if let Some(phrase) = captures.get(3) {
                     server.send(
                         &format!("You say \"{}\"", Paint::white(phrase.as_str()).bold()),
-                        player.0.id,
+                        client.id,
                     );
 
                     players
                         .iter()
-                        .filter(|p| p.1 .0 == player.1 .0 && p.0.id != player.0.id)
-                        .for_each(|p| {
+                        .filter(|(c, p, _)| p.0 == position.0 && c.id != client.id)
+                        .for_each(|(c, _, _)| {
                             server.send(
                                 &format!(
                                     "{} said \"{}\"",
-                                    Paint::cyan(&player.2.name),
+                                    Paint::cyan(&character.name),
                                     Paint::white(phrase.as_str().trim()).bold()
                                 ),
-                                p.0.id,
+                                c.id,
                             )
                         });
                 } else {
-                    server.send("Say what?", player.0.id);
+                    server.send("Say what?", client.id);
                 }
             }
         }

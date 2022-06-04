@@ -15,7 +15,7 @@ use super::{
     SyncChannel,
 };
 
-pub(crate) enum TelnetCommand {
+pub enum TelnetCommand {
     Iac = 255,
     Will = 251,
     Wont = 252,
@@ -23,8 +23,8 @@ pub(crate) enum TelnetCommand {
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
-pub(crate) struct ConnectionId {
-    pub(crate) uuid: Uuid,
+pub struct ConnectionId {
+    pub uuid: Uuid,
     address: SocketAddr,
 }
 
@@ -37,22 +37,22 @@ struct ClientConnection {
     outbox: SyncChannel<(Option<NetworkCommand>, Option<NetworkMessage>)>,
 }
 
-pub(crate) struct NetworkServer {
+pub struct NetworkServer {
     runtime: Runtime,
     /// Incoming connections
-    pub(crate) incoming: SyncChannel<IncomingConnection>,
+    pub incoming: SyncChannel<IncomingConnection>,
     /// Active clients
     clients: Arc<DashMap<ConnectionId, ClientConnection>>,
     /// Recently disconnected clients
-    pub(crate) lost: SyncChannel<ConnectionId>,
+    pub lost: SyncChannel<ConnectionId>,
     /// Network events
-    pub(crate) events: SyncChannel<NetworkEvent>,
+    pub events: SyncChannel<NetworkEvent>,
     /// Messages received from clients
-    pub(crate) inbox: SyncChannel<NetworkMessage>,
+    pub inbox: SyncChannel<NetworkMessage>,
 }
 
 impl NetworkServer {
-    pub(crate) fn new() -> Self {
+    pub fn new() -> Self {
         Self {
             runtime: Builder::new_multi_thread()
                 .enable_io()
@@ -66,7 +66,7 @@ impl NetworkServer {
         }
     }
 
-    pub(crate) fn listen(&self, address: impl ToSocketAddrs + Send + 'static) {
+    pub fn listen(&self, address: impl ToSocketAddrs + Send + 'static) {
         let incoming = self.incoming.sender.clone();
         let events = self.events.sender.clone();
 
@@ -105,7 +105,7 @@ impl NetworkServer {
         });
     }
 
-    pub(crate) fn setup_client(&self, connection: IncomingConnection) {
+    pub fn setup_client(&self, connection: IncomingConnection) {
         let outbox: SyncChannel<(Option<NetworkCommand>, Option<NetworkMessage>)> =
             SyncChannel::new();
 
@@ -213,7 +213,7 @@ impl NetworkServer {
         );
     }
 
-    pub(crate) fn remove_client(&self, id: ConnectionId) {
+    pub fn remove_client(&self, id: ConnectionId) {
         self.clients.remove(&id);
 
         if let Err(error) = self.events.sender.send(NetworkEvent::Disconnected(id)) {
@@ -223,7 +223,7 @@ impl NetworkServer {
         info!("Client disconnected: {id:?}");
     }
 
-    pub(crate) fn send(&self, message: &str, id: ConnectionId) {
+    pub fn send(&self, message: &str, id: ConnectionId) {
         info!("Sending message to {id:?}: {message:?}");
 
         if let Some(client) = self.clients.get(&id) {
@@ -239,7 +239,7 @@ impl NetworkServer {
         }
     }
 
-    pub(crate) fn send_command(&self, command: [u8; 3], id: ConnectionId) {
+    pub fn send_command(&self, command: [u8; 3], id: ConnectionId) {
         info!("Sending command to {id:?}: {command:?}");
 
         if let Some(client) = self.clients.get(&id) {

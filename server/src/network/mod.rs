@@ -1,6 +1,6 @@
 mod errors;
-pub(crate) mod events;
-pub(crate) mod server;
+pub mod events;
+pub mod server;
 mod systems;
 
 use bevy::prelude::*;
@@ -11,7 +11,7 @@ use systems::{handle_events, handle_inbox, handle_incoming, handle_lost};
 
 use self::{events::NetworkMessage, systems::setup_network};
 
-pub(crate) struct SyncChannel<T> {
+pub struct SyncChannel<T> {
     sender: Sender<T>,
     receiver: Receiver<T>,
 }
@@ -24,7 +24,7 @@ impl<T> SyncChannel<T> {
     }
 }
 
-pub(crate) struct NetworkPlugin;
+pub struct NetworkPlugin;
 
 impl Plugin for NetworkPlugin {
     fn build(&self, app: &mut App) {

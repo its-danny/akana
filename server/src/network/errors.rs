@@ -3,7 +3,7 @@ use thiserror::Error;
 use super::server::ConnectionId;
 
 #[derive(Error, Debug)]
-pub(crate) enum NetworkError {
+pub enum NetworkError {
     #[error("An error occured when accepting a new connnection: {0}")]
     Accept(std::io::Error),
     #[error("An error occured when trying to start listening for new connections: {0}")]

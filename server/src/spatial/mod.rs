@@ -1,11 +1,11 @@
-pub(crate) mod components;
+pub mod components;
 mod systems;
 
 use bevy::prelude::*;
 
-use self::systems::{look, manage_doors, map, movement};
+use self::systems::{look::*, map::*, movement::*, toggle_door::*};
 
-pub(crate) struct SpatialPlugin;
+pub struct SpatialPlugin;
 
 impl Plugin for SpatialPlugin {
     fn build(&self, app: &mut App) {
@@ -15,7 +15,7 @@ impl Plugin for SpatialPlugin {
                 .with_system(look)
                 .with_system(map)
                 .with_system(movement)
-                .with_system(manage_doors),
+                .with_system(toggle_door),
         );
     }
 }

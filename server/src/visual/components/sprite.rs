@@ -2,12 +2,12 @@ use bevy::prelude::*;
 use yansi::Paint;
 
 #[derive(Component)]
-pub(crate) struct Sprite {
-    pub(crate) character: String,
-    pub(crate) color: String,
+pub struct Sprite {
+    pub character: String,
+    pub color: String,
 }
 
-pub(crate) trait SpritePaint {
+pub trait SpritePaint {
     fn paint(&self) -> Paint<&str>;
 }
 

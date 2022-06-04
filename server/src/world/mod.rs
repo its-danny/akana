@@ -5,11 +5,11 @@ mod systems;
 use bevy::prelude::*;
 
 use self::{
-    resources::{NewPlayerSpawn, WorldTime},
-    systems::{setup_world, update_world_time},
+    resources::{new_player_spawn::NewPlayerSpawn, world_time::WorldTime},
+    systems::{setup_world::*, update_world_time::*},
 };
 
-pub(crate) struct WorldPlugin;
+pub struct WorldPlugin;
 
 impl Plugin for WorldPlugin {
     fn build(&self, app: &mut App) {

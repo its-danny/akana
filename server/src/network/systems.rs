@@ -7,13 +7,13 @@ use super::{
     server::NetworkServer,
 };
 
-pub(crate) fn setup_network(server: Res<NetworkServer>) {
+pub fn setup_network(server: Res<NetworkServer>) {
     let server_url = env::var("SERVER_URL").expect("Could not read SERVER_URL from env");
 
     server.listen(server_url);
 }
 
-pub(crate) fn handle_incoming(server: Res<NetworkServer>) {
+pub fn handle_incoming(server: Res<NetworkServer>) {
     for connection in server.incoming.receiver.try_iter() {
         debug!("Handling incoming connection: {connection:?}");
 
@@ -21,7 +21,7 @@ pub(crate) fn handle_incoming(server: Res<NetworkServer>) {
     }
 }
 
-pub(crate) fn handle_lost(server: Res<NetworkServer>) {
+pub fn handle_lost(server: Res<NetworkServer>) {
     for id in server.lost.receiver.try_iter() {
         debug!("Handling lost connection: {id:?}");
 
@@ -29,7 +29,7 @@ pub(crate) fn handle_lost(server: Res<NetworkServer>) {
     }
 }
 
-pub(crate) fn handle_events(server: Res<NetworkServer>, mut events: EventWriter<NetworkEvent>) {
+pub fn handle_events(server: Res<NetworkServer>, mut events: EventWriter<NetworkEvent>) {
     for event in server.events.receiver.try_iter() {
         debug!("Handling event: {event:?}");
 
@@ -37,7 +37,7 @@ pub(crate) fn handle_events(server: Res<NetworkServer>, mut events: EventWriter<
     }
 }
 
-pub(crate) fn handle_inbox(server: Res<NetworkServer>, mut messages: EventWriter<NetworkMessage>) {
+pub fn handle_inbox(server: Res<NetworkServer>, mut messages: EventWriter<NetworkMessage>) {
     for message in server.inbox.receiver.try_iter() {
         debug!("Handling inbox message: {message:?}");
 

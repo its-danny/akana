@@ -1,15 +1,15 @@
-pub(crate) mod components;
-pub(crate) mod events;
-pub(crate) mod systems;
+pub mod components;
+pub mod events;
+pub mod systems;
 
 use bevy::prelude::*;
 
 use self::{
-    events::PromptEvent,
-    systems::{handle_network_events, send_prompt, send_prompt_on_input},
+    events::prompt_event::PromptEvent,
+    systems::{emit_prompt_on_input::*, handle_network_events::*, send_prompt::*},
 };
 
-pub(crate) struct PlayerPlugin;
+pub struct PlayerPlugin;
 
 impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
@@ -19,7 +19,7 @@ impl Plugin for PlayerPlugin {
             SystemSet::new()
                 .label("player")
                 .with_system(handle_network_events)
-                .with_system(send_prompt_on_input)
+                .with_system(emit_prompt_on_input)
                 .with_system(send_prompt),
         );
     }

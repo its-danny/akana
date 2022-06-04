@@ -1,19 +1,18 @@
-mod api;
-pub(crate) mod components;
+pub mod components;
 mod systems;
+mod utils;
 
 use bevy::prelude::*;
 
-use systems::{perform_authentication, start_authenticating_new_clients};
+use self::systems::perform_authentication::*;
 
-pub(crate) struct AuthPlugin;
+pub struct AuthPlugin;
 
 impl Plugin for AuthPlugin {
     fn build(&self, app: &mut App) {
         app.add_system_set(
             SystemSet::new()
                 .label("auth")
-                .with_system(start_authenticating_new_clients)
                 .with_system(perform_authentication),
         );
     }

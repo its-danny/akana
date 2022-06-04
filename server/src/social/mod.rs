@@ -2,9 +2,9 @@ mod systems;
 
 use bevy::prelude::*;
 
-use self::systems::say;
+use self::systems::say::*;
 
-pub(crate) struct SocialPlugin;
+pub struct SocialPlugin;
 
 impl Plugin for SocialPlugin {
     fn build(&self, app: &mut App) {
