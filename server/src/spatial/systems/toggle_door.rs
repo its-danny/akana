@@ -37,7 +37,7 @@ pub fn toggle_door(
                         "open" => {
                             match collider {
                                 Some(_) => {
-                                    sprite.character = "/".to_string();
+                                    sprite.character = door.opened_character.clone();
                                     commands.entity(entity).remove::<Collider>();
                                     server.send_message("The door opens.", client.id);
                                 }
@@ -46,13 +46,7 @@ pub fn toggle_door(
                         }
                         "close" => match collider {
                             None => {
-                                sprite.character = if door.facing == "horizontal" {
-                                    "|"
-                                } else {
-                                    "-"
-                                }
-                                .to_string();
-
+                                sprite.character = door.closed_character.clone();
                                 commands.entity(entity).insert(Collider);
                                 server.send_message("The door closes.", client.id);
                             }

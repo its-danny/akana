@@ -71,9 +71,9 @@ fn spawn_tile(entity: &EntityInstance, layer: &LayerInstance, commands: &mut Com
             let x: i32 = (x + entity.grid.get(0).unwrap()).try_into().unwrap();
             let y: i32 = (y + entity.grid.get(1).unwrap()).try_into().unwrap();
 
-            let mut entity = commands.spawn();
+            let mut tile = commands.spawn();
 
-            entity.insert_bundle((
+            tile.insert_bundle((
                 Tile {
                     name: str_fields[0].to_string(),
                     description: str_fields[1].to_string(),
@@ -86,7 +86,7 @@ fn spawn_tile(entity: &EntityInstance, layer: &LayerInstance, commands: &mut Com
             ));
 
             if bool_fields[0] {
-                entity.insert(Collider);
+                tile.insert(Collider);
             }
         }
     }
@@ -109,22 +109,15 @@ fn spawn_door(entity: &EntityInstance, commands: &mut Commands) {
             .unwrap_or_else(|| panic!("Could not get `{field}` as bool"))
     });
 
-    let facing = if bool_fields[0] {
-        "horizontal"
-    } else {
-        "vertical"
-    };
-
-    let mut entity = commands.spawn();
-
-    entity.insert_bundle((
+    commands.spawn().insert_bundle((
         Door {
-            facing: facing.to_string(),
+            opened_character: "/".to_string(),
+            closed_character: if bool_fields[0] { "|" } else { "-" }.to_string(),
         },
         Position(IVec2::new(x, y)),
         Collider,
         Sprite {
-            character: if facing == "horizontal" { "|" } else { "_" }.to_string(),
+            character: if bool_fields[0] { "|" } else { "-" }.to_string(),
             color: "white".to_string(),
         },
     ));
