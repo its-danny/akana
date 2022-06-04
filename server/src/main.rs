@@ -3,6 +3,7 @@ mod network;
 mod player;
 mod social;
 mod spatial;
+mod visual;
 mod world;
 
 use auth::AuthPlugin;

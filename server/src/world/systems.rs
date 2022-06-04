@@ -3,7 +3,8 @@ use chrono::{Local as LocalTime, Timelike};
 use ldtk_rust::Project;
 
 use crate::{
-    spatial::components::{Collider, Position},
+    spatial::components::{Collider, Door, Position},
+    visual::components::Sprite,
     world::components::Tile,
 };
 
@@ -59,7 +60,9 @@ pub(crate) fn setup_world(mut commands: Commands, mut new_player_spawn: ResMut<N
                             Tile {
                                 name: str_fields[0].to_string(),
                                 description: str_fields[1].to_string(),
-                                sprite: str_fields[2].to_string(),
+                            },
+                            Sprite {
+                                character: str_fields[2].to_string(),
                                 color: str_fields[3].to_string(),
                             },
                             Position(IVec3::new(x, y, 0)),
@@ -73,7 +76,49 @@ pub(crate) fn setup_world(mut commands: Commands, mut new_player_spawn: ResMut<N
             }
         }
 
-        if layer.identifier == "New_Player_Spawn" {
+        if layer.identifier == "Entities" {
+            for entity in &layer.entity_instances {
+                let x = *entity.grid.get(0).unwrap() as i32;
+                let y = *entity.grid.get(1).unwrap() as i32;
+
+                if entity.identifier == "Door" {
+                    let bool_fields: [bool; 1] = ["horizontal"].map(|field| {
+                        entity
+                            .field_instances
+                            .iter()
+                            .find(|f| f.identifier == field)
+                            .unwrap_or_else(|| panic!("Could not find `{field}` field"))
+                            .value
+                            .as_ref()
+                            .unwrap_or_else(|| panic!("Could not get `{field}` value"))
+                            .as_bool()
+                            .unwrap_or_else(|| panic!("Could not get `{field}` as bool"))
+                    });
+
+                    let facing = if bool_fields[0] {
+                        "horizontal"
+                    } else {
+                        "vertical"
+                    };
+
+                    let mut entity = commands.spawn();
+
+                    entity.insert_bundle((
+                        Door {
+                            facing: facing.to_string(),
+                        },
+                        Position(IVec3::new(x, y, 0)),
+                        Collider,
+                        Sprite {
+                            character: if facing == "horizontal" { "|" } else { "_" }.to_string(),
+                            color: "white".to_string(),
+                        },
+                    ));
+                }
+            }
+        }
+
+        if layer.identifier == "Spawn" {
             let entity = &layer.entity_instances.get(0).unwrap();
 
             let x = *entity.grid.get(0).unwrap() as i32;
