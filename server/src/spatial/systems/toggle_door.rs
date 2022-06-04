@@ -39,9 +39,9 @@ pub fn toggle_door(
                                 Some(_) => {
                                     sprite.character = "/".to_string();
                                     commands.entity(entity).remove::<Collider>();
-                                    server.send("The door opens.", client.id);
+                                    server.send_message("The door opens.", client.id);
                                 }
-                                None => server.send("It's already open!", client.id),
+                                None => server.send_message("It's already open!", client.id),
                             };
                         }
                         "close" => match collider {
@@ -54,14 +54,14 @@ pub fn toggle_door(
                                 .to_string();
 
                                 commands.entity(entity).insert(Collider);
-                                server.send("The door closes.", client.id);
+                                server.send_message("The door closes.", client.id);
                             }
-                            Some(_) => server.send("It's already closed!", client.id),
+                            Some(_) => server.send_message("It's already closed!", client.id),
                         },
                         _ => {}
                     }
                 } else {
-                    server.send("There's no doors here!", client.id);
+                    server.send_message("There's no doors here!", client.id);
                 }
             }
         }

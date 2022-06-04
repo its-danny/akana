@@ -25,7 +25,7 @@ pub fn say(
         {
             if let Some(captures) = CMD.captures(&message.body.to_lowercase()) {
                 if let Some(phrase) = captures.get(3) {
-                    server.send(
+                    server.send_message(
                         &format!("You say \"{}\"", Paint::white(phrase.as_str()).bold()),
                         client.id,
                     );
@@ -34,7 +34,7 @@ pub fn say(
                         .iter()
                         .filter(|(c, p, _)| p.0 == position.0 && c.id != client.id)
                         .for_each(|(c, _, _)| {
-                            server.send(
+                            server.send_message(
                                 &format!(
                                     "{} said \"{}\"",
                                     Paint::cyan(&character.name),
@@ -44,7 +44,7 @@ pub fn say(
                             )
                         });
                 } else {
-                    server.send("Say what?", client.id);
+                    server.send_message("Say what?", client.id);
                 }
             }
         }

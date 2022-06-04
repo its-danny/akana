@@ -38,7 +38,7 @@ pub fn perform_authentication(
                     // Validate the name. Currently, that just means it's
                     // more than 3 letters long.
                     if message.body.len() < 3 {
-                        server.send("That's not a valid name. Try again!", client.id);
+                        server.send_message("That's not a valid name. Try again!", client.id);
 
                         break;
                     }
@@ -49,16 +49,16 @@ pub fn perform_authentication(
                             // for their password. We send this telnet command along with it
                             // so that their client won't echo back their passwor.
                             server.send_command([Iac as u8, Will as u8, Echo as u8], client.id);
-                            server.send("What's your password?", client.id);
+                            server.send_message("What's your password?", client.id);
                         }
                         StatusCode::NOT_FOUND => {
                             // If the user is not found, we do the same, but letting them
                             // know this will be a new account.
                             server.send_command([Iac as u8, Will as u8, Echo as u8], client.id);
-                            server.send("Looks like this is a new character. What password would you like to use?", client.id);
+                            server.send_message("Looks like this is a new character. What password would you like to use?", client.id);
                         }
                         _ => {
-                            server.send("Uh oh, something broke!", client.id);
+                            server.send_message("Uh oh, something broke!", client.id);
                         }
                     }
 
@@ -71,7 +71,7 @@ pub fn perform_authentication(
                     // Validate the name. Currently, that just means it's
                     // more than 3 letters long.
                     if message.body.len() < 3 {
-                        server.send("That's not a valid password. Try again!", client.id);
+                        server.send_message("That's not a valid password. Try again!", client.id);
 
                         break;
                     }
@@ -88,7 +88,7 @@ pub fn perform_authentication(
                             // send another telnet command letting their client know it's
                             // ok to echo input again.
                             server.send_command([Iac as u8, Wont as u8, Echo as u8], client.id);
-                            server.send("Authenticated.", client.id);
+                            server.send_message("Authenticated.", client.id);
 
                             // Send the prompt.
                             prompts.send(PromptEvent(client.id));
@@ -108,10 +108,10 @@ pub fn perform_authentication(
                         }
                         StatusCode::FORBIDDEN => {
                             // If their password was not correct, let them try again.
-                            server.send("Incorrect password. Try again!", client.id);
+                            server.send_message("Incorrect password. Try again!", client.id);
                         }
                         _ => {
-                            server.send("Uh oh, something broke!", client.id);
+                            server.send_message("Uh oh, something broke!", client.id);
                         }
                     }
                 }

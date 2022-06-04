@@ -19,7 +19,7 @@ pub fn handle_network_events(
             NetworkEvent::Connected(id) => {
                 commands.spawn_bundle((Client { id: *id, width: 80 }, Authenticating::default()));
 
-                server.send("What's your name?", *id);
+                server.send_message("What's your name?", *id);
 
                 info!("Player spawned for {id:?}");
             }

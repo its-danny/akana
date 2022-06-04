@@ -54,7 +54,7 @@ pub fn map(
                     }
                 }
 
-                server.send(
+                server.send_message(
                     &map.map(|r| r.map(|c| format!("{}", c)).join(""))
                         .join("\r\n"),
                     client.id,

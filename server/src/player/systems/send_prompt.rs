@@ -36,7 +36,7 @@ pub fn send_prompt(
                 ">"
             );
 
-            server.send(
+            server.send_message(
                 &format!("{:width$}{world_status_colored}", name,),
                 client.id,
             );

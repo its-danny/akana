@@ -25,7 +25,7 @@ pub fn look(
         if CMD.is_match(&message.body.to_lowercase()) {
             if let Some((client, position)) = players.iter().find(|(c, _)| c.id == message.id) {
                 if let Some((tile, _, sprite)) = tiles.iter().find(|(_, p, _)| p.0 == position.0) {
-                    server.send(
+                    server.send_message(
                         &format!("{} {}\r\n{}", sprite.paint(), tile.name, tile.description),
                         client.id,
                     );

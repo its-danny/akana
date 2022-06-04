@@ -55,7 +55,7 @@ pub fn movement(
 
                 if let Some(tile) = wanted_tile {
                     if colliders.iter().any(|c| c.0 == tile.0) {
-                        server.send("Something blocks your way.", client.id);
+                        server.send_message("Something blocks your way.", client.id);
                     } else {
                         debug!("Moving {:?} to {:?}", client.id, tile);
 
@@ -64,7 +64,7 @@ pub fn movement(
                         moved.push(client.id);
                     }
                 } else {
-                    server.send("You can't go that direction.", client.id);
+                    server.send_message("You can't go that direction.", client.id);
                 }
             }
         }

@@ -225,7 +225,7 @@ impl NetworkServer {
         info!("Client disconnected: {id:?}");
     }
 
-    pub fn send(&self, message: &str, id: ConnectionId) {
+    pub fn send_message(&self, message: &str, id: ConnectionId) {
         info!("Sending message to {id:?}: {message:?}");
 
         if let Some(client) = self.clients.get(&id) {
