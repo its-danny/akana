@@ -57,8 +57,6 @@ pub fn movement(
                     if colliders.iter().any(|c| c.0 == tile.0) {
                         server.send_message("Something blocks your way.", client.id);
                     } else {
-                        debug!("Moving {:?} to {:?}", client.id, tile);
-
                         position.0 = tile.0;
 
                         moved.push(client.id);

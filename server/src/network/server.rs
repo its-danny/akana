@@ -177,8 +177,6 @@ impl NetworkServer {
                 write_task: self.runtime.spawn(async move {
                     while let Ok(output) = outbox_receiver.recv() {
                         if let Some(command) = output.0 {
-                            debug!("Writing command to socket {command:?}");
-
                             match write_socket.write_all(&command.command).await {
                                 Ok(_) => (),
                                 Err(error) => {
@@ -194,8 +192,6 @@ impl NetworkServer {
                         }
 
                         if let Some(message) = output.1 {
-                            debug!("Writing message to socket {message:?}");
-
                             match write_socket.write_all(message.body.as_bytes()).await {
                                 Ok(_) => (),
                                 Err(error) => {

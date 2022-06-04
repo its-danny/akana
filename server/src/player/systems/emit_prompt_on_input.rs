@@ -16,8 +16,6 @@ pub fn emit_prompt_on_input(
     players: Query<&Client, With<Online>>,
 ) {
     for message in messages.iter() {
-        debug!("Internal? {}", message.internal);
-
         if !message.internal {
             if let Some(client) = players.iter().find(|c| c.id == message.id) {
                 prompts.send(PromptEvent(client.id));
