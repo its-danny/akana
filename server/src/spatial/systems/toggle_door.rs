@@ -78,3 +78,181 @@ pub fn toggle_door(
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use bevy::{ecs::event::Events, prelude::*};
+
+    use crate::{
+        network::events::{NetworkInput, NetworkOutput},
+        spatial::components::collider::Collider,
+        test::bundles::utils::{connection_id, door_bundle, open_door_bundle, player_bundle},
+    };
+
+    #[test]
+    fn open() {
+        let mut app = App::new();
+
+        app.add_event::<NetworkInput>();
+        app.add_event::<NetworkOutput>();
+        app.add_system(super::toggle_door);
+
+        let id = connection_id();
+        app.world.spawn().insert_bundle(player_bundle(id, 0, 0));
+
+        let door_id = app
+            .world
+            .spawn()
+            .insert_bundle(door_bundle(true, 0, 1))
+            .id();
+
+        app.world
+            .resource_mut::<Events<NetworkInput>>()
+            .send(NetworkInput {
+                id,
+                body: "open".into(),
+                internal: false,
+            });
+
+        app.update();
+
+        assert!(app.world.get::<Collider>(door_id).is_none());
+
+        let output_events = app.world.resource::<Events<NetworkOutput>>();
+        let mut output_reader = output_events.get_reader();
+        let output = output_reader.iter(&output_events).next().unwrap();
+
+        assert_eq!(output.id, id);
+        assert_eq!(output.body, "The door opens.");
+    }
+
+    #[test]
+    fn already_open() {
+        let mut app = App::new();
+
+        app.add_event::<NetworkInput>();
+        app.add_event::<NetworkOutput>();
+        app.add_system(super::toggle_door);
+
+        let id = connection_id();
+        app.world.spawn().insert_bundle(player_bundle(id, 0, 0));
+
+        app.world
+            .spawn()
+            .insert_bundle(open_door_bundle(true, 0, 1));
+
+        app.world
+            .resource_mut::<Events<NetworkInput>>()
+            .send(NetworkInput {
+                id,
+                body: "open".into(),
+                internal: false,
+            });
+
+        app.update();
+
+        let output_events = app.world.resource::<Events<NetworkOutput>>();
+        let mut output_reader = output_events.get_reader();
+        let output = output_reader.iter(&output_events).next().unwrap();
+
+        assert_eq!(output.id, id);
+        assert_eq!(output.body, "It's already open!");
+    }
+
+    #[test]
+    fn close() {
+        let mut app = App::new();
+
+        app.add_event::<NetworkInput>();
+        app.add_event::<NetworkOutput>();
+        app.add_system(super::toggle_door);
+
+        let id = connection_id();
+        app.world.spawn().insert_bundle(player_bundle(id, 0, 0));
+
+        let door_id = app
+            .world
+            .spawn()
+            .insert_bundle(open_door_bundle(true, 0, 1))
+            .id();
+
+        app.world
+            .resource_mut::<Events<NetworkInput>>()
+            .send(NetworkInput {
+                id,
+                body: "close".into(),
+                internal: false,
+            });
+
+        app.update();
+
+        assert!(app.world.get::<Collider>(door_id).is_some());
+
+        let output_events = app.world.resource::<Events<NetworkOutput>>();
+        let mut output_reader = output_events.get_reader();
+        let output = output_reader.iter(&output_events).next().unwrap();
+
+        assert_eq!(output.id, id);
+        assert_eq!(output.body, "The door closes.");
+    }
+
+    #[test]
+    fn already_closed() {
+        let mut app = App::new();
+
+        app.add_event::<NetworkInput>();
+        app.add_event::<NetworkOutput>();
+        app.add_system(super::toggle_door);
+
+        let id = connection_id();
+        app.world.spawn().insert_bundle(player_bundle(id, 0, 0));
+
+        app.world.spawn().insert_bundle(door_bundle(true, 0, 1));
+
+        app.world
+            .resource_mut::<Events<NetworkInput>>()
+            .send(NetworkInput {
+                id,
+                body: "close".into(),
+                internal: false,
+            });
+
+        app.update();
+
+        let output_events = app.world.resource::<Events<NetworkOutput>>();
+        let mut output_reader = output_events.get_reader();
+        let output = output_reader.iter(&output_events).next().unwrap();
+
+        assert_eq!(output.id, id);
+        assert_eq!(output.body, "It's already closed!");
+    }
+
+    #[test]
+    fn no_nearby_door() {
+        let mut app = App::new();
+
+        app.add_event::<NetworkInput>();
+        app.add_event::<NetworkOutput>();
+        app.add_system(super::toggle_door);
+
+        let id = connection_id();
+        app.world.spawn().insert_bundle(player_bundle(id, 0, 0));
+
+        app.world
+            .resource_mut::<Events<NetworkInput>>()
+            .send(NetworkInput {
+                id,
+                body: "open".into(),
+                internal: false,
+            });
+
+        app.update();
+
+        let output_events = app.world.resource::<Events<NetworkOutput>>();
+        let mut output_reader = output_events.get_reader();
+        let output = output_reader.iter(&output_events).next().unwrap();
+
+        assert_eq!(output.id, id);
+        assert_eq!(output.body, "There's no doors here!");
+    }
+}

@@ -34,3 +34,49 @@ pub fn look(
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use bevy::{ecs::event::Events, prelude::*};
+    use yansi::Paint;
+
+    use crate::{
+        network::events::{NetworkInput, NetworkOutput},
+        test::bundles::utils::{connection_id, player_bundle, tile_bundle},
+    };
+
+    #[test]
+    fn look() {
+        let mut app = App::new();
+
+        app.add_event::<NetworkInput>();
+        app.add_event::<NetworkOutput>();
+        app.add_system(super::look);
+
+        let id = connection_id();
+        app.world.spawn().insert_bundle(player_bundle(id, 0, 0));
+
+        app.world
+            .spawn()
+            .insert_bundle(tile_bundle("Test Room", "Please ignore.", 0, 0));
+
+        app.world
+            .resource_mut::<Events<NetworkInput>>()
+            .send(NetworkInput {
+                id,
+                body: "look".into(),
+                internal: false,
+            });
+
+        app.update();
+
+        let output_events = app.world.resource::<Events<NetworkOutput>>();
+        let mut output_reader = output_events.get_reader();
+        let output = output_reader.iter(&output_events).next().unwrap();
+
+        assert_eq!(output.id, id);
+        assert!(output.body.contains(&Paint::black(".").bold().to_string()));
+        assert!(output.body.contains("Test Room"));
+        assert!(output.body.contains("Please ignore."));
+    }
+}

@@ -3,6 +3,7 @@ mod network;
 mod player;
 mod social;
 mod spatial;
+mod test;
 mod visual;
 mod world;
 

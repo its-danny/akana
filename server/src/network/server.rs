@@ -25,7 +25,7 @@ pub enum TelnetCommand {
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 pub struct ConnectionId {
     pub uuid: Uuid,
-    address: SocketAddr,
+    pub address: SocketAddr,
 }
 
 struct ClientConnection {

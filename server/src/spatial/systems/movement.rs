@@ -84,3 +84,180 @@ pub fn movement(
         });
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use bevy::{ecs::event::Events, prelude::*};
+
+    use crate::{
+        network::events::{NetworkInput, NetworkOutput},
+        spatial::components::{collider::Collider, position::Position},
+        test::bundles::utils::{connection_id, player_bundle, tile_bundle},
+    };
+
+    #[test]
+    fn movement() {
+        let mut app = App::new();
+
+        app.add_event::<NetworkInput>();
+        app.add_event::<NetworkOutput>();
+        app.add_system(super::movement);
+
+        let id = connection_id();
+        let player_id = app
+            .world
+            .spawn()
+            .insert_bundle(player_bundle(id, 0, 0))
+            .id();
+
+        app.world
+            .spawn()
+            .insert_bundle(tile_bundle("Test Room 1", "Please ignore.", 0, 0));
+
+        app.world
+            .spawn()
+            .insert_bundle(tile_bundle("Test Room 2", "Please ignore.", 0, 1));
+
+        app.world
+            .resource_mut::<Events<NetworkInput>>()
+            .send(NetworkInput {
+                id,
+                body: "south".into(),
+                internal: false,
+            });
+
+        app.update();
+
+        assert_eq!(
+            app.world.get::<Position>(player_id).unwrap().0,
+            IVec2::new(0, 1)
+        );
+    }
+
+    #[test]
+    fn blocked() {
+        let mut app = App::new();
+
+        app.add_event::<NetworkInput>();
+        app.add_event::<NetworkOutput>();
+        app.add_system(super::movement);
+
+        let id = connection_id();
+        let player_id = app
+            .world
+            .spawn()
+            .insert_bundle(player_bundle(id, 0, 0))
+            .id();
+
+        app.world
+            .spawn()
+            .insert_bundle(tile_bundle("Test Room 1", "Please ignore.", 0, 0));
+
+        app.world
+            .spawn()
+            .insert_bundle(tile_bundle("Test Room 2", "Please ignore.", 0, 1))
+            .insert(Collider);
+
+        app.world
+            .resource_mut::<Events<NetworkInput>>()
+            .send(NetworkInput {
+                id,
+                body: "south".into(),
+                internal: false,
+            });
+
+        app.update();
+
+        assert_eq!(
+            app.world.get::<Position>(player_id).unwrap().0,
+            IVec2::new(0, 0)
+        );
+
+        let output_events = app.world.resource::<Events<NetworkOutput>>();
+        let mut output_reader = output_events.get_reader();
+        let output = output_reader.iter(&output_events).next().unwrap();
+
+        assert_eq!(output.id, id);
+        assert_eq!(output.body, "Something blocks your way.");
+    }
+
+    #[test]
+    fn invalid() {
+        let mut app = App::new();
+
+        app.add_event::<NetworkInput>();
+        app.add_event::<NetworkOutput>();
+        app.add_system(super::movement);
+
+        let id = connection_id();
+        let player_id = app
+            .world
+            .spawn()
+            .insert_bundle(player_bundle(id, 0, 0))
+            .id();
+
+        app.world
+            .spawn()
+            .insert_bundle(tile_bundle("Test Room", "Please ignore.", 0, 0));
+
+        app.world
+            .resource_mut::<Events<NetworkInput>>()
+            .send(NetworkInput {
+                id,
+                body: "south".into(),
+                internal: false,
+            });
+
+        app.update();
+
+        assert_eq!(
+            app.world.get::<Position>(player_id).unwrap().0,
+            IVec2::new(0, 0)
+        );
+
+        let output_events = app.world.resource::<Events<NetworkOutput>>();
+        let mut output_reader = output_events.get_reader();
+        let output = output_reader.iter(&output_events).next().unwrap();
+
+        assert_eq!(output.id, id);
+        assert_eq!(output.body, "You can't go that direction.");
+    }
+
+    #[test]
+    fn look_sent_after() {
+        let mut app = App::new();
+
+        app.add_event::<NetworkInput>();
+        app.add_event::<NetworkOutput>();
+        app.add_system(super::movement);
+
+        let id = connection_id();
+        app.world.spawn().insert_bundle(player_bundle(id, 0, 0));
+
+        app.world
+            .spawn()
+            .insert_bundle(tile_bundle("Test Room 1", "Please ignore.", 0, 0));
+
+        app.world
+            .spawn()
+            .insert_bundle(tile_bundle("Test Room 2", "Please ignore.", 0, 1));
+
+        app.world
+            .resource_mut::<Events<NetworkInput>>()
+            .send(NetworkInput {
+                id,
+                body: "south".into(),
+                internal: false,
+            });
+
+        app.update();
+
+        let input_events = app.world.resource::<Events<NetworkInput>>();
+        let mut input_reader = input_events.get_reader();
+        let input = input_reader.iter(&input_events).last().unwrap();
+
+        assert_eq!(input.id, id);
+        assert_eq!(input.body, "look");
+        assert_eq!(input.internal, true);
+    }
+}
