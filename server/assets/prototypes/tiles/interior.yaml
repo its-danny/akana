@@ -1,0 +1,11 @@
+---
+name: "Interior"
+components:
+  - type: Tile
+    value:
+      name: "Inside"
+      description: "Inside of some ol' building."
+  - type: Sprite
+    value:
+      character: "."
+      color: "black_bold"

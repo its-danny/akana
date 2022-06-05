@@ -7,9 +7,13 @@ mod test;
 mod visual;
 mod world;
 
-use auth::AuthPlugin;
-use bevy::{app::ScheduleRunnerSettings, log::LogPlugin, prelude::*, utils::Duration};
+use bevy::{
+    app::ScheduleRunnerSettings, asset::AssetPlugin, log::LogPlugin, prelude::*, utils::Duration,
+};
+use bevy_proto::{prelude::ProtoDataOptions, ProtoPlugin};
 use dotenv::dotenv;
+
+use auth::AuthPlugin;
 use network::NetworkPlugin;
 use player::PlayerPlugin;
 use social::SocialPlugin;
@@ -24,6 +28,14 @@ fn main() {
             1.0 / 60.0,
         )))
         .add_plugins(MinimalPlugins)
+        .add_plugin(AssetPlugin)
+        .add_plugin(ProtoPlugin {
+            options: Some(ProtoDataOptions {
+                directories: vec![String::from("server/assets/prototypes")],
+                recursive_loading: true,
+                ..Default::default()
+            }),
+        })
         .add_plugin(LogPlugin)
         .add_plugin(WorldPlugin)
         .add_plugin(NetworkPlugin)

@@ -1,0 +1,12 @@
+---
+name: "Wall"
+components:
+  - type: Tile
+    value:
+      name: "Wall"
+      description: ""
+  - type: Sprite
+    value:
+      character: "#"
+      color: "black_bold"
+  - type: Collider

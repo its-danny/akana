@@ -1,7 +1,9 @@
 use bevy::prelude::*;
+use bevy_proto::ProtoComponent;
+use serde::{Deserialize, Serialize};
 use yansi::Paint;
 
-#[derive(Component)]
+#[derive(Clone, Serialize, Deserialize, ProtoComponent, Component)]
 pub struct Sprite {
     pub character: String,
     pub color: String,

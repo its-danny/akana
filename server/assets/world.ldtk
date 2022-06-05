@@ -10,7 +10,7 @@
 	},
 	"jsonVersion": "1.1.3",
 	"appBuildId": 458364,
-	"nextUid": 17,
+	"nextUid": 20,
 	"identifierStyle": "Capitalize",
 	"worldLayout": "Free",
 	"worldGridWidth": 256,
@@ -38,7 +38,7 @@
 			"__type": "Entities",
 			"identifier": "Entities",
 			"type": "Entities",
-			"uid": 13,
+			"uid": 17,
 			"gridSize": 16,
 			"guideGridWid": 0,
 			"guideGridHei": 0,
@@ -117,68 +117,7 @@
 		}
 	], "entities": [
 		{
-			"identifier": "Door",
-			"uid": 11,
-			"tags": [],
-			"width": 16,
-			"height": 16,
-			"resizableX": false,
-			"resizableY": false,
-			"keepAspectRatio": false,
-			"tileOpacity": 1,
-			"fillOpacity": 1,
-			"lineOpacity": 1,
-			"hollow": false,
-			"color": "#95793F",
-			"renderMode": "Rectangle",
-			"showName": true,
-			"tilesetId": null,
-			"tileId": null,
-			"tileRenderMode": "FitInside",
-			"tileRect": null,
-			"nineSliceBorders": [],
-			"maxCount": 0,
-			"limitScope": "PerLevel",
-			"limitBehavior": "MoveLastOne",
-			"pivotX": 0,
-			"pivotY": 0,
-			"fieldDefs": [
-				{
-					"identifier": "horizontal",
-					"__type": "Bool",
-					"uid": 16,
-					"type": "F_Bool",
-					"isArray": false,
-					"canBeNull": false,
-					"arrayMinLength": null,
-					"arrayMaxLength": null,
-					"editorDisplayMode": "Hidden",
-					"editorDisplayPos": "Above",
-					"editorAlwaysShow": false,
-					"editorCutLongValues": true,
-					"editorTextSuffix": null,
-					"editorTextPrefix": null,
-					"useForSmartColor": false,
-					"min": null,
-					"max": null,
-					"regex": null,
-					"acceptFileTypes": null,
-					"defaultOverride": {
-						"id": "V_Bool",
-						"params": [ false ]
-					},
-					"textLanguageMode": null,
-					"symmetricalRef": false,
-					"autoChainRef": true,
-					"allowOutOfLevelRef": true,
-					"allowedRefs": "OnlySame",
-					"allowedRefTags": [],
-					"tilesetUid": null
-				}
-			]
-		},
-		{
-			"identifier": "Tile",
+			"identifier": "Entity",
 			"uid": 1,
 			"tags": [],
 			"width": 16,
@@ -205,7 +144,7 @@
 			"pivotY": 0,
 			"fieldDefs": [
 				{
-					"identifier": "name",
+					"identifier": "prototype",
 					"__type": "String",
 					"uid": 2,
 					"type": "F_String",
@@ -213,129 +152,10 @@
 					"canBeNull": false,
 					"arrayMinLength": null,
 					"arrayMaxLength": null,
-					"editorDisplayMode": "Hidden",
-					"editorDisplayPos": "Center",
-					"editorAlwaysShow": false,
-					"editorCutLongValues": true,
-					"editorTextSuffix": null,
-					"editorTextPrefix": null,
-					"useForSmartColor": false,
-					"min": null,
-					"max": null,
-					"regex": null,
-					"acceptFileTypes": null,
-					"defaultOverride": null,
-					"textLanguageMode": null,
-					"symmetricalRef": false,
-					"autoChainRef": true,
-					"allowOutOfLevelRef": true,
-					"allowedRefs": "OnlySame",
-					"allowedRefTags": [],
-					"tilesetUid": null
-				},
-				{
-					"identifier": "description",
-					"__type": "String",
-					"uid": 7,
-					"type": "F_String",
-					"isArray": false,
-					"canBeNull": false,
-					"arrayMinLength": null,
-					"arrayMaxLength": null,
-					"editorDisplayMode": "Hidden",
-					"editorDisplayPos": "Above",
-					"editorAlwaysShow": false,
-					"editorCutLongValues": true,
-					"editorTextSuffix": null,
-					"editorTextPrefix": null,
-					"useForSmartColor": false,
-					"min": null,
-					"max": null,
-					"regex": null,
-					"acceptFileTypes": null,
-					"defaultOverride": null,
-					"textLanguageMode": null,
-					"symmetricalRef": false,
-					"autoChainRef": true,
-					"allowOutOfLevelRef": true,
-					"allowedRefs": "OnlySame",
-					"allowedRefTags": [],
-					"tilesetUid": null
-				},
-				{
-					"identifier": "sprite",
-					"__type": "String",
-					"uid": 8,
-					"type": "F_String",
-					"isArray": false,
-					"canBeNull": true,
-					"arrayMinLength": null,
-					"arrayMaxLength": null,
 					"editorDisplayMode": "ValueOnly",
 					"editorDisplayPos": "Center",
 					"editorAlwaysShow": false,
-					"editorCutLongValues": true,
-					"editorTextSuffix": null,
-					"editorTextPrefix": null,
-					"useForSmartColor": false,
-					"min": null,
-					"max": null,
-					"regex": null,
-					"acceptFileTypes": null,
-					"defaultOverride": {
-						"id": "V_String",
-						"params": ["."]
-					},
-					"textLanguageMode": null,
-					"symmetricalRef": false,
-					"autoChainRef": true,
-					"allowOutOfLevelRef": true,
-					"allowedRefs": "OnlySame",
-					"allowedRefTags": [],
-					"tilesetUid": null
-				},
-				{
-					"identifier": "color",
-					"__type": "String",
-					"uid": 9,
-					"type": "F_String",
-					"isArray": false,
-					"canBeNull": true,
-					"arrayMinLength": null,
-					"arrayMaxLength": null,
-					"editorDisplayMode": "Hidden",
-					"editorDisplayPos": "Above",
-					"editorAlwaysShow": false,
-					"editorCutLongValues": true,
-					"editorTextSuffix": null,
-					"editorTextPrefix": null,
-					"useForSmartColor": false,
-					"min": null,
-					"max": null,
-					"regex": null,
-					"acceptFileTypes": null,
-					"defaultOverride": null,
-					"textLanguageMode": null,
-					"symmetricalRef": false,
-					"autoChainRef": true,
-					"allowOutOfLevelRef": true,
-					"allowedRefs": "OnlySame",
-					"allowedRefTags": [],
-					"tilesetUid": null
-				},
-				{
-					"identifier": "collision",
-					"__type": "Bool",
-					"uid": 10,
-					"type": "F_Bool",
-					"isArray": false,
-					"canBeNull": false,
-					"arrayMinLength": null,
-					"arrayMaxLength": null,
-					"editorDisplayMode": "Hidden",
-					"editorDisplayPos": "Above",
-					"editorAlwaysShow": false,
-					"editorCutLongValues": true,
+					"editorCutLongValues": false,
 					"editorTextSuffix": null,
 					"editorTextPrefix": null,
 					"useForSmartColor": false,
@@ -411,11 +231,11 @@
 			"identifier": "Level_0",
 			"iid": "f2959250-dbe0-11ec-ac7b-f7dcc3e0c2da",
 			"uid": 0,
-			"worldX": -48,
-			"worldY": -48,
+			"worldX": -32,
+			"worldY": -80,
 			"worldDepth": 0,
-			"pxWid": 240,
-			"pxHei": 240,
+			"pxWid": 208,
+			"pxHei": 224,
 			"__bgColor": "#696A79",
 			"bgColor": null,
 			"useAutoIdentifier": true,
@@ -431,42 +251,42 @@
 				{
 					"__identifier": "Entities",
 					"__type": "Entities",
-					"__cWid": 15,
-					"__cHei": 15,
+					"__cWid": 13,
+					"__cHei": 14,
 					"__gridSize": 16,
 					"__opacity": 1,
 					"__pxTotalOffsetX": 0,
 					"__pxTotalOffsetY": 0,
 					"__tilesetDefUid": null,
 					"__tilesetRelPath": null,
-					"iid": "f01f7f90-dbe0-11ec-a434-e7083cd5afae",
+					"iid": "e57e04a0-dbe0-11ec-8bb2-61b9f38f7601",
 					"levelId": 0,
-					"layerDefUid": 13,
+					"layerDefUid": 17,
 					"pxOffsetX": 0,
 					"pxOffsetY": 0,
 					"visible": true,
 					"optionalRules": [],
 					"intGridCsv": [],
 					"autoLayerTiles": [],
-					"seed": 7355104,
+					"seed": 358904,
 					"overrideTilesetUid": null,
 					"gridTiles": [],
 					"entityInstances": [
 						{
-							"__identifier": "Door",
-							"__grid": [8,7],
+							"__identifier": "Entity",
+							"__grid": [6,7],
 							"__pivot": [0,0],
 							"__tags": [],
 							"__tile": null,
-							"__smartColor": "#95793F",
-							"iid": "0b177d70-dbe0-11ec-a434-417bd73a1d34",
+							"__smartColor": "#282828",
+							"iid": "e94ee2c0-dbe0-11ec-8bb2-a5cbb601d2fa",
 							"width": 16,
 							"height": 16,
-							"defUid": 11,
-							"px": [128,112],
-							"fieldInstances": [{ "__identifier": "horizontal", "__value": true, "__type": "Bool", "__tile": null, "defUid": 16, "realEditorValues": [{
-								"id": "V_Bool",
-								"params": [ true ]
+							"defUid": 1,
+							"px": [96,112],
+							"fieldInstances": [{ "__identifier": "prototype", "__value": "Horizontal Door", "__type": "String", "__tile": null, "defUid": 2, "realEditorValues": [{
+								"id": "V_String",
+								"params": ["Horizontal Door"]
 							}] }]
 						}
 					]
@@ -474,8 +294,8 @@
 				{
 					"__identifier": "Tiles",
 					"__type": "Entities",
-					"__cWid": 15,
-					"__cHei": 15,
+					"__cWid": 13,
+					"__cHei": 14,
 					"__gridSize": 16,
 					"__opacity": 1,
 					"__pxTotalOffsetX": 0,
@@ -496,286 +316,148 @@
 					"gridTiles": [],
 					"entityInstances": [
 						{
-							"__identifier": "Tile",
-							"__grid": [0,4],
+							"__identifier": "Entity",
+							"__grid": [6,8],
 							"__pivot": [0,0],
 							"__tags": [],
 							"__tile": null,
 							"__smartColor": "#282828",
-							"iid": "4767b5f0-dbe0-11ec-84fe-677d493ae662",
-							"width": 128,
-							"height": 112,
-							"defUid": 1,
-							"px": [0,64],
-							"fieldInstances": [
-								{ "__identifier": "name", "__value": "Outside", "__type": "String", "__tile": null, "defUid": 2, "realEditorValues": [{
-									"id": "V_String",
-									"params": ["Outside"]
-								}] },
-								{ "__identifier": "description", "__value": "Outside of some building.", "__type": "String", "__tile": null, "defUid": 7, "realEditorValues": [{
-									"id": "V_String",
-									"params": ["Outside of some building."]
-								}] },
-								{ "__identifier": "sprite", "__value": ".", "__type": "String", "__tile": null, "defUid": 8, "realEditorValues": [{
-									"id": "V_String",
-									"params": ["."]
-								}] },
-								{ "__identifier": "color", "__value": "black_bold", "__type": "String", "__tile": null, "defUid": 9, "realEditorValues": [{
-									"id": "V_String",
-									"params": ["black_bold"]
-								}] },
-								{ "__identifier": "collision", "__value": false, "__type": "Bool", "__tile": null, "defUid": 10, "realEditorValues": [] }
-							]
-						},
-						{
-							"__identifier": "Tile",
-							"__grid": [8,4],
-							"__pivot": [0,0],
-							"__tags": [],
-							"__tile": null,
-							"__smartColor": "#282828",
-							"iid": "db5bcfa0-dbe0-11ec-84fe-7bc95d76945f",
+							"iid": "4b22a750-dbe0-11ec-8bb2-792cc4f383d2",
 							"width": 16,
 							"height": 48,
 							"defUid": 1,
-							"px": [128,64],
-							"fieldInstances": [
-								{ "__identifier": "name", "__value": "Wall", "__type": "String", "__tile": null, "defUid": 2, "realEditorValues": [{
-									"id": "V_String",
-									"params": ["Wall"]
-								}] },
-								{ "__identifier": "description", "__value": "N/A", "__type": "String", "__tile": null, "defUid": 7, "realEditorValues": [{
-									"id": "V_String",
-									"params": ["N/A"]
-								}] },
-								{ "__identifier": "sprite", "__value": "#", "__type": "String", "__tile": null, "defUid": 8, "realEditorValues": [{
-									"id": "V_String",
-									"params": ["#"]
-								}] },
-								{ "__identifier": "color", "__value": "black_bold", "__type": "String", "__tile": null, "defUid": 9, "realEditorValues": [{
-									"id": "V_String",
-									"params": ["black_bold"]
-								}] },
-								{ "__identifier": "collision", "__value": true, "__type": "Bool", "__tile": null, "defUid": 10, "realEditorValues": [{
-									"id": "V_Bool",
-									"params": [ true ]
-								}] }
-							]
+							"px": [96,128],
+							"fieldInstances": [{ "__identifier": "prototype", "__value": "Path", "__type": "String", "__tile": null, "defUid": 2, "realEditorValues": [{
+								"id": "V_String",
+								"params": ["Path"]
+							}] }]
 						},
 						{
-							"__identifier": "Tile",
-							"__grid": [9,4],
+							"__identifier": "Entity",
+							"__grid": [4,4],
 							"__pivot": [0,0],
 							"__tags": [],
 							"__tile": null,
 							"__smartColor": "#282828",
-							"iid": "6943efa0-dbe0-11ec-84fe-99510a381bd5",
+							"iid": "ca87a5b0-dbe0-11ec-8bb2-17a5b1309353",
+							"width": 80,
+							"height": 48,
+							"defUid": 1,
+							"px": [64,64],
+							"fieldInstances": [{ "__identifier": "prototype", "__value": "Interior", "__type": "String", "__tile": null, "defUid": 2, "realEditorValues": [{
+								"id": "V_String",
+								"params": ["Interior"]
+							}] }]
+						},
+						{
+							"__identifier": "Entity",
+							"__grid": [4,7],
+							"__pivot": [0,0],
+							"__tags": [],
+							"__tile": null,
+							"__smartColor": "#282828",
+							"iid": "cea8c6b0-dbe0-11ec-8bb2-27087613e2ee",
 							"width": 32,
 							"height": 16,
 							"defUid": 1,
-							"px": [144,64],
-							"fieldInstances": [
-								{ "__identifier": "name", "__value": "Wall", "__type": "String", "__tile": null, "defUid": 2, "realEditorValues": [{
-									"id": "V_String",
-									"params": ["Wall"]
-								}] },
-								{ "__identifier": "description", "__value": "N/A", "__type": "String", "__tile": null, "defUid": 7, "realEditorValues": [{
-									"id": "V_String",
-									"params": ["N/A"]
-								}] },
-								{ "__identifier": "sprite", "__value": "#", "__type": "String", "__tile": null, "defUid": 8, "realEditorValues": [{
-									"id": "V_String",
-									"params": ["#"]
-								}] },
-								{ "__identifier": "color", "__value": "black_bold", "__type": "String", "__tile": null, "defUid": 9, "realEditorValues": [{
-									"id": "V_String",
-									"params": ["black_bold"]
-								}] },
-								{ "__identifier": "collision", "__value": true, "__type": "Bool", "__tile": null, "defUid": 10, "realEditorValues": [{
-									"id": "V_Bool",
-									"params": [ true ]
-								}] }
-							]
+							"px": [64,112],
+							"fieldInstances": [{ "__identifier": "prototype", "__value": "Wall", "__type": "String", "__tile": null, "defUid": 2, "realEditorValues": [{
+								"id": "V_String",
+								"params": ["Wall"]
+							}] }]
 						},
 						{
-							"__identifier": "Tile",
-							"__grid": [11,4],
+							"__identifier": "Entity",
+							"__grid": [7,7],
 							"__pivot": [0,0],
 							"__tags": [],
 							"__tile": null,
 							"__smartColor": "#282828",
-							"iid": "6d55a750-dbe0-11ec-84fe-ad8983affaee",
+							"iid": "d0106d00-dbe0-11ec-8bb2-e55ad61ff096",
+							"width": 32,
+							"height": 16,
+							"defUid": 1,
+							"px": [112,112],
+							"fieldInstances": [{ "__identifier": "prototype", "__value": "Wall", "__type": "String", "__tile": null, "defUid": 2, "realEditorValues": [{
+								"id": "V_String",
+								"params": ["Wall"]
+							}] }]
+						},
+						{
+							"__identifier": "Entity",
+							"__grid": [3,3],
+							"__pivot": [0,0],
+							"__tags": [],
+							"__tile": null,
+							"__smartColor": "#282828",
+							"iid": "d139f8e0-dbe0-11ec-8bb2-b9a0827533e3",
 							"width": 16,
-							"height": 112,
-							"defUid": 1,
-							"px": [176,64],
-							"fieldInstances": [
-								{ "__identifier": "name", "__value": "Wall", "__type": "String", "__tile": null, "defUid": 2, "realEditorValues": [{
-									"id": "V_String",
-									"params": ["Wall"]
-								}] },
-								{ "__identifier": "description", "__value": "N/A", "__type": "String", "__tile": null, "defUid": 7, "realEditorValues": [{
-									"id": "V_String",
-									"params": ["N/A"]
-								}] },
-								{ "__identifier": "sprite", "__value": "#", "__type": "String", "__tile": null, "defUid": 8, "realEditorValues": [{
-									"id": "V_String",
-									"params": ["#"]
-								}] },
-								{ "__identifier": "color", "__value": "black_bold", "__type": "String", "__tile": null, "defUid": 9, "realEditorValues": [{
-									"id": "V_String",
-									"params": ["black_bold"]
-								}] },
-								{ "__identifier": "collision", "__value": true, "__type": "Bool", "__tile": null, "defUid": 10, "realEditorValues": [{
-									"id": "V_Bool",
-									"params": [ true ]
-								}] }
-							]
-						},
-						{
-							"__identifier": "Tile",
-							"__grid": [9,10],
-							"__pivot": [0,0],
-							"__tags": [],
-							"__tile": null,
-							"__smartColor": "#282828",
-							"iid": "6f1d47f0-dbe0-11ec-84fe-8bb0da68f49e",
-							"width": 32,
-							"height": 16,
-							"defUid": 1,
-							"px": [144,160],
-							"fieldInstances": [
-								{ "__identifier": "name", "__value": "Wall", "__type": "String", "__tile": null, "defUid": 2, "realEditorValues": [{
-									"id": "V_String",
-									"params": ["Wall"]
-								}] },
-								{ "__identifier": "description", "__value": "N/A", "__type": "String", "__tile": null, "defUid": 7, "realEditorValues": [{
-									"id": "V_String",
-									"params": ["N/A"]
-								}] },
-								{ "__identifier": "sprite", "__value": "#", "__type": "String", "__tile": null, "defUid": 8, "realEditorValues": [{
-									"id": "V_String",
-									"params": ["#"]
-								}] },
-								{ "__identifier": "color", "__value": "black_bold", "__type": "String", "__tile": null, "defUid": 9, "realEditorValues": [{
-									"id": "V_String",
-									"params": ["black_bold"]
-								}] },
-								{ "__identifier": "collision", "__value": true, "__type": "Bool", "__tile": null, "defUid": 10, "realEditorValues": [{
-									"id": "V_Bool",
-									"params": [ true ]
-								}] }
-							]
-						},
-						{
-							"__identifier": "Tile",
-							"__grid": [9,5],
-							"__pivot": [0,0],
-							"__tags": [],
-							"__tile": null,
-							"__smartColor": "#282828",
-							"iid": "700c89f0-dbe0-11ec-84fe-95c7cfd2b4ca",
-							"width": 32,
 							"height": 80,
 							"defUid": 1,
-							"px": [144,80],
-							"fieldInstances": [
-								{ "__identifier": "name", "__value": "Inside", "__type": "String", "__tile": null, "defUid": 2, "realEditorValues": [{
-									"id": "V_String",
-									"params": ["Inside"]
-								}] },
-								{ "__identifier": "description", "__value": "Inside of some building.", "__type": "String", "__tile": null, "defUid": 7, "realEditorValues": [{
-									"id": "V_String",
-									"params": ["Inside of some building."]
-								}] },
-								{ "__identifier": "sprite", "__value": ".", "__type": "String", "__tile": null, "defUid": 8, "realEditorValues": [{
-									"id": "V_String",
-									"params": ["."]
-								}] },
-								{ "__identifier": "color", "__value": "black_bold", "__type": "String", "__tile": null, "defUid": 9, "realEditorValues": [{
-									"id": "V_String",
-									"params": ["black_bold"]
-								}] },
-								{ "__identifier": "collision", "__value": false, "__type": "Bool", "__tile": null, "defUid": 10, "realEditorValues": [] }
-							]
+							"px": [48,48],
+							"fieldInstances": [{ "__identifier": "prototype", "__value": "Wall", "__type": "String", "__tile": null, "defUid": 2, "realEditorValues": [{
+								"id": "V_String",
+								"params": ["Wall"]
+							}] }]
 						},
 						{
-							"__identifier": "Tile",
-							"__grid": [8,8],
+							"__identifier": "Entity",
+							"__grid": [9,3],
 							"__pivot": [0,0],
 							"__tags": [],
 							"__tile": null,
 							"__smartColor": "#282828",
-							"iid": "12eb4c90-dbe0-11ec-a434-21ecd7665126",
+							"iid": "d4266a70-dbe0-11ec-8bb2-fd45b404db3a",
 							"width": 16,
-							"height": 48,
+							"height": 80,
 							"defUid": 1,
-							"px": [128,128],
-							"fieldInstances": [
-								{ "__identifier": "name", "__value": "Wall", "__type": "String", "__tile": null, "defUid": 2, "realEditorValues": [{
-									"id": "V_String",
-									"params": ["Wall"]
-								}] },
-								{ "__identifier": "description", "__value": "N/A", "__type": "String", "__tile": null, "defUid": 7, "realEditorValues": [{
-									"id": "V_String",
-									"params": ["N/A"]
-								}] },
-								{ "__identifier": "sprite", "__value": "#", "__type": "String", "__tile": null, "defUid": 8, "realEditorValues": [{
-									"id": "V_String",
-									"params": ["#"]
-								}] },
-								{ "__identifier": "color", "__value": "black", "__type": "String", "__tile": null, "defUid": 9, "realEditorValues": [{
-									"id": "V_String",
-									"params": ["black"]
-								}] },
-								{ "__identifier": "collision", "__value": true, "__type": "Bool", "__tile": null, "defUid": 10, "realEditorValues": [{
-									"id": "V_Bool",
-									"params": [ true ]
-								}] }
-							]
+							"px": [144,48],
+							"fieldInstances": [{ "__identifier": "prototype", "__value": "Wall", "__type": "String", "__tile": null, "defUid": 2, "realEditorValues": [{
+								"id": "V_String",
+								"params": ["Wall"]
+							}] }]
 						},
 						{
-							"__identifier": "Tile",
-							"__grid": [8,7],
+							"__identifier": "Entity",
+							"__grid": [4,3],
 							"__pivot": [0,0],
 							"__tags": [],
 							"__tile": null,
 							"__smartColor": "#282828",
-							"iid": "1abca450-dbe0-11ec-a434-3d682bb456fe",
+							"iid": "d5688760-dbe0-11ec-8bb2-9b18c5a15813",
+							"width": 80,
+							"height": 16,
+							"defUid": 1,
+							"px": [64,48],
+							"fieldInstances": [{ "__identifier": "prototype", "__value": "Wall", "__type": "String", "__tile": null, "defUid": 2, "realEditorValues": [{
+								"id": "V_String",
+								"params": ["Wall"]
+							}] }]
+						},
+						{
+							"__identifier": "Entity",
+							"__grid": [6,7],
+							"__pivot": [0,0],
+							"__tags": [],
+							"__tile": null,
+							"__smartColor": "#282828",
+							"iid": "6f0c7fc0-dbe0-11ec-8bb2-338ba3d47241",
 							"width": 16,
 							"height": 16,
 							"defUid": 1,
-							"px": [128,112],
-							"fieldInstances": [
-								{ "__identifier": "name", "__value": "Entry", "__type": "String", "__tile": null, "defUid": 2, "realEditorValues": [{
-									"id": "V_String",
-									"params": ["Entry"]
-								}] },
-								{ "__identifier": "description", "__value": "Entry way to some building.", "__type": "String", "__tile": null, "defUid": 7, "realEditorValues": [{
-									"id": "V_String",
-									"params": ["Entry way to some building."]
-								}] },
-								{ "__identifier": "sprite", "__value": ".", "__type": "String", "__tile": null, "defUid": 8, "realEditorValues": [{
-									"id": "V_String",
-									"params": ["."]
-								}] },
-								{ "__identifier": "color", "__value": "black_bold", "__type": "String", "__tile": null, "defUid": 9, "realEditorValues": [{
-									"id": "V_String",
-									"params": ["black_bold"]
-								}] },
-								{ "__identifier": "collision", "__value": false, "__type": "Bool", "__tile": null, "defUid": 10, "realEditorValues": [{
-									"id": "V_Bool",
-									"params": [ false ]
-								}] }
-							]
+							"px": [96,112],
+							"fieldInstances": [{ "__identifier": "prototype", "__value": "Interior", "__type": "String", "__tile": null, "defUid": 2, "realEditorValues": [{
+								"id": "V_String",
+								"params": ["Interior"]
+							}] }]
 						}
 					]
 				},
 				{
 					"__identifier": "Spawn",
 					"__type": "Entities",
-					"__cWid": 15,
-					"__cHei": 15,
+					"__cWid": 13,
+					"__cHei": 14,
 					"__gridSize": 16,
 					"__opacity": 1,
 					"__pxTotalOffsetX": 0,
@@ -797,16 +479,16 @@
 					"entityInstances": [
 						{
 							"__identifier": "Spawn",
-							"__grid": [5,9],
+							"__grid": [6,9],
 							"__pivot": [0,0],
 							"__tags": [],
 							"__tile": null,
 							"__smartColor": "#2CD1A6",
-							"iid": "95f87c50-dbe0-11ec-84fe-6d82a90f2525",
+							"iid": "4dca47b0-dbe0-11ec-8bb2-2d047604060e",
 							"width": 16,
 							"height": 16,
 							"defUid": 5,
-							"px": [80,144],
+							"px": [96,144],
 							"fieldInstances": []
 						}
 					]

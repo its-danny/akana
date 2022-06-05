@@ -6,6 +6,7 @@ edition = "2021"
 [dependencies]
 api = { path = "../api" }
 bevy = { version = "0.7.0", default-features = false }
+bevy_proto = "0.4.0"
 chrono = "0.4.19"
 crossbeam-channel = "0.5.4"
 dashmap = "5.2.0"
@@ -17,6 +18,7 @@ reqwest = { version = "0.11.10", features = ["blocking", "json"] }
 serde = { version = "1.0.137", features = [ "derive" ] }
 thiserror = "1.0.30"
 tokio = { version = "1.18.0", features = [ "full" ] }
+typetag = "0.1.8"
 yansi = "0.5.1"
 
 [dev-dependencies]

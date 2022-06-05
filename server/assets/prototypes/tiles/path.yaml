@@ -1,0 +1,11 @@
+---
+name: "Path"
+components:
+  - type: Tile
+    value:
+      name: "Path"
+      description: "A path to nowhere."
+  - type: Sprite
+    value:
+      character: "."
+      color: "black_bold"

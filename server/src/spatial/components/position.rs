@@ -1,4 +1,6 @@
 use bevy::prelude::*;
+use bevy_proto::ProtoComponent;
+use serde::{Deserialize, Serialize};
 
-#[derive(Component, Debug)]
+#[derive(Clone, Serialize, Deserialize, ProtoComponent, Component, Debug)]
 pub struct Position(pub IVec2);

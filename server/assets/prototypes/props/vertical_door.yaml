@@ -1,0 +1,12 @@
+---
+name: "Vertical Door"
+components:
+  - type: Door
+    value:
+      opened_character: "/"
+      closed_character: "|"
+  - type: Sprite
+    value:
+      character: "|"
+      color: "white"
+  - type: Collider
