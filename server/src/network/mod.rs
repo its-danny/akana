@@ -46,8 +46,9 @@ impl Plugin for NetworkPlugin {
                 .with_system(handle_incoming)
                 .with_system(handle_lost)
                 .with_system(handle_events)
-                .with_system(handle_inbox)
-                .with_system(handle_outbox),
+                .with_system(handle_inbox),
         );
+
+        app.add_system_set_to_stage(CoreStage::Last, SystemSet::new().with_system(handle_outbox));
     }
 }
