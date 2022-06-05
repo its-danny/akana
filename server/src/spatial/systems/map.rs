@@ -4,7 +4,7 @@ use regex::Regex;
 use yansi::Paint;
 
 use crate::{
-    network::{events::NetworkMessage, server::NetworkServer},
+    network::events::{NetworkInput, NetworkOutput},
     player::components::{client::Client, online::Online},
     spatial::components::position::Position,
     visual::components::sprite::{Sprite, SpritePaint},
@@ -12,8 +12,8 @@ use crate::{
 
 /// Handles the `map` command.
 pub fn map(
-    server: Res<NetworkServer>,
-    mut messages: EventReader<NetworkMessage>,
+    mut input: EventReader<NetworkInput>,
+    mut output: EventWriter<NetworkOutput>,
     players: Query<(&Client, &Position), With<Online>>,
     sprites: Query<(&Position, &Sprite)>,
 ) {
@@ -21,7 +21,7 @@ pub fn map(
         static ref CMD: Regex = Regex::new("^(map|m)$").unwrap();
     }
 
-    for message in messages.iter() {
+    for message in input.iter() {
         if CMD.is_match(&message.body.to_lowercase()) {
             if let Some((client, position)) = players.iter().find(|(c, _)| c.id == message.id) {
                 const MAP_WIDTH: i32 = 80;
@@ -54,11 +54,12 @@ pub fn map(
                     }
                 }
 
-                server.send_message(
-                    &map.map(|r| r.map(|c| format!("{}", c)).join(""))
+                output.send(NetworkOutput {
+                    id: client.id,
+                    body: map
+                        .map(|r| r.map(|c| format!("{}", c)).join(""))
                         .join("\r\n"),
-                    client.id,
-                );
+                });
             }
         }
     }

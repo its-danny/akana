@@ -3,7 +3,7 @@ use lazy_static::lazy_static;
 use regex::Regex;
 
 use crate::{
-    network::{events::NetworkMessage, server::NetworkServer},
+    network::events::{NetworkInput, NetworkOutput},
     player::components::{client::Client, online::Online},
     spatial::components::position::Position,
     visual::components::sprite::{Sprite, SpritePaint},
@@ -12,8 +12,8 @@ use crate::{
 
 /// Handles the `look` command.
 pub fn look(
-    server: Res<NetworkServer>,
-    mut messages: EventReader<NetworkMessage>,
+    mut input: EventReader<NetworkInput>,
+    mut output: EventWriter<NetworkOutput>,
     players: Query<(&Client, &Position), With<Online>>,
     tiles: Query<(&Tile, &Position, &Sprite)>,
 ) {
@@ -21,14 +21,14 @@ pub fn look(
         static ref CMD: Regex = Regex::new("^(look|l)$").unwrap();
     }
 
-    for message in messages.iter() {
+    for message in input.iter() {
         if CMD.is_match(&message.body.to_lowercase()) {
             if let Some((client, position)) = players.iter().find(|(c, _)| c.id == message.id) {
                 if let Some((tile, _, sprite)) = tiles.iter().find(|(_, p, _)| p.0 == position.0) {
-                    server.send_message(
-                        &format!("{} {}\r\n{}", sprite.paint(), tile.name, tile.description),
-                        client.id,
-                    );
+                    output.send(NetworkOutput {
+                        id: client.id,
+                        body: format!("{} {}\r\n{}", sprite.paint(), tile.name, tile.description),
+                    });
                 }
             }
         }

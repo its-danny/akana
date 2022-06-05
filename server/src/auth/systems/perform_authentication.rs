@@ -8,7 +8,7 @@ use crate::{
         utils::api::{sign_in, user_exists},
     },
     network::{
-        events::NetworkMessage,
+        events::{NetworkInput, NetworkOutput},
         server::{NetworkServer, TelnetCommand::*},
     },
     player::{
@@ -19,17 +19,18 @@ use crate::{
     world::resources::new_player_spawn::NewPlayerSpawn,
 };
 
-/// Intercept all [`NetworkMessage`] for any user that's currently
+/// Intercept all [`NetworkInput`] for any user that's currently
 /// authenticating and handle authentication.
 pub fn perform_authentication(
     mut commands: Commands,
     server: Res<NetworkServer>,
     new_player_spawn: Res<NewPlayerSpawn>,
-    mut messages: EventReader<NetworkMessage>,
+    mut input: EventReader<NetworkInput>,
+    mut output: EventWriter<NetworkOutput>,
     mut prompts: EventWriter<PromptEvent>,
     mut players: Query<(Entity, &Client, &mut Authenticating)>,
 ) {
-    for message in messages.iter() {
+    for message in input.iter() {
         if let Some((entity, client, mut authenticating)) =
             players.iter_mut().find(|(_, c, _)| c.id == message.id)
         {
@@ -38,7 +39,10 @@ pub fn perform_authentication(
                     // Validate the name. Currently, that just means it's
                     // more than 3 letters long.
                     if message.body.len() < 3 {
-                        server.send_message("That's not a valid name. Try again!", client.id);
+                        output.send(NetworkOutput {
+                            id: client.id,
+                            body: "That's not a valid name. Try again!".to_string(),
+                        });
 
                         break;
                     }
@@ -49,16 +53,27 @@ pub fn perform_authentication(
                             // for their password. We send this telnet command along with it
                             // so that their client won't echo back their passwor.
                             server.send_command([Iac as u8, Will as u8, Echo as u8], client.id);
-                            server.send_message("What's your password?", client.id);
+
+                            output.send(NetworkOutput {
+                                id: client.id,
+                                body: "What's your password?".to_string(),
+                            });
                         }
                         StatusCode::NOT_FOUND => {
                             // If the user is not found, we do the same, but letting them
                             // know this will be a new account.
                             server.send_command([Iac as u8, Will as u8, Echo as u8], client.id);
-                            server.send_message("Looks like this is a new character. What password would you like to use?", client.id);
+
+                            output.send(NetworkOutput {
+                                id: client.id,
+                                body: "Looks like this is a new character. What password would you like to use?".to_string(),
+                            });
                         }
                         _ => {
-                            server.send_message("Uh oh, something broke!", client.id);
+                            output.send(NetworkOutput {
+                                id: client.id,
+                                body: "Uh oh, something broke!".to_string(),
+                            });
                         }
                     }
 
@@ -71,7 +86,10 @@ pub fn perform_authentication(
                     // Validate the name. Currently, that just means it's
                     // more than 3 letters long.
                     if message.body.len() < 3 {
-                        server.send_message("That's not a valid password. Try again!", client.id);
+                        output.send(NetworkOutput {
+                            id: client.id,
+                            body: "That's not a valid password. Try again!".to_string(),
+                        });
 
                         break;
                     }
@@ -88,7 +106,11 @@ pub fn perform_authentication(
                             // send another telnet command letting their client know it's
                             // ok to echo input again.
                             server.send_command([Iac as u8, Wont as u8, Echo as u8], client.id);
-                            server.send_message("Authenticated.", client.id);
+
+                            output.send(NetworkOutput {
+                                id: client.id,
+                                body: "Authenticated.".to_string(),
+                            });
 
                             // Send the prompt.
                             prompts.send(PromptEvent(client.id));
@@ -108,10 +130,16 @@ pub fn perform_authentication(
                         }
                         StatusCode::FORBIDDEN => {
                             // If their password was not correct, let them try again.
-                            server.send_message("Incorrect password. Try again!", client.id);
+                            output.send(NetworkOutput {
+                                id: client.id,
+                                body: "Incorrect password. Try again!".to_string(),
+                            });
                         }
                         _ => {
-                            server.send_message("Uh oh, something broke!", client.id);
+                            output.send(NetworkOutput {
+                                id: client.id,
+                                body: "Uh oh, something broke!".to_string(),
+                            });
                         }
                     }
                 }

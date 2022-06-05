@@ -3,7 +3,7 @@ use std::env;
 use bevy::prelude::*;
 
 use super::{
-    events::{NetworkEvent, NetworkMessage},
+    events::{NetworkEvent, NetworkInput, NetworkOutput},
     server::NetworkServer,
 };
 
@@ -37,10 +37,16 @@ pub fn handle_events(server: Res<NetworkServer>, mut events: EventWriter<Network
     }
 }
 
-pub fn handle_inbox(server: Res<NetworkServer>, mut messages: EventWriter<NetworkMessage>) {
+pub fn handle_inbox(server: Res<NetworkServer>, mut input: EventWriter<NetworkInput>) {
     for message in server.inbox.receiver.try_iter() {
         debug!("Handling inbox message: {message:?}");
 
-        messages.send(message);
+        input.send(message);
+    }
+}
+
+pub fn handle_outbox(server: Res<NetworkServer>, mut output: EventReader<NetworkOutput>) {
+    for message in output.iter() {
+        server.send_message(&message.body, message.id);
     }
 }

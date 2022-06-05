@@ -2,16 +2,16 @@ use bevy::prelude::*;
 
 use crate::{
     auth::components::authenticating::Authenticating,
-    network::{events::NetworkEvent, server::NetworkServer},
+    network::events::{NetworkEvent, NetworkOutput},
     player::components::client::Client,
 };
 
 /// Spawn a new entity with a [`Player`] component when a new connection
 /// comes in, an despawn it when the connection is lost.
 pub fn handle_network_events(
-    server: ResMut<NetworkServer>,
     mut commands: Commands,
     mut events: EventReader<NetworkEvent>,
+    mut output: EventWriter<NetworkOutput>,
     players: Query<(Entity, &Client)>,
 ) {
     for event in events.iter() {
@@ -19,7 +19,10 @@ pub fn handle_network_events(
             NetworkEvent::Connected(id) => {
                 commands.spawn_bundle((Client { id: *id, width: 80 }, Authenticating::default()));
 
-                server.send_message("What's your name?", *id);
+                output.send(NetworkOutput {
+                    id: *id,
+                    body: "What's your name?".to_string(),
+                });
 
                 info!("Player spawned for {id:?}");
             }

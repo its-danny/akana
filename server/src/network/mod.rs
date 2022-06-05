@@ -9,7 +9,10 @@ use events::NetworkEvent;
 use server::NetworkServer;
 use systems::{handle_events, handle_inbox, handle_incoming, handle_lost};
 
-use self::{events::NetworkMessage, systems::setup_network};
+use self::{
+    events::{NetworkInput, NetworkOutput},
+    systems::{handle_outbox, setup_network},
+};
 
 pub struct SyncChannel<T> {
     sender: Sender<T>,
@@ -31,7 +34,8 @@ impl Plugin for NetworkPlugin {
         app.insert_resource(NetworkServer::new());
 
         app.add_event::<NetworkEvent>();
-        app.add_event::<NetworkMessage>();
+        app.add_event::<NetworkInput>();
+        app.add_event::<NetworkOutput>();
 
         app.add_startup_system(setup_network);
 
@@ -42,7 +46,8 @@ impl Plugin for NetworkPlugin {
                 .with_system(handle_incoming)
                 .with_system(handle_lost)
                 .with_system(handle_events)
-                .with_system(handle_inbox),
+                .with_system(handle_inbox)
+                .with_system(handle_outbox),
         );
     }
 }

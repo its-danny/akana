@@ -4,8 +4,8 @@ use regex::Regex;
 
 use crate::{
     network::{
-        events::NetworkMessage,
-        server::{ConnectionId, NetworkServer},
+        events::{NetworkInput, NetworkOutput},
+        server::ConnectionId,
     },
     player::components::{client::Client, online::Online},
     spatial::components::{collider::Collider, position::Position},
@@ -15,8 +15,8 @@ use crate::{
 /// Handles movement commands.
 #[allow(clippy::type_complexity)]
 pub fn movement(
-    server: Res<NetworkServer>,
-    mut messages: ParamSet<(EventReader<NetworkMessage>, EventWriter<NetworkMessage>)>,
+    mut input: ParamSet<(EventReader<NetworkInput>, EventWriter<NetworkInput>)>,
+    mut output: EventWriter<NetworkOutput>,
     mut players: Query<(&Client, &mut Position), With<Online>>,
     tiles: Query<&Position, (With<Tile>, Without<Client>)>,
     colliders: Query<&Position, (With<Collider>, Without<Client>)>,
@@ -30,7 +30,7 @@ pub fn movement(
 
     let mut moved: Vec<ConnectionId> = Vec::new();
 
-    for message in messages.p0().iter() {
+    for message in input.p0().iter() {
         if let Some((client, mut position)) = players.iter_mut().find(|p| p.0.id == message.id) {
             if let Some(captures) = CMD.captures(&message.body.to_lowercase()) {
                 let wanted_tile = match captures.get(0).unwrap().as_str() {
@@ -55,22 +55,28 @@ pub fn movement(
 
                 if let Some(tile) = wanted_tile {
                     if colliders.iter().any(|c| c.0 == tile.0) {
-                        server.send_message("Something blocks your way.", client.id);
+                        output.send(NetworkOutput {
+                            id: client.id,
+                            body: "Something blocks your way.".to_string(),
+                        });
                     } else {
                         position.0 = tile.0;
 
                         moved.push(client.id);
                     }
                 } else {
-                    server.send_message("You can't go that direction.", client.id);
+                    output.send(NetworkOutput {
+                        id: client.id,
+                        body: "You can't go that direction.".to_string(),
+                    });
                 }
             }
         }
     }
 
     for id in moved {
-        messages.p1().send({
-            NetworkMessage {
+        input.p1().send({
+            NetworkInput {
                 id,
                 body: "look".to_string(),
                 internal: true,

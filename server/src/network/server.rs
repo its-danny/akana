@@ -11,7 +11,7 @@ use tokio::{
 
 use super::{
     errors::NetworkError,
-    events::{IncomingConnection, NetworkCommand, NetworkEvent, NetworkMessage},
+    events::{IncomingConnection, NetworkCommand, NetworkEvent, NetworkInput, NetworkOutput},
     SyncChannel,
 };
 
@@ -34,7 +34,7 @@ struct ClientConnection {
     #[allow(dead_code)]
     write_task: JoinHandle<()>,
     /// Messages to be sent out
-    outbox: SyncChannel<(Option<NetworkCommand>, Option<NetworkMessage>)>,
+    outbox: SyncChannel<(Option<NetworkCommand>, Option<NetworkOutput>)>,
 }
 
 pub struct NetworkServer {
@@ -48,7 +48,7 @@ pub struct NetworkServer {
     /// Network events
     pub events: SyncChannel<NetworkEvent>,
     /// Messages received from clients
-    pub inbox: SyncChannel<NetworkMessage>,
+    pub inbox: SyncChannel<NetworkInput>,
 }
 
 impl NetworkServer {
@@ -106,7 +106,7 @@ impl NetworkServer {
     }
 
     pub fn setup_client(&self, connection: IncomingConnection) {
-        let outbox: SyncChannel<(Option<NetworkCommand>, Option<NetworkMessage>)> =
+        let outbox: SyncChannel<(Option<NetworkCommand>, Option<NetworkOutput>)> =
             SyncChannel::new();
 
         let lost_sender = self.lost.sender.clone();
@@ -164,7 +164,7 @@ impl NetworkServer {
                             .to_string();
 
                         if !message.is_empty() {
-                            if let Err(error) = inbox_sender.send(NetworkMessage {
+                            if let Err(error) = inbox_sender.send(NetworkInput {
                                 id,
                                 body: message,
                                 internal: false,
@@ -227,10 +227,9 @@ impl NetworkServer {
         if let Some(client) = self.clients.get(&id) {
             if let Err(error) = client.value().outbox.sender.send((
                 None,
-                Some(NetworkMessage {
+                Some(NetworkOutput {
                     id,
                     body: format!("{message}\r\n"),
-                    internal: false,
                 }),
             )) {
                 error!("Could not send to outbox: {error}");

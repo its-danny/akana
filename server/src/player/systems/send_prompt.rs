@@ -2,7 +2,7 @@ use bevy::prelude::*;
 use yansi::Paint;
 
 use crate::{
-    network::server::NetworkServer,
+    network::events::NetworkOutput,
     player::{
         components::{character::Character, client::Client, online::Online},
         events::prompt_event::PromptEvent,
@@ -12,9 +12,9 @@ use crate::{
 
 /// Send a prompt to anyone who needs it.
 pub fn send_prompt(
-    server: Res<NetworkServer>,
     world_time: Res<WorldTime>,
     mut prompts: EventReader<PromptEvent>,
+    mut output: EventWriter<NetworkOutput>,
     players: Query<(&Client, &Character), With<Online>>,
 ) {
     for event in prompts.iter() {
@@ -36,10 +36,10 @@ pub fn send_prompt(
                 ">"
             );
 
-            server.send_message(
-                &format!("{:width$}{world_status_colored}", name,),
-                client.id,
-            );
+            output.send(NetworkOutput {
+                id: client.id,
+                body: format!("{:width$}{world_status_colored}", name),
+            });
         }
     }
 }
