@@ -5,6 +5,10 @@ components:
     value:
       opened_character: "/"
       closed_character: "|"
+  - type: Details
+    value:
+      name: "Door"
+      description: "IIt's a door!"
   - type: Sprite
     value:
       character: "|"

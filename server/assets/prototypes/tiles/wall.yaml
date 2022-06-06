@@ -2,9 +2,10 @@
 name: "Wall"
 components:
   - type: Tile
+  - type: Details
     value:
       name: "Wall"
-      description: ""
+      description: "You shouldn't be seeing this!"
   - type: Sprite
     value:
       character: "#"

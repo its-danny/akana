@@ -7,7 +7,7 @@ pub mod utils {
         network::server::ConnectionId,
         player::components::{client::Client, online::Online},
         spatial::components::{collider::Collider, door::Door, position::Position},
-        visual::components::sprite::Sprite,
+        visual::components::{details::Details, sprite::Sprite},
         world::components::tile::Tile,
     };
 
@@ -26,9 +26,15 @@ pub mod utils {
         (Client { id, width: 80 }, Position(IVec2::new(x, y)), Online)
     }
 
-    pub fn tile_bundle(name: &str, description: &str, x: i32, y: i32) -> (Tile, Position, Sprite) {
+    pub fn tile_bundle(
+        name: &str,
+        description: &str,
+        x: i32,
+        y: i32,
+    ) -> (Tile, Details, Position, Sprite) {
         (
-            Tile {
+            Tile,
+            Details {
                 name: name.into(),
                 description: description.into(),
             },
@@ -40,28 +46,44 @@ pub mod utils {
         )
     }
 
-    pub fn door_bundle(is_horizontal: bool, x: i32, y: i32) -> (Door, Position, Collider, Sprite) {
+    pub fn door_bundle(
+        is_horizontal: bool,
+        x: i32,
+        y: i32,
+    ) -> (Door, Position, Details, Sprite, Collider) {
         (
             Door {
                 opened_character: "/".to_string(),
                 closed_character: if is_horizontal { "|" } else { "-" }.to_string(),
             },
             Position(IVec2::new(x, y)),
-            Collider,
+            Details {
+                name: "Door".into(),
+                description: "A door.".into(),
+            },
             Sprite {
                 character: if is_horizontal { "|" } else { "-" }.to_string(),
                 color: "white".to_string(),
             },
+            Collider,
         )
     }
 
-    pub fn open_door_bundle(is_horizontal: bool, x: i32, y: i32) -> (Door, Position, Sprite) {
+    pub fn open_door_bundle(
+        is_horizontal: bool,
+        x: i32,
+        y: i32,
+    ) -> (Door, Position, Details, Sprite) {
         (
             Door {
                 opened_character: "/".to_string(),
                 closed_character: if is_horizontal { "|" } else { "-" }.to_string(),
             },
             Position(IVec2::new(x, y)),
+            Details {
+                name: "Door".into(),
+                description: "A door.".into(),
+            },
             Sprite {
                 character: if is_horizontal { "|" } else { "-" }.to_string(),
                 color: "white".to_string(),

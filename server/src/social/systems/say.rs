@@ -16,14 +16,14 @@ pub fn say(
     players: Query<(&Client, &Position, &Character), With<Online>>,
 ) {
     lazy_static! {
-        static ref CMD: Regex = Regex::new("^(say( )?|')(.+)?$").unwrap();
+        static ref CMD: Regex = Regex::new("^(say|')( )?(.+)?$").unwrap();
     }
 
     for message in input.iter() {
-        if let Some((client, position, character)) =
-            players.iter().find(|(c, _, _)| c.id == message.id)
-        {
-            if let Some(captures) = CMD.captures(&message.body.to_lowercase()) {
+        if let Some(captures) = CMD.captures(&message.body.to_lowercase()) {
+            if let Some((client, position, character)) =
+                players.iter().find(|(c, _, _)| c.id == message.id)
+            {
                 if let Some(phrase) = captures.get(3) {
                     output.send(NetworkOutput {
                         id: client.id,

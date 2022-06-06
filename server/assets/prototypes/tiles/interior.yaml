@@ -2,6 +2,7 @@
 name: "Interior"
 components:
   - type: Tile
+  - type: Details
     value:
       name: "Inside"
       description: "Inside of some ol' building."

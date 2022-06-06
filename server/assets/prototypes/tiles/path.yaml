@@ -2,6 +2,7 @@
 name: "Path"
 components:
   - type: Tile
+  - type: Details
     value:
       name: "Path"
       description: "A path to nowhere."
