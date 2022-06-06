@@ -84,7 +84,9 @@ mod tests {
         app.add_system(super::map);
 
         let id = connection_id();
-        app.world.spawn().insert_bundle(player_bundle(id, 0, 0));
+        app.world
+            .spawn()
+            .insert_bundle(player_bundle(id, "Mussugro", 0, 0));
 
         app.world
             .spawn()

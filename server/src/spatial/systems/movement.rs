@@ -107,7 +107,7 @@ mod tests {
         let player_id = app
             .world
             .spawn()
-            .insert_bundle(player_bundle(id, 0, 0))
+            .insert_bundle(player_bundle(id, "Chirolne", 0, 0))
             .id();
 
         app.world
@@ -146,7 +146,7 @@ mod tests {
         let player_id = app
             .world
             .spawn()
-            .insert_bundle(player_bundle(id, 0, 0))
+            .insert_bundle(player_bundle(id, "Chirolne", 0, 0))
             .id();
 
         app.world
@@ -193,7 +193,7 @@ mod tests {
         let player_id = app
             .world
             .spawn()
-            .insert_bundle(player_bundle(id, 0, 0))
+            .insert_bundle(player_bundle(id, "Chirolne", 0, 0))
             .id();
 
         app.world
@@ -232,7 +232,9 @@ mod tests {
         app.add_system(super::movement);
 
         let id = connection_id();
-        app.world.spawn().insert_bundle(player_bundle(id, 0, 0));
+        app.world
+            .spawn()
+            .insert_bundle(player_bundle(id, "Chirolne", 0, 0));
 
         app.world
             .spawn()

@@ -5,7 +5,7 @@ pub mod utils {
 
     use crate::{
         network::server::ConnectionId,
-        player::components::{client::Client, online::Online},
+        player::components::{character::Character, client::Client, online::Online},
         spatial::components::{collider::Collider, door::Door, position::Position, tile::Tile},
         visual::components::{details::Details, sprite::Sprite},
     };
@@ -21,8 +21,21 @@ pub mod utils {
         }
     }
 
-    pub fn player_bundle(id: ConnectionId, x: i32, y: i32) -> (Client, Position, Online) {
-        (Client { id, width: 80 }, Position(IVec2::new(x, y)), Online)
+    pub fn player_bundle(
+        id: ConnectionId,
+        name: &str,
+        x: i32,
+        y: i32,
+    ) -> (Client, Position, Character, Online) {
+        (
+            Client { id, width: 80 },
+            Position(IVec2::new(x, y)),
+            Character {
+                name: name.into(),
+                id: 1,
+            },
+            Online,
+        )
     }
 
     pub fn tile_bundle(

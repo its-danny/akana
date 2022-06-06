@@ -94,7 +94,9 @@ mod tests {
         app.add_system(super::look);
 
         let id = connection_id();
-        app.world.spawn().insert_bundle(player_bundle(id, 0, 0));
+        app.world
+            .spawn()
+            .insert_bundle(player_bundle(id, "Rodrani", 0, 0));
 
         app.world
             .spawn()
@@ -129,7 +131,9 @@ mod tests {
         app.add_system(super::look);
 
         let id = connection_id();
-        app.world.spawn().insert_bundle(player_bundle(id, 0, 0));
+        app.world
+            .spawn()
+            .insert_bundle(player_bundle(id, "Rodrani", 0, 0));
 
         app.world
             .spawn()
@@ -166,7 +170,9 @@ mod tests {
         app.add_system(super::look);
 
         let id = connection_id();
-        app.world.spawn().insert_bundle(player_bundle(id, 0, 0));
+        app.world
+            .spawn()
+            .insert_bundle(player_bundle(id, "Rodrani", 0, 0));
 
         app.world
             .spawn()

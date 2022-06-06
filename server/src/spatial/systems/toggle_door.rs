@@ -98,7 +98,9 @@ mod tests {
         app.add_system(super::toggle_door);
 
         let id = connection_id();
-        app.world.spawn().insert_bundle(player_bundle(id, 0, 0));
+        app.world
+            .spawn()
+            .insert_bundle(player_bundle(id, "Hunral", 0, 0));
 
         let door_id = app
             .world
@@ -135,7 +137,9 @@ mod tests {
         app.add_system(super::toggle_door);
 
         let id = connection_id();
-        app.world.spawn().insert_bundle(player_bundle(id, 0, 0));
+        app.world
+            .spawn()
+            .insert_bundle(player_bundle(id, "Hunral", 0, 0));
 
         app.world
             .spawn()
@@ -168,7 +172,9 @@ mod tests {
         app.add_system(super::toggle_door);
 
         let id = connection_id();
-        app.world.spawn().insert_bundle(player_bundle(id, 0, 0));
+        app.world
+            .spawn()
+            .insert_bundle(player_bundle(id, "Hunral", 0, 0));
 
         let door_id = app
             .world
@@ -205,7 +211,9 @@ mod tests {
         app.add_system(super::toggle_door);
 
         let id = connection_id();
-        app.world.spawn().insert_bundle(player_bundle(id, 0, 0));
+        app.world
+            .spawn()
+            .insert_bundle(player_bundle(id, "Hunral", 0, 0));
 
         app.world.spawn().insert_bundle(door_bundle(true, 0, 1));
 
@@ -236,7 +244,9 @@ mod tests {
         app.add_system(super::toggle_door);
 
         let id = connection_id();
-        app.world.spawn().insert_bundle(player_bundle(id, 0, 0));
+        app.world
+            .spawn()
+            .insert_bundle(player_bundle(id, "Hunral", 0, 0));
 
         app.world
             .resource_mut::<Events<NetworkInput>>()
