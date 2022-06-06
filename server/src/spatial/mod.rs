@@ -3,7 +3,7 @@ mod systems;
 
 use bevy::prelude::*;
 
-use self::systems::{look::*, map::*, movement::*, toggle_door::*};
+use self::systems::{look::*, map::*, movement::*, peer::*, toggle_door::*};
 
 pub struct SpatialPlugin;
 
@@ -13,6 +13,7 @@ impl Plugin for SpatialPlugin {
             SystemSet::new()
                 .label("spatial")
                 .with_system(look)
+                .with_system(peer)
                 .with_system(map)
                 .with_system(movement)
                 .with_system(toggle_door),
