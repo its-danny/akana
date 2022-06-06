@@ -87,6 +87,8 @@ mod tests {
 
     #[test]
     fn look() {
+        Paint::disable();
+
         let mut app = App::new();
 
         app.add_event::<NetworkInput>();
@@ -117,13 +119,15 @@ mod tests {
         let output = output_reader.iter(&output_events).next().unwrap();
 
         assert_eq!(output.id, id);
-        assert!(output.body.contains(&Paint::black(".").bold().to_string()));
+        assert!(output.body.contains("."));
         assert!(output.body.contains("Test Room"));
         assert!(output.body.contains("Please ignore."));
     }
 
     #[test]
     fn at_entity() {
+        Paint::disable();
+
         let mut app = App::new();
 
         app.add_event::<NetworkInput>();
@@ -156,7 +160,7 @@ mod tests {
         let output = output_reader.iter(&output_events).next().unwrap();
 
         assert_eq!(output.id, id);
-        assert!(output.body.contains(&Paint::white("-").to_string()));
+        assert!(output.body.contains("-"));
         assert!(output.body.contains("Door"));
         assert!(output.body.contains("A door."));
     }

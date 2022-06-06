@@ -77,6 +77,8 @@ mod tests {
 
     #[test]
     fn map() {
+        Paint::disable();
+
         let mut app = App::new();
 
         app.add_event::<NetworkInput>();
@@ -115,19 +117,7 @@ mod tests {
         let output = output_reader.iter(&output_events).next().unwrap();
 
         assert_eq!(output.id, id);
-        assert_eq!(
-            output
-                .body
-                .matches(&Paint::black(".").bold().to_string())
-                .count(),
-            2
-        );
-        assert_eq!(
-            output
-                .body
-                .matches(&Paint::white("@").bold().to_string())
-                .count(),
-            1
-        );
+        assert_eq!(output.body.matches(".").count(), 2);
+        assert_eq!(output.body.matches("@").count(), 1);
     }
 }
