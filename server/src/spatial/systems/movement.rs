@@ -8,8 +8,7 @@ use crate::{
         server::ConnectionId,
     },
     player::components::{client::Client, online::Online},
-    spatial::components::{collider::Collider, position::Position},
-    world::components::tile::Tile,
+    spatial::components::{collider::Collider, position::Position, tile::Tile},
 };
 
 /// Handles movement commands.
@@ -31,8 +30,9 @@ pub fn movement(
     let mut moved: Vec<ConnectionId> = Vec::new();
 
     for message in input.p0().iter() {
-        if let Some((client, mut position)) = players.iter_mut().find(|p| p.0.id == message.id) {
-            if let Some(captures) = CMD.captures(&message.body.to_lowercase()) {
+        if let Some(captures) = CMD.captures(&message.body.to_lowercase()) {
+            if let Some((client, mut position)) = players.iter_mut().find(|p| p.0.id == message.id)
+            {
                 let wanted_tile = match captures.get(0).unwrap().as_str() {
                     "north" | "n" => tiles.iter().find(|p| p.0 == position.0 + IVec2::new(0, -1)),
                     "northeast" | "ne" => {

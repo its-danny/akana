@@ -5,12 +5,11 @@ use regex::Regex;
 use crate::{
     network::events::{NetworkInput, NetworkOutput},
     player::components::{client::Client, online::Online},
-    spatial::components::position::Position,
+    spatial::components::{position::Position, tile::Tile},
     visual::components::{
         details::Details,
         sprite::{Sprite, SpritePaint},
     },
-    world::components::tile::Tile,
 };
 
 /// Handles the `look` command.

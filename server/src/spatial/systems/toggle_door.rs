@@ -23,8 +23,8 @@ pub fn toggle_door(
     }
 
     for message in input.iter() {
-        if let Some((client, position)) = players.iter().find(|p| p.0.id == message.id) {
-            if let Some(captures) = CMD.captures(&message.body.to_lowercase()) {
+        if let Some(captures) = CMD.captures(&message.body.to_lowercase()) {
+            if let Some((client, position)) = players.iter().find(|p| p.0.id == message.id) {
                 if let Some((entity, door, _, mut sprite, collider)) =
                     doors.iter_mut().find(|(_, _, p, _, _)| {
                         p.0 == position.0 + IVec2::new(0, 1)

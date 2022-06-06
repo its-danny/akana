@@ -6,9 +6,8 @@ pub mod utils {
     use crate::{
         network::server::ConnectionId,
         player::components::{client::Client, online::Online},
-        spatial::components::{collider::Collider, door::Door, position::Position},
+        spatial::components::{collider::Collider, door::Door, position::Position, tile::Tile},
         visual::components::{details::Details, sprite::Sprite},
-        world::components::tile::Tile,
     };
 
     pub fn connection_id() -> ConnectionId {

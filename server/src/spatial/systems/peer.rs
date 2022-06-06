@@ -6,9 +6,8 @@ use yansi::Paint;
 use crate::{
     network::events::{NetworkInput, NetworkOutput},
     player::components::{character::Character, client::Client, online::Online},
-    spatial::components::position::Position,
+    spatial::components::{position::Position, tile::Tile},
     visual::components::details::Details,
-    world::components::tile::Tile,
 };
 
 /// Lists all entities in a room, excluding tiles, with their entity ID.
