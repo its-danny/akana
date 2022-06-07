@@ -12,12 +12,13 @@ use crate::{
     },
 };
 
-/// Handles the `look` command.
+/// Send a description of the tile the player is currently on or
+/// an entity if they target one.
 pub fn look(
     mut input: EventReader<NetworkInput>,
     mut output: EventWriter<NetworkOutput>,
     players: Query<(&Client, &Position), With<Online>>,
-    entities: Query<(&Position, &Details, &Sprite), Without<Tile>>,
+    entities: Query<(Entity, &Position, &Details, &Sprite), Without<Tile>>,
     tiles: Query<(&Position, &Details, &Sprite), With<Tile>>,
 ) {
     lazy_static! {
@@ -28,13 +29,15 @@ pub fn look(
         if let Some(captures) = CMD.captures(&message.body.to_lowercase()) {
             if let Some((client, position)) = players.iter().find(|(c, _)| c.id == message.id) {
                 match captures.get(3) {
-                    // Look at a specific entity by name.
-                    Some(name) => {
-                        match entities.iter().find(|(p, d, _)| {
+                    // Look at a specific entity by name or ID.
+                    Some(name_or_id) => {
+                        match entities.iter().find(|(e, p, d, _)| {
                             p.0 == position.0
-                                && d.name.to_lowercase() == name.as_str().to_lowercase().trim()
+                                && (d.name.to_lowercase()
+                                    == name_or_id.as_str().to_lowercase().trim()
+                                    || e.id().to_string() == name_or_id.as_str())
                         }) {
-                            Some((_, details, sprite)) => {
+                            Some((_, _, details, sprite)) => {
                                 output.send(NetworkOutput {
                                     id: client.id,
                                     body: format!(
@@ -125,7 +128,7 @@ mod tests {
     }
 
     #[test]
-    fn at_entity() {
+    fn at_entity_by_name() {
         Paint::disable();
 
         let mut app = App::new();
@@ -150,6 +153,51 @@ mod tests {
             .send(NetworkInput {
                 id,
                 body: "look door".into(),
+                internal: false,
+            });
+
+        app.update();
+
+        let output_events = app.world.resource::<Events<NetworkOutput>>();
+        let mut output_reader = output_events.get_reader();
+        let output = output_reader.iter(output_events).next().unwrap();
+
+        assert_eq!(output.id, id);
+        assert!(output.body.contains("-"));
+        assert!(output.body.contains("Door"));
+        assert!(output.body.contains("A door."));
+    }
+
+    #[test]
+    fn at_entity_by_id() {
+        Paint::disable();
+
+        let mut app = App::new();
+
+        app.add_event::<NetworkInput>();
+        app.add_event::<NetworkOutput>();
+        app.add_system(super::look);
+
+        let id = connection_id();
+        app.world
+            .spawn()
+            .insert_bundle(player_bundle(id, "Rodrani", 0, 0));
+
+        app.world
+            .spawn()
+            .insert_bundle(tile_bundle("Test Room", "Please ignore.", 0, 0));
+
+        let door = app
+            .world
+            .spawn()
+            .insert_bundle(door_bundle(false, 0, 0))
+            .id();
+
+        app.world
+            .resource_mut::<Events<NetworkInput>>()
+            .send(NetworkInput {
+                id,
+                body: format!("look {}", door.id().to_string()),
                 internal: false,
             });
 
