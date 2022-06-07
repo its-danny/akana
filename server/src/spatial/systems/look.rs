@@ -29,7 +29,8 @@ pub fn look(
         if let Some(captures) = CMD.captures(&message.body.to_lowercase()) {
             if let Some((client, position)) = players.iter().find(|(c, _)| c.id == message.id) {
                 match captures.get(3) {
-                    // Look at a specific entity by name or ID.
+                    // Look at a specific entity by name or ID in the same tile
+                    // as the player.
                     Some(name_or_id) => {
                         match entities.iter().find(|(e, p, d, _)| {
                             p.0 == position.0
@@ -56,7 +57,7 @@ pub fn look(
                             }
                         }
                     }
-                    // If no name is provided, look at the player's current tile.
+                    // If none provided, look at tile.
                     None => {
                         if let Some((_, details, sprite)) =
                             tiles.iter().find(|(p, _, _)| p.0 == position.0)

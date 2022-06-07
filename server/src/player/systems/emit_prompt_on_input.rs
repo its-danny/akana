@@ -23,3 +23,44 @@ pub fn emit_prompt_on_input(
         }
     }
 }
+
+#[cfg(test)]
+mod test {
+    use bevy::{ecs::event::Events, prelude::*};
+
+    use crate::{
+        network::events::NetworkInput,
+        player::events::prompt_event::PromptEvent,
+        test::bundles::utils::{connection_id, player_bundle},
+    };
+
+    #[test]
+    fn emits() {
+        let mut app = App::new();
+
+        app.add_event::<NetworkInput>();
+        app.add_event::<PromptEvent>();
+        app.add_system(super::emit_prompt_on_input);
+
+        let id = connection_id();
+        app.world
+            .spawn()
+            .insert_bundle(player_bundle(id, "Detrak", 0, 0));
+
+        app.world
+            .resource_mut::<Events<NetworkInput>>()
+            .send(NetworkInput {
+                id,
+                body: "look".into(),
+                internal: false,
+            });
+
+        app.update();
+
+        let prompt_events = app.world.resource::<Events<PromptEvent>>();
+        let mut prompt_reader = prompt_events.get_reader();
+        let prompt = prompt_reader.iter(prompt_events).next().unwrap();
+
+        assert_eq!(prompt.0, id);
+    }
+}
