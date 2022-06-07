@@ -122,7 +122,7 @@ mod tests {
 
         let output_events = app.world.resource::<Events<NetworkOutput>>();
         let mut output_reader = output_events.get_reader();
-        let output = output_reader.iter(&output_events).next().unwrap();
+        let output = output_reader.iter(output_events).next().unwrap();
 
         assert_eq!(output.id, id);
         assert_eq!(output.body, "The door opens.");
@@ -157,7 +157,7 @@ mod tests {
 
         let output_events = app.world.resource::<Events<NetworkOutput>>();
         let mut output_reader = output_events.get_reader();
-        let output = output_reader.iter(&output_events).next().unwrap();
+        let output = output_reader.iter(output_events).next().unwrap();
 
         assert_eq!(output.id, id);
         assert_eq!(output.body, "It's already open!");
@@ -196,7 +196,7 @@ mod tests {
 
         let output_events = app.world.resource::<Events<NetworkOutput>>();
         let mut output_reader = output_events.get_reader();
-        let output = output_reader.iter(&output_events).next().unwrap();
+        let output = output_reader.iter(output_events).next().unwrap();
 
         assert_eq!(output.id, id);
         assert_eq!(output.body, "The door closes.");
@@ -229,7 +229,7 @@ mod tests {
 
         let output_events = app.world.resource::<Events<NetworkOutput>>();
         let mut output_reader = output_events.get_reader();
-        let output = output_reader.iter(&output_events).next().unwrap();
+        let output = output_reader.iter(output_events).next().unwrap();
 
         assert_eq!(output.id, id);
         assert_eq!(output.body, "It's already closed!");
@@ -260,7 +260,7 @@ mod tests {
 
         let output_events = app.world.resource::<Events<NetworkOutput>>();
         let mut output_reader = output_events.get_reader();
-        let output = output_reader.iter(&output_events).next().unwrap();
+        let output = output_reader.iter(output_events).next().unwrap();
 
         assert_eq!(output.id, id);
         assert_eq!(output.body, "There's no doors here!");

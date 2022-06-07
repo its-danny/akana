@@ -98,7 +98,7 @@ mod tests {
         let mut output_reader = output_events.get_reader();
 
         let for_sender = output_reader
-            .iter(&output_events)
+            .iter(output_events)
             .find(|o| o.id == sender_id)
             .unwrap();
 
@@ -106,7 +106,7 @@ mod tests {
         assert!(for_sender.body.contains("Hey, Amri!"));
 
         let for_recipient = output_reader
-            .iter(&output_events)
+            .iter(output_events)
             .find(|o| o.id == recipient_id)
             .unwrap();
 
@@ -139,7 +139,7 @@ mod tests {
 
         let output_events = app.world.resource::<Events<NetworkOutput>>();
         let mut output_reader = output_events.get_reader();
-        let output = output_reader.iter(&output_events).next().unwrap();
+        let output = output_reader.iter(output_events).next().unwrap();
 
         assert!(output.body.contains("Say what?"));
     }

@@ -116,7 +116,7 @@ mod tests {
 
         let output_events = app.world.resource::<Events<NetworkOutput>>();
         let mut output_reader = output_events.get_reader();
-        let output = output_reader.iter(&output_events).next().unwrap();
+        let output = output_reader.iter(output_events).next().unwrap();
 
         assert_eq!(output.id, id);
         assert!(output.body.contains("."));
@@ -157,7 +157,7 @@ mod tests {
 
         let output_events = app.world.resource::<Events<NetworkOutput>>();
         let mut output_reader = output_events.get_reader();
-        let output = output_reader.iter(&output_events).next().unwrap();
+        let output = output_reader.iter(output_events).next().unwrap();
 
         assert_eq!(output.id, id);
         assert!(output.body.contains("-"));
@@ -194,7 +194,7 @@ mod tests {
 
         let output_events = app.world.resource::<Events<NetworkOutput>>();
         let mut output_reader = output_events.get_reader();
-        let output = output_reader.iter(&output_events).next().unwrap();
+        let output = output_reader.iter(output_events).next().unwrap();
 
         assert_eq!(output.id, id);
         assert_eq!(output.body, "You don't see that here.".to_string());
