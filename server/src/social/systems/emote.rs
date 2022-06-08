@@ -143,6 +143,6 @@ mod tests {
         let mut output_reader = output_events.get_reader();
         let output = output_reader.iter(output_events).next().unwrap();
 
-        assert!(output.body.contains("Emote what?"));
+        assert_eq!(output.body, "Emote what?");
     }
 }

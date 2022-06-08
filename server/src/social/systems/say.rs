@@ -102,16 +102,14 @@ mod tests {
             .find(|o| o.id == sender_id)
             .unwrap();
 
-        assert!(for_sender.body.contains("You say"));
-        assert!(for_sender.body.contains("Hey, Amri!"));
+        assert_eq!(for_sender.body, "You say \"Hey, Amri!\"");
 
         let for_recipient = output_reader
             .iter(output_events)
             .find(|o| o.id == recipient_id)
             .unwrap();
 
-        assert!(for_recipient.body.contains("Igres says"));
-        assert!(for_recipient.body.contains("Hey, Amri!"));
+        assert_eq!(for_recipient.body, "Igres says \"Hey, Amri!\"");
     }
 
     #[test]
@@ -141,6 +139,6 @@ mod tests {
         let mut output_reader = output_events.get_reader();
         let output = output_reader.iter(output_events).next().unwrap();
 
-        assert!(output.body.contains("Say what?"));
+        assert_eq!(output.body, "Say what?");
     }
 }

@@ -123,9 +123,7 @@ mod tests {
         let output = output_reader.iter(output_events).next().unwrap();
 
         assert_eq!(output.id, id);
-        assert!(output.body.contains("."));
-        assert!(output.body.contains("Test Room"));
-        assert!(output.body.contains("Please ignore."));
+        assert_eq!(output.body, ". Test Room\r\nPlease ignore.");
     }
 
     #[test]
@@ -164,9 +162,7 @@ mod tests {
         let output = output_reader.iter(output_events).next().unwrap();
 
         assert_eq!(output.id, id);
-        assert!(output.body.contains("-"));
-        assert!(output.body.contains("Door"));
-        assert!(output.body.contains("A door."));
+        assert_eq!(output.body, "- Door\r\nA door.");
     }
 
     #[test]
@@ -209,9 +205,7 @@ mod tests {
         let output = output_reader.iter(output_events).next().unwrap();
 
         assert_eq!(output.id, id);
-        assert!(output.body.contains("-"));
-        assert!(output.body.contains("Door"));
-        assert!(output.body.contains("A door."));
+        assert_eq!(output.body, "- Door\r\nA door.");
     }
 
     #[test]
