@@ -7,7 +7,7 @@ use crate::{
         events::{NetworkInput, NetworkOutput},
         server::ConnectionId,
     },
-    player::components::{client::Client, online::Online},
+    player::components::{client::NetworkClient, online::Online},
     spatial::components::{collider::Collider, position::Position, tile::Tile},
 };
 
@@ -16,9 +16,9 @@ use crate::{
 pub fn movement(
     mut input: ParamSet<(EventReader<NetworkInput>, EventWriter<NetworkInput>)>,
     mut output: EventWriter<NetworkOutput>,
-    mut players: Query<(&Client, &mut Position), With<Online>>,
-    tiles: Query<&Position, (With<Tile>, Without<Client>)>,
-    colliders: Query<&Position, (With<Collider>, Without<Client>)>,
+    mut players: Query<(&NetworkClient, &mut Position), With<Online>>,
+    tiles: Query<&Position, (With<Tile>, Without<NetworkClient>)>,
+    colliders: Query<&Position, (With<Collider>, Without<NetworkClient>)>,
 ) {
     lazy_static! {
         static ref CMD: Regex = Regex::new(
@@ -91,8 +91,9 @@ mod tests {
 
     use crate::{
         network::events::{NetworkInput, NetworkOutput},
+        player::components::client::NetworkClient,
         spatial::components::{collider::Collider, position::Position},
-        test::bundles::utils::{connection_id, player_bundle, tile_bundle},
+        test::bundles::utils::{player_bundle, tile_bundle, PlayerBundle, TileBundle},
     };
 
     #[test]
@@ -103,25 +104,29 @@ mod tests {
         app.add_event::<NetworkOutput>();
         app.add_system(super::movement);
 
-        let id = connection_id();
-        let player_id = app
+        let player = app
             .world
             .spawn()
-            .insert_bundle(player_bundle(id, "Chirolne", 0, 0))
+            .insert_bundle(player_bundle(PlayerBundle {
+                ..Default::default()
+            }))
             .id();
 
-        app.world
-            .spawn()
-            .insert_bundle(tile_bundle("Test Room 1", "Please ignore.", 0, 0));
+        let player_client_id = app.world.get::<NetworkClient>(player).unwrap().id;
 
-        app.world
-            .spawn()
-            .insert_bundle(tile_bundle("Test Room 2", "Please ignore.", 0, 1));
+        app.world.spawn().insert_bundle(tile_bundle(TileBundle {
+            ..Default::default()
+        }));
+
+        app.world.spawn().insert_bundle(tile_bundle(TileBundle {
+            y: 1,
+            ..Default::default()
+        }));
 
         app.world
             .resource_mut::<Events<NetworkInput>>()
             .send(NetworkInput {
-                id,
+                id: player_client_id,
                 body: "south".into(),
                 internal: false,
             });
@@ -129,7 +134,7 @@ mod tests {
         app.update();
 
         assert_eq!(
-            app.world.get::<Position>(player_id).unwrap().0,
+            app.world.get::<Position>(player).unwrap().0,
             IVec2::new(0, 1)
         );
     }
@@ -142,26 +147,32 @@ mod tests {
         app.add_event::<NetworkOutput>();
         app.add_system(super::movement);
 
-        let id = connection_id();
-        let player_id = app
+        let player = app
             .world
             .spawn()
-            .insert_bundle(player_bundle(id, "Chirolne", 0, 0))
+            .insert_bundle(player_bundle(PlayerBundle {
+                ..Default::default()
+            }))
             .id();
 
-        app.world
-            .spawn()
-            .insert_bundle(tile_bundle("Test Room 1", "Please ignore.", 0, 0));
+        let player_client_id = app.world.get::<NetworkClient>(player).unwrap().id;
+
+        app.world.spawn().insert_bundle(tile_bundle(TileBundle {
+            ..Default::default()
+        }));
 
         app.world
             .spawn()
-            .insert_bundle(tile_bundle("Test Room 2", "Please ignore.", 0, 1))
+            .insert_bundle(tile_bundle(TileBundle {
+                y: 1,
+                ..Default::default()
+            }))
             .insert(Collider);
 
         app.world
             .resource_mut::<Events<NetworkInput>>()
             .send(NetworkInput {
-                id,
+                id: player_client_id,
                 body: "south".into(),
                 internal: false,
             });
@@ -169,7 +180,7 @@ mod tests {
         app.update();
 
         assert_eq!(
-            app.world.get::<Position>(player_id).unwrap().0,
+            app.world.get::<Position>(player).unwrap().0,
             IVec2::new(0, 0)
         );
 
@@ -177,7 +188,7 @@ mod tests {
         let mut output_reader = output_events.get_reader();
         let output = output_reader.iter(output_events).next().unwrap();
 
-        assert_eq!(output.id, id);
+        assert_eq!(output.id, player_client_id);
         assert_eq!(output.body, "Something blocks your way.");
     }
 
@@ -189,21 +200,24 @@ mod tests {
         app.add_event::<NetworkOutput>();
         app.add_system(super::movement);
 
-        let id = connection_id();
-        let player_id = app
+        let player = app
             .world
             .spawn()
-            .insert_bundle(player_bundle(id, "Chirolne", 0, 0))
+            .insert_bundle(player_bundle(PlayerBundle {
+                ..Default::default()
+            }))
             .id();
 
-        app.world
-            .spawn()
-            .insert_bundle(tile_bundle("Test Room", "Please ignore.", 0, 0));
+        let player_client_id = app.world.get::<NetworkClient>(player).unwrap().id;
+
+        app.world.spawn().insert_bundle(tile_bundle(TileBundle {
+            ..Default::default()
+        }));
 
         app.world
             .resource_mut::<Events<NetworkInput>>()
             .send(NetworkInput {
-                id,
+                id: player_client_id,
                 body: "south".into(),
                 internal: false,
             });
@@ -211,7 +225,7 @@ mod tests {
         app.update();
 
         assert_eq!(
-            app.world.get::<Position>(player_id).unwrap().0,
+            app.world.get::<Position>(player).unwrap().0,
             IVec2::new(0, 0)
         );
 
@@ -219,7 +233,7 @@ mod tests {
         let mut output_reader = output_events.get_reader();
         let output = output_reader.iter(output_events).next().unwrap();
 
-        assert_eq!(output.id, id);
+        assert_eq!(output.id, player_client_id);
         assert_eq!(output.body, "You can't go that direction.");
     }
 
@@ -231,23 +245,29 @@ mod tests {
         app.add_event::<NetworkOutput>();
         app.add_system(super::movement);
 
-        let id = connection_id();
-        app.world
+        let player = app
+            .world
             .spawn()
-            .insert_bundle(player_bundle(id, "Chirolne", 0, 0));
+            .insert_bundle(player_bundle(PlayerBundle {
+                ..Default::default()
+            }))
+            .id();
 
-        app.world
-            .spawn()
-            .insert_bundle(tile_bundle("Test Room 1", "Please ignore.", 0, 0));
+        let player_client_id = app.world.get::<NetworkClient>(player).unwrap().id;
 
-        app.world
-            .spawn()
-            .insert_bundle(tile_bundle("Test Room 2", "Please ignore.", 0, 1));
+        app.world.spawn().insert_bundle(tile_bundle(TileBundle {
+            ..Default::default()
+        }));
+
+        app.world.spawn().insert_bundle(tile_bundle(TileBundle {
+            y: 1,
+            ..Default::default()
+        }));
 
         app.world
             .resource_mut::<Events<NetworkInput>>()
             .send(NetworkInput {
-                id,
+                id: player_client_id,
                 body: "south".into(),
                 internal: false,
             });
@@ -258,7 +278,7 @@ mod tests {
         let mut input_reader = input_events.get_reader();
         let input = input_reader.iter(&input_events).last().unwrap();
 
-        assert_eq!(input.id, id);
+        assert_eq!(input.id, player_client_id);
         assert_eq!(input.body, "look");
         assert_eq!(input.internal, true);
     }

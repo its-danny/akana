@@ -5,7 +5,7 @@ use yansi::Paint;
 
 use crate::{
     network::events::{NetworkInput, NetworkOutput},
-    player::components::{character::Character, client::Client, online::Online},
+    player::components::{character::Character, client::NetworkClient, online::Online},
     spatial::components::{position::Position, tile::Tile},
     visual::components::details::Details,
 };
@@ -14,7 +14,7 @@ use crate::{
 pub fn peer(
     mut input: EventReader<NetworkInput>,
     mut output: EventWriter<NetworkOutput>,
-    players: Query<(&Client, &Position, &Character), With<Online>>,
+    players: Query<(&NetworkClient, &Position, &Character), With<Online>>,
     entities: Query<(Entity, &Position, &Details), Without<Tile>>,
 ) {
     lazy_static! {

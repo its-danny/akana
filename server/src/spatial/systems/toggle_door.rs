@@ -4,7 +4,7 @@ use regex::Regex;
 
 use crate::{
     network::events::{NetworkInput, NetworkOutput},
-    player::components::{client::Client, online::Online},
+    player::components::{client::NetworkClient, online::Online},
     spatial::components::{collider::Collider, door::Door, position::Position},
     visual::components::sprite::Sprite,
 };
@@ -15,8 +15,11 @@ pub fn toggle_door(
     mut commands: Commands,
     mut input: EventReader<NetworkInput>,
     mut output: EventWriter<NetworkOutput>,
-    players: Query<(&Client, &mut Position), With<Online>>,
-    mut doors: Query<(Entity, &Door, &Position, &mut Sprite, Option<&Collider>), Without<Client>>,
+    players: Query<(&NetworkClient, &mut Position), With<Online>>,
+    mut doors: Query<
+        (Entity, &Door, &Position, &mut Sprite, Option<&Collider>),
+        Without<NetworkClient>,
+    >,
 ) {
     lazy_static! {
         static ref CMD: Regex = Regex::new("^(open|close)$").unwrap();
@@ -85,8 +88,11 @@ mod tests {
 
     use crate::{
         network::events::{NetworkInput, NetworkOutput},
+        player::components::client::NetworkClient,
         spatial::components::collider::Collider,
-        test::bundles::utils::{connection_id, door_bundle, open_door_bundle, player_bundle},
+        test::bundles::utils::{
+            closed_door_bundle, open_door_bundle, player_bundle, DoorBundle, PlayerBundle,
+        },
     };
 
     #[test]
@@ -97,34 +103,42 @@ mod tests {
         app.add_event::<NetworkOutput>();
         app.add_system(super::toggle_door);
 
-        let id = connection_id();
-        app.world
-            .spawn()
-            .insert_bundle(player_bundle(id, "Hunral", 0, 0));
-
-        let door_id = app
+        let player = app
             .world
             .spawn()
-            .insert_bundle(door_bundle(true, 0, 1))
+            .insert_bundle(player_bundle(PlayerBundle {
+                ..Default::default()
+            }))
+            .id();
+
+        let player_client_id = app.world.get::<NetworkClient>(player).unwrap().id;
+
+        let door = app
+            .world
+            .spawn()
+            .insert_bundle(closed_door_bundle(DoorBundle {
+                y: 1,
+                ..Default::default()
+            }))
             .id();
 
         app.world
             .resource_mut::<Events<NetworkInput>>()
             .send(NetworkInput {
-                id,
+                id: player_client_id,
                 body: "open".into(),
                 internal: false,
             });
 
         app.update();
 
-        assert!(app.world.get::<Collider>(door_id).is_none());
+        assert!(app.world.get::<Collider>(door).is_none());
 
         let output_events = app.world.resource::<Events<NetworkOutput>>();
         let mut output_reader = output_events.get_reader();
         let output = output_reader.iter(output_events).next().unwrap();
 
-        assert_eq!(output.id, id);
+        assert_eq!(output.id, player_client_id);
         assert_eq!(output.body, "The door opens.");
     }
 
@@ -136,19 +150,27 @@ mod tests {
         app.add_event::<NetworkOutput>();
         app.add_system(super::toggle_door);
 
-        let id = connection_id();
-        app.world
+        let player = app
+            .world
             .spawn()
-            .insert_bundle(player_bundle(id, "Hunral", 0, 0));
+            .insert_bundle(player_bundle(PlayerBundle {
+                ..Default::default()
+            }))
+            .id();
+
+        let player_client_id = app.world.get::<NetworkClient>(player).unwrap().id;
 
         app.world
             .spawn()
-            .insert_bundle(open_door_bundle(true, 0, 1));
+            .insert_bundle(open_door_bundle(DoorBundle {
+                y: 1,
+                ..Default::default()
+            }));
 
         app.world
             .resource_mut::<Events<NetworkInput>>()
             .send(NetworkInput {
-                id,
+                id: player_client_id,
                 body: "open".into(),
                 internal: false,
             });
@@ -159,7 +181,7 @@ mod tests {
         let mut output_reader = output_events.get_reader();
         let output = output_reader.iter(output_events).next().unwrap();
 
-        assert_eq!(output.id, id);
+        assert_eq!(output.id, player_client_id);
         assert_eq!(output.body, "It's already open!");
     }
 
@@ -171,34 +193,42 @@ mod tests {
         app.add_event::<NetworkOutput>();
         app.add_system(super::toggle_door);
 
-        let id = connection_id();
-        app.world
-            .spawn()
-            .insert_bundle(player_bundle(id, "Hunral", 0, 0));
-
-        let door_id = app
+        let player = app
             .world
             .spawn()
-            .insert_bundle(open_door_bundle(true, 0, 1))
+            .insert_bundle(player_bundle(PlayerBundle {
+                y: 1,
+                ..Default::default()
+            }))
+            .id();
+
+        let player_client_id = app.world.get::<NetworkClient>(player).unwrap().id;
+
+        let door = app
+            .world
+            .spawn()
+            .insert_bundle(open_door_bundle(DoorBundle {
+                ..Default::default()
+            }))
             .id();
 
         app.world
             .resource_mut::<Events<NetworkInput>>()
             .send(NetworkInput {
-                id,
+                id: player_client_id,
                 body: "close".into(),
                 internal: false,
             });
 
         app.update();
 
-        assert!(app.world.get::<Collider>(door_id).is_some());
+        assert!(app.world.get::<Collider>(door).is_some());
 
         let output_events = app.world.resource::<Events<NetworkOutput>>();
         let mut output_reader = output_events.get_reader();
         let output = output_reader.iter(output_events).next().unwrap();
 
-        assert_eq!(output.id, id);
+        assert_eq!(output.id, player_client_id);
         assert_eq!(output.body, "The door closes.");
     }
 
@@ -210,17 +240,28 @@ mod tests {
         app.add_event::<NetworkOutput>();
         app.add_system(super::toggle_door);
 
-        let id = connection_id();
+        let player = app
+            .world
+            .spawn()
+            .insert_bundle(player_bundle(PlayerBundle {
+                y: 1,
+                ..Default::default()
+            }))
+            .insert(Collider)
+            .id();
+
+        let player_client_id = app.world.get::<NetworkClient>(player).unwrap().id;
+
         app.world
             .spawn()
-            .insert_bundle(player_bundle(id, "Hunral", 0, 0));
-
-        app.world.spawn().insert_bundle(door_bundle(true, 0, 1));
+            .insert_bundle(closed_door_bundle(DoorBundle {
+                ..Default::default()
+            }));
 
         app.world
             .resource_mut::<Events<NetworkInput>>()
             .send(NetworkInput {
-                id,
+                id: player_client_id,
                 body: "close".into(),
                 internal: false,
             });
@@ -231,7 +272,7 @@ mod tests {
         let mut output_reader = output_events.get_reader();
         let output = output_reader.iter(output_events).next().unwrap();
 
-        assert_eq!(output.id, id);
+        assert_eq!(output.id, player_client_id);
         assert_eq!(output.body, "It's already closed!");
     }
 
@@ -243,15 +284,20 @@ mod tests {
         app.add_event::<NetworkOutput>();
         app.add_system(super::toggle_door);
 
-        let id = connection_id();
-        app.world
+        let player = app
+            .world
             .spawn()
-            .insert_bundle(player_bundle(id, "Hunral", 0, 0));
+            .insert_bundle(player_bundle(PlayerBundle {
+                ..Default::default()
+            }))
+            .id();
+
+        let player_client_id = app.world.get::<NetworkClient>(player).unwrap().id;
 
         app.world
             .resource_mut::<Events<NetworkInput>>()
             .send(NetworkInput {
-                id,
+                id: player_client_id,
                 body: "open".into(),
                 internal: false,
             });
@@ -262,7 +308,7 @@ mod tests {
         let mut output_reader = output_events.get_reader();
         let output = output_reader.iter(output_events).next().unwrap();
 
-        assert_eq!(output.id, id);
+        assert_eq!(output.id, player_client_id);
         assert_eq!(output.body, "There's no doors here!");
     }
 }

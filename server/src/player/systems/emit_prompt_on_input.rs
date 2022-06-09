@@ -3,7 +3,7 @@ use bevy::prelude::*;
 use crate::{
     network::events::NetworkInput,
     player::{
-        components::{client::Client, online::Online},
+        components::{client::NetworkClient, online::Online},
         events::prompt_event::PromptEvent,
     },
 };
@@ -13,7 +13,7 @@ use crate::{
 pub fn emit_prompt_on_input(
     mut input: EventReader<NetworkInput>,
     mut prompts: EventWriter<PromptEvent>,
-    players: Query<&Client, With<Online>>,
+    players: Query<&NetworkClient, With<Online>>,
 ) {
     for message in input.iter() {
         if !message.internal {
@@ -30,8 +30,8 @@ mod test {
 
     use crate::{
         network::events::NetworkInput,
-        player::events::prompt_event::PromptEvent,
-        test::bundles::utils::{connection_id, player_bundle},
+        player::{components::client::NetworkClient, events::prompt_event::PromptEvent},
+        test::bundles::utils::{player_bundle, PlayerBundle},
     };
 
     #[test]
@@ -42,15 +42,20 @@ mod test {
         app.add_event::<PromptEvent>();
         app.add_system(super::emit_prompt_on_input);
 
-        let id = connection_id();
-        app.world
+        let player = app
+            .world
             .spawn()
-            .insert_bundle(player_bundle(id, "Detrak", 0, 0));
+            .insert_bundle(player_bundle(PlayerBundle {
+                ..Default::default()
+            }))
+            .id();
+
+        let player_client_id = app.world.get::<NetworkClient>(player).unwrap().id;
 
         app.world
             .resource_mut::<Events<NetworkInput>>()
             .send(NetworkInput {
-                id,
+                id: player_client_id,
                 body: "look".into(),
                 internal: false,
             });
@@ -61,6 +66,6 @@ mod test {
         let mut prompt_reader = prompt_events.get_reader();
         let prompt = prompt_reader.iter(prompt_events).next().unwrap();
 
-        assert_eq!(prompt.0, id);
+        assert_eq!(prompt.0, player_client_id);
     }
 }

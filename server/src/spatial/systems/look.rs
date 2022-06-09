@@ -4,7 +4,7 @@ use regex::Regex;
 
 use crate::{
     network::events::{NetworkInput, NetworkOutput},
-    player::components::{client::Client, online::Online},
+    player::components::{client::NetworkClient, online::Online},
     spatial::components::{position::Position, tile::Tile},
     visual::components::{
         details::Details,
@@ -17,7 +17,7 @@ use crate::{
 pub fn look(
     mut input: EventReader<NetworkInput>,
     mut output: EventWriter<NetworkOutput>,
-    players: Query<(&Client, &Position), With<Online>>,
+    players: Query<(&NetworkClient, &Position), With<Online>>,
     entities: Query<(Entity, &Position, &Details, &Sprite), Without<Tile>>,
     tiles: Query<(&Position, &Details, &Sprite), With<Tile>>,
 ) {
@@ -86,7 +86,12 @@ mod tests {
 
     use crate::{
         network::events::{NetworkInput, NetworkOutput},
-        test::bundles::utils::{connection_id, door_bundle, player_bundle, tile_bundle},
+        player::components::client::NetworkClient,
+        test::bundles::utils::{
+            closed_door_bundle, open_door_bundle, player_bundle, tile_bundle, DoorBundle,
+            PlayerBundle, TileBundle,
+        },
+        visual::components::{details::Details, sprite::Sprite},
     };
 
     #[test]
@@ -99,19 +104,26 @@ mod tests {
         app.add_event::<NetworkOutput>();
         app.add_system(super::look);
 
-        let id = connection_id();
-        app.world
+        let player = app
+            .world
             .spawn()
-            .insert_bundle(player_bundle(id, "Rodrani", 0, 0));
+            .insert_bundle(player_bundle(PlayerBundle {
+                ..Default::default()
+            }))
+            .id();
 
-        app.world
-            .spawn()
-            .insert_bundle(tile_bundle("Test Room", "Please ignore.", 0, 0));
+        let player_client_id = app.world.get::<NetworkClient>(player).unwrap().id;
+
+        app.world.spawn().insert_bundle(tile_bundle(TileBundle {
+            name: "Test Room".into(),
+            description: "Please ignore.".into(),
+            ..Default::default()
+        }));
 
         app.world
             .resource_mut::<Events<NetworkInput>>()
             .send(NetworkInput {
-                id,
+                id: player_client_id,
                 body: "look".into(),
                 internal: false,
             });
@@ -122,7 +134,7 @@ mod tests {
         let mut output_reader = output_events.get_reader();
         let output = output_reader.iter(output_events).next().unwrap();
 
-        assert_eq!(output.id, id);
+        assert_eq!(output.id, player_client_id);
         assert_eq!(output.body, ". Test Room\r\nPlease ignore.");
     }
 
@@ -136,22 +148,34 @@ mod tests {
         app.add_event::<NetworkOutput>();
         app.add_system(super::look);
 
-        let id = connection_id();
-        app.world
+        let player = app
+            .world
             .spawn()
-            .insert_bundle(player_bundle(id, "Rodrani", 0, 0));
+            .insert_bundle(player_bundle(PlayerBundle {
+                ..Default::default()
+            }))
+            .id();
 
-        app.world
+        app.world.spawn().insert_bundle(tile_bundle(TileBundle {
+            ..Default::default()
+        }));
+
+        let door = app
+            .world
             .spawn()
-            .insert_bundle(tile_bundle("Test Room", "Please ignore.", 0, 0));
+            .insert_bundle(open_door_bundle(DoorBundle {
+                name: "Front Door".into(),
+                ..Default::default()
+            }))
+            .id();
 
-        app.world.spawn().insert_bundle(door_bundle(false, 0, 0));
+        let player_client_id = app.world.get::<NetworkClient>(player).unwrap().id;
 
         app.world
             .resource_mut::<Events<NetworkInput>>()
             .send(NetworkInput {
-                id,
-                body: "look door".into(),
+                id: player_client_id,
+                body: format!("look front door"),
                 internal: false,
             });
 
@@ -161,8 +185,17 @@ mod tests {
         let mut output_reader = output_events.get_reader();
         let output = output_reader.iter(output_events).next().unwrap();
 
-        assert_eq!(output.id, id);
-        assert_eq!(output.body, "- Door\r\nA door.");
+        assert_eq!(output.id, player_client_id);
+
+        assert_eq!(
+            output.body,
+            format!(
+                "{} {}\r\n{}",
+                app.world.get::<Sprite>(door).unwrap().character,
+                app.world.get::<Details>(door).unwrap().name,
+                app.world.get::<Details>(door).unwrap().description,
+            )
+        );
     }
 
     #[test]
@@ -175,25 +208,32 @@ mod tests {
         app.add_event::<NetworkOutput>();
         app.add_system(super::look);
 
-        let id = connection_id();
-        app.world
+        let player = app
+            .world
             .spawn()
-            .insert_bundle(player_bundle(id, "Rodrani", 0, 0));
+            .insert_bundle(player_bundle(PlayerBundle {
+                ..Default::default()
+            }))
+            .id();
 
-        app.world
-            .spawn()
-            .insert_bundle(tile_bundle("Test Room", "Please ignore.", 0, 0));
+        let player_client_id = app.world.get::<NetworkClient>(player).unwrap().id;
+
+        app.world.spawn().insert_bundle(tile_bundle(TileBundle {
+            ..Default::default()
+        }));
 
         let door = app
             .world
             .spawn()
-            .insert_bundle(door_bundle(false, 0, 0))
+            .insert_bundle(closed_door_bundle(DoorBundle {
+                ..Default::default()
+            }))
             .id();
 
         app.world
             .resource_mut::<Events<NetworkInput>>()
             .send(NetworkInput {
-                id,
+                id: player_client_id,
                 body: format!("look {}", door.id().to_string()),
                 internal: false,
             });
@@ -204,8 +244,17 @@ mod tests {
         let mut output_reader = output_events.get_reader();
         let output = output_reader.iter(output_events).next().unwrap();
 
-        assert_eq!(output.id, id);
-        assert_eq!(output.body, "- Door\r\nA door.");
+        assert_eq!(output.id, player_client_id);
+
+        assert_eq!(
+            output.body,
+            format!(
+                "{} {}\r\n{}",
+                app.world.get::<Sprite>(door).unwrap().character,
+                app.world.get::<Details>(door).unwrap().name,
+                app.world.get::<Details>(door).unwrap().description,
+            )
+        );
     }
 
     #[test]
@@ -216,19 +265,24 @@ mod tests {
         app.add_event::<NetworkOutput>();
         app.add_system(super::look);
 
-        let id = connection_id();
-        app.world
+        let player = app
+            .world
             .spawn()
-            .insert_bundle(player_bundle(id, "Rodrani", 0, 0));
+            .insert_bundle(player_bundle(PlayerBundle {
+                ..Default::default()
+            }))
+            .id();
 
-        app.world
-            .spawn()
-            .insert_bundle(tile_bundle("Test Room", "Please ignore.", 0, 0));
+        let player_client_id = app.world.get::<NetworkClient>(player).unwrap().id;
+
+        app.world.spawn().insert_bundle(tile_bundle(TileBundle {
+            ..Default::default()
+        }));
 
         app.world
             .resource_mut::<Events<NetworkInput>>()
             .send(NetworkInput {
-                id,
+                id: player_client_id,
                 body: "look door".into(),
                 internal: false,
             });
@@ -239,7 +293,7 @@ mod tests {
         let mut output_reader = output_events.get_reader();
         let output = output_reader.iter(output_events).next().unwrap();
 
-        assert_eq!(output.id, id);
+        assert_eq!(output.id, player_client_id);
         assert_eq!(output.body, "You don't see that here.".to_string());
     }
 }

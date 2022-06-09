@@ -5,7 +5,7 @@ use yansi::Paint;
 
 use crate::{
     network::events::{NetworkInput, NetworkOutput},
-    player::components::{client::Client, online::Online},
+    player::components::{client::NetworkClient, online::Online},
     spatial::components::position::Position,
     visual::components::sprite::{Sprite, SpritePaint},
 };
@@ -14,7 +14,7 @@ use crate::{
 pub fn map(
     mut input: EventReader<NetworkInput>,
     mut output: EventWriter<NetworkOutput>,
-    players: Query<(&Client, &Position), With<Online>>,
+    players: Query<(&NetworkClient, &Position), With<Online>>,
     sprites: Query<(&Position, &Sprite)>,
 ) {
     lazy_static! {
@@ -72,7 +72,8 @@ mod tests {
 
     use crate::{
         network::events::{NetworkInput, NetworkOutput},
-        test::bundles::utils::{connection_id, player_bundle, tile_bundle},
+        player::components::client::NetworkClient,
+        test::bundles::utils::{player_bundle, tile_bundle, PlayerBundle, TileBundle},
     };
 
     #[test]
@@ -85,27 +86,34 @@ mod tests {
         app.add_event::<NetworkOutput>();
         app.add_system(super::map);
 
-        let id = connection_id();
-        app.world
+        let player = app
+            .world
             .spawn()
-            .insert_bundle(player_bundle(id, "Mussugro", 0, 0));
+            .insert_bundle(player_bundle(PlayerBundle {
+                ..Default::default()
+            }))
+            .id();
 
-        app.world
-            .spawn()
-            .insert_bundle(tile_bundle("Test Room 1", "Please ignore.", 0, 0));
+        let player_client_id = app.world.get::<NetworkClient>(player).unwrap().id;
 
-        app.world
-            .spawn()
-            .insert_bundle(tile_bundle("Test Room 2", "Please ignore.", 0, 1));
+        app.world.spawn().insert_bundle(tile_bundle(TileBundle {
+            ..Default::default()
+        }));
 
-        app.world
-            .spawn()
-            .insert_bundle(tile_bundle("Test Room 2", "Please ignore.", 1, 0));
+        app.world.spawn().insert_bundle(tile_bundle(TileBundle {
+            x: 1,
+            ..Default::default()
+        }));
+
+        app.world.spawn().insert_bundle(tile_bundle(TileBundle {
+            y: 1,
+            ..Default::default()
+        }));
 
         app.world
             .resource_mut::<Events<NetworkInput>>()
             .send(NetworkInput {
-                id,
+                id: player_client_id,
                 body: "map".into(),
                 internal: false,
             });
@@ -116,7 +124,7 @@ mod tests {
         let mut output_reader = output_events.get_reader();
         let output = output_reader.iter(output_events).next().unwrap();
 
-        assert_eq!(output.id, id);
+        assert_eq!(output.id, player_client_id);
         assert_eq!(output.body.matches(".").count(), 2);
         assert_eq!(output.body.matches("@").count(), 1);
     }

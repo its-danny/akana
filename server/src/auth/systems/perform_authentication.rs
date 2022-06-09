@@ -12,7 +12,7 @@ use crate::{
         server::{NetworkServer, TelnetCommand::*},
     },
     player::{
-        components::{character::Character, client::Client, online::Online},
+        components::{character::Character, client::NetworkClient, online::Online},
         events::prompt_event::PromptEvent,
     },
     spatial::components::position::Position,
@@ -28,7 +28,7 @@ pub fn perform_authentication(
     mut input: EventReader<NetworkInput>,
     mut output: EventWriter<NetworkOutput>,
     mut prompts: EventWriter<PromptEvent>,
-    mut players: Query<(Entity, &Client, &mut Authenticating)>,
+    mut players: Query<(Entity, &NetworkClient, &mut Authenticating)>,
 ) {
     for message in input.iter() {
         if let Some((entity, client, mut authenticating)) =

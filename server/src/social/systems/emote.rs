@@ -5,7 +5,7 @@ use yansi::Paint;
 
 use crate::{
     network::events::{NetworkInput, NetworkOutput},
-    player::components::{character::Character, client::Client, online::Online},
+    player::components::{character::Character, client::NetworkClient, online::Online},
     spatial::components::position::Position,
 };
 
@@ -17,7 +17,7 @@ lazy_static! {
 pub fn emote(
     mut input: EventReader<NetworkInput>,
     mut output: EventWriter<NetworkOutput>,
-    players: Query<(&Client, &Position, &Character), With<Online>>,
+    players: Query<(&NetworkClient, &Position, &Character), With<Online>>,
 ) {
     for message in input.iter() {
         if let Some(captures) = CMD.captures(&message.body) {
@@ -65,7 +65,8 @@ mod tests {
 
     use crate::{
         network::events::{NetworkInput, NetworkOutput},
-        test::bundles::utils::{connection_id, player_bundle},
+        player::components::{character::Character, client::NetworkClient},
+        test::bundles::utils::{player_bundle, PlayerBundle},
     };
 
     #[test]
@@ -78,20 +79,30 @@ mod tests {
         app.add_event::<NetworkOutput>();
         app.add_system(super::emote);
 
-        let sender_id = connection_id();
-        app.world
+        let sender = app
+            .world
             .spawn()
-            .insert_bundle(player_bundle(sender_id, "Igres", 0, 0));
+            .insert_bundle(player_bundle(PlayerBundle {
+                ..Default::default()
+            }))
+            .id();
 
-        let recipient_id = connection_id();
-        app.world
+        let sender_client_id = app.world.get::<NetworkClient>(sender).unwrap().id;
+
+        let recipient = app
+            .world
             .spawn()
-            .insert_bundle(player_bundle(recipient_id, "Amri", 0, 0));
+            .insert_bundle(player_bundle(PlayerBundle {
+                ..Default::default()
+            }))
+            .id();
+
+        let recipient_client_id = app.world.get::<NetworkClient>(recipient).unwrap().id;
 
         app.world
             .resource_mut::<Events<NetworkInput>>()
             .send(NetworkInput {
-                id: sender_id,
+                id: sender_client_id,
                 body: "emote sighs".into(),
                 internal: false,
             });
@@ -103,17 +114,23 @@ mod tests {
 
         let for_sender = output_reader
             .iter(output_events)
-            .find(|o| o.id == sender_id)
+            .find(|o| o.id == sender_client_id)
             .unwrap();
 
-        assert_eq!(for_sender.body, "Igres sighs");
+        assert_eq!(
+            for_sender.body,
+            format!("{} sighs", app.world.get::<Character>(sender).unwrap().name)
+        );
 
         let for_recipient = output_reader
             .iter(output_events)
-            .find(|o| o.id == recipient_id)
+            .find(|o| o.id == recipient_client_id)
             .unwrap();
 
-        assert_eq!(for_recipient.body, "Igres sighs");
+        assert_eq!(
+            for_recipient.body,
+            format!("{} sighs", app.world.get::<Character>(sender).unwrap().name)
+        );
     }
 
     #[test]
@@ -124,15 +141,20 @@ mod tests {
         app.add_event::<NetworkOutput>();
         app.add_system(super::emote);
 
-        let id = connection_id();
-        app.world
+        let player = app
+            .world
             .spawn()
-            .insert_bundle(player_bundle(id, "Igres", 0, 0));
+            .insert_bundle(player_bundle(PlayerBundle {
+                ..Default::default()
+            }))
+            .id();
+
+        let player_client_id = app.world.get::<NetworkClient>(player).unwrap().id;
 
         app.world
             .resource_mut::<Events<NetworkInput>>()
             .send(NetworkInput {
-                id,
+                id: player_client_id,
                 body: "emote".into(),
                 internal: false,
             });

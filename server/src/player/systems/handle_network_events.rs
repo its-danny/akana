@@ -3,7 +3,7 @@ use bevy::prelude::*;
 use crate::{
     auth::components::authenticating::Authenticating,
     network::events::{NetworkEvent, NetworkOutput},
-    player::components::client::Client,
+    player::components::client::NetworkClient,
 };
 
 /// Spawn a new entity with a [`Player`] component when a new connection
@@ -12,12 +12,15 @@ pub fn handle_network_events(
     mut commands: Commands,
     mut events: EventReader<NetworkEvent>,
     mut output: EventWriter<NetworkOutput>,
-    players: Query<(Entity, &Client)>,
+    players: Query<(Entity, &NetworkClient)>,
 ) {
     for event in events.iter() {
         match event {
             NetworkEvent::Connected(id) => {
-                commands.spawn_bundle((Client { id: *id, width: 80 }, Authenticating::default()));
+                commands.spawn_bundle((
+                    NetworkClient { id: *id, width: 80 },
+                    Authenticating::default(),
+                ));
 
                 output.send(NetworkOutput {
                     id: *id,
