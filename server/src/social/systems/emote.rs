@@ -10,7 +10,7 @@ use crate::{
 };
 
 lazy_static! {
-    static ref CMD: Regex = Regex::new("^(emote|;)( )?(.+)?$").unwrap();
+    static ref CMD: Regex = Regex::new("^(emote|;)(( +)(.+))?$").unwrap();
 }
 
 /// Broadcasts a message to anyone on the same tile as the sender.
@@ -24,7 +24,7 @@ pub fn emote(
             if let Some((client, position, character)) =
                 players.iter().find(|(c, _, _)| c.id == message.id)
             {
-                if let Some(phrase) = captures.get(3) {
+                if let Some(phrase) = captures.get(4) {
                     output.send(NetworkOutput {
                         id: client.id,
                         body: format!(

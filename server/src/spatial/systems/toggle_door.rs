@@ -10,7 +10,6 @@ use crate::{
 };
 
 /// Handles opening and closing doors
-#[allow(clippy::type_complexity)]
 pub fn toggle_door(
     mut commands: Commands,
     mut input: EventReader<NetworkInput>,

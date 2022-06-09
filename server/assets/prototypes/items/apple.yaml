@@ -1,0 +1,13 @@
+---
+name: Apple
+components:
+  - type: Item
+  - type: Details
+    value:
+      name: "Apple"
+      description: "A delicious fruit."
+  - type: Sprite
+    value:
+      character: "o"
+      color: "red"
+  - type: CanTake

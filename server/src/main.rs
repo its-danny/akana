@@ -1,4 +1,5 @@
 mod auth;
+mod items;
 mod network;
 mod player;
 mod social;
@@ -14,6 +15,7 @@ use bevy_proto::{prelude::ProtoDataOptions, ProtoPlugin};
 use dotenv::dotenv;
 
 use auth::AuthPlugin;
+use items::ItemsPlugin;
 use network::NetworkPlugin;
 use player::PlayerPlugin;
 use social::SocialPlugin;
@@ -43,5 +45,6 @@ fn main() {
         .add_plugin(PlayerPlugin)
         .add_plugin(SpatialPlugin)
         .add_plugin(SocialPlugin)
+        .add_plugin(ItemsPlugin)
         .run();
 }

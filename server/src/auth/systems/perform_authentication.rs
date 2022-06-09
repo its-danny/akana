@@ -7,6 +7,7 @@ use crate::{
         components::authenticating::{AuthState, Authenticating},
         utils::api::{sign_in, user_exists},
     },
+    items::components::backpack::Backpack,
     network::{
         events::{NetworkInput, NetworkOutput},
         server::{NetworkServer, TelnetCommand::*},
@@ -125,6 +126,7 @@ pub fn perform_authentication(
                                     id: json.id,
                                     name: json.name,
                                 },
+                                Backpack(Vec::new()),
                                 Position(new_player_spawn.0),
                             ));
                         }

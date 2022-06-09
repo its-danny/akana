@@ -1,6 +1,6 @@
 #[cfg(test)]
 pub mod utils {
-    use bevy::{math::IVec2, utils::Uuid};
+    use bevy::{math::IVec2, prelude::Entity, utils::Uuid};
     use fake::{
         faker::{
             internet::raw::IPv4,
@@ -12,6 +12,7 @@ pub mod utils {
     };
 
     use crate::{
+        items::components::{backpack::Backpack, can_take::CanTake, item::Item},
         network::server::ConnectionId,
         player::components::{character::Character, client::NetworkClient, online::Online},
         spatial::components::{collider::Collider, door::Door, position::Position, tile::Tile},
@@ -22,6 +23,7 @@ pub mod utils {
         pub name: String,
         pub x: i32,
         pub y: i32,
+        pub items: Vec<Entity>,
     }
 
     impl Default for PlayerBundle {
@@ -30,13 +32,14 @@ pub mod utils {
                 name: Name().fake::<String>(),
                 x: 0,
                 y: 0,
+                items: Vec::new(),
             }
         }
     }
 
     pub fn player_bundle(
-        PlayerBundle { name, x, y }: PlayerBundle,
-    ) -> (NetworkClient, Character, Position, Online) {
+        PlayerBundle { name, x, y, items }: PlayerBundle,
+    ) -> (NetworkClient, Character, Position, Backpack, Online) {
         (
             NetworkClient {
                 id: ConnectionId {
@@ -52,6 +55,7 @@ pub mod utils {
                 id: 1,
             },
             Position(IVec2::new(x, y)),
+            Backpack(items),
             Online,
         )
     }
@@ -96,6 +100,71 @@ pub mod utils {
             },
             Sprite { character, color },
             Position(IVec2::new(x, y)),
+        )
+    }
+
+    pub struct ItemBundle {
+        pub name: String,
+        pub description: String,
+        pub character: String,
+        pub color: String,
+        pub x: i32,
+        pub y: i32,
+    }
+
+    impl Default for ItemBundle {
+        fn default() -> Self {
+            Self {
+                name: Sentence(1..2).fake::<String>(),
+                description: Paragraph(1..2).fake::<String>(),
+                character: "x".into(),
+                color: "white".into(),
+                x: 0,
+                y: 0,
+            }
+        }
+    }
+
+    pub fn item_bundle(
+        ItemBundle {
+            name,
+            description,
+            character,
+            color,
+            x,
+            y,
+        }: ItemBundle,
+    ) -> (Item, Details, Sprite, Position, CanTake) {
+        (
+            Item,
+            Details {
+                name: name.into(),
+                description: description.into(),
+            },
+            Sprite { character, color },
+            Position(IVec2::new(x, y)),
+            CanTake,
+        )
+    }
+
+    pub fn item_in_backpack_bundle(
+        ItemBundle {
+            name,
+            description,
+            character,
+            color,
+            x: _,
+            y: _,
+        }: ItemBundle,
+    ) -> (Item, Details, Sprite, CanTake) {
+        (
+            Item,
+            Details {
+                name: name.into(),
+                description: description.into(),
+            },
+            Sprite { character, color },
+            CanTake,
         )
     }
 

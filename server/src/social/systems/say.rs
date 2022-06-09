@@ -16,7 +16,7 @@ pub fn say(
     players: Query<(&NetworkClient, &Position, &Character), With<Online>>,
 ) {
     lazy_static! {
-        static ref CMD: Regex = Regex::new("^(say|')( )?(.+)?$").unwrap();
+        static ref CMD: Regex = Regex::new("^(say|')(( +)(.+))?$").unwrap();
     }
 
     for message in input.iter() {
@@ -24,7 +24,7 @@ pub fn say(
             if let Some((client, position, character)) =
                 players.iter().find(|(c, _, _)| c.id == message.id)
             {
-                if let Some(phrase) = captures.get(3) {
+                if let Some(phrase) = captures.get(4) {
                     output.send(NetworkOutput {
                         id: client.id,
                         body: format!("You say \"{}\"", Paint::white(phrase.as_str()).bold()),

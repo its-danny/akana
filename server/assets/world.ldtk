@@ -9,7 +9,7 @@
 		"url": "https://ldtk.io"
 	},
 	"jsonVersion": "1.1.3",
-	"appBuildId": 458364,
+	"appBuildId": 459645,
 	"nextUid": 20,
 	"identifierStyle": "Capitalize",
 	"worldLayout": "Free",
@@ -287,6 +287,40 @@
 							"fieldInstances": [{ "__identifier": "prototype", "__value": "Horizontal Door", "__type": "String", "__tile": null, "defUid": 2, "realEditorValues": [{
 								"id": "V_String",
 								"params": ["Horizontal Door"]
+							}] }]
+						},
+						{
+							"__identifier": "Entity",
+							"__grid": [6,5],
+							"__pivot": [0,0],
+							"__tags": [],
+							"__tile": null,
+							"__smartColor": "#282828",
+							"iid": "3c8bac60-dbe0-11ec-8313-d5f95e8bb672",
+							"width": 16,
+							"height": 16,
+							"defUid": 1,
+							"px": [96,80],
+							"fieldInstances": [{ "__identifier": "prototype", "__value": "Apple", "__type": "String", "__tile": null, "defUid": 2, "realEditorValues": [{
+								"id": "V_String",
+								"params": ["Apple"]
+							}] }]
+						},
+						{
+							"__identifier": "Entity",
+							"__grid": [6,5],
+							"__pivot": [0,0],
+							"__tags": [],
+							"__tile": null,
+							"__smartColor": "#282828",
+							"iid": "c62730c0-dbe0-11ec-8313-31ae8323a3ca",
+							"width": 16,
+							"height": 16,
+							"defUid": 1,
+							"px": [96,80],
+							"fieldInstances": [{ "__identifier": "prototype", "__value": "Apple", "__type": "String", "__tile": null, "defUid": 2, "realEditorValues": [{
+								"id": "V_String",
+								"params": ["Apple"]
 							}] }]
 						}
 					]

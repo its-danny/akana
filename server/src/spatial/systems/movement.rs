@@ -12,7 +12,6 @@ use crate::{
 };
 
 /// Handles movement commands.
-#[allow(clippy::type_complexity)]
 pub fn movement(
     mut input: ParamSet<(EventReader<NetworkInput>, EventWriter<NetworkInput>)>,
     mut output: EventWriter<NetworkOutput>,

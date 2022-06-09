@@ -22,16 +22,17 @@ pub fn look(
     tiles: Query<(&Position, &Details, &Sprite), With<Tile>>,
 ) {
     lazy_static! {
-        static ref CMD: Regex = Regex::new("^(look|l)( )?(.+)?$").unwrap();
+        static ref CMD: Regex = Regex::new("^(look|l)(( +)(.+))?$").unwrap();
     }
 
     for message in input.iter() {
         if let Some(captures) = CMD.captures(&message.body.to_lowercase()) {
             if let Some((client, position)) = players.iter().find(|(c, _)| c.id == message.id) {
-                match captures.get(3) {
+                match captures.get(4) {
                     // Look at a specific entity by name or ID in the same tile
                     // as the player.
                     Some(name_or_id) => {
+                        debug!("Looking at {}", name_or_id.as_str());
                         match entities.iter().find(|(e, p, d, _)| {
                             p.0 == position.0
                                 && (d.name.to_lowercase()

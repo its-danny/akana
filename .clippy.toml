@@ -1,0 +1,5 @@
+# This one is a bit chatty with bevy due to how
+# systems work so upping the threshold.
+#
+# https://rust-lang.github.io/rust-clippy/master/
+type-complexity-threshold = 300
