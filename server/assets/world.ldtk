@@ -322,6 +322,23 @@
 								"id": "V_String",
 								"params": ["Apple"]
 							}] }]
+						},
+						{
+							"__identifier": "Entity",
+							"__grid": [8,6],
+							"__pivot": [0,0],
+							"__tags": [],
+							"__tile": null,
+							"__smartColor": "#282828",
+							"iid": "4383a4f0-dbe0-11ec-89f6-ad3f9365c79f",
+							"width": 16,
+							"height": 16,
+							"defUid": 1,
+							"px": [128,96],
+							"fieldInstances": [{ "__identifier": "prototype", "__value": "Banana", "__type": "String", "__tile": null, "defUid": 2, "realEditorValues": [{
+								"id": "V_String",
+								"params": ["Banana"]
+							}] }]
 						}
 					]
 				},

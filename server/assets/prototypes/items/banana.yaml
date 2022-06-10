@@ -1,0 +1,13 @@
+---
+name: Banana
+components:
+  - type: Item
+  - type: Details
+    value:
+      name: "Banana"
+      description: "A delicious fruit."
+  - type: Sprite
+    value:
+      character: ")"
+      color: [255, 255, 95]
+  - type: CanTake
