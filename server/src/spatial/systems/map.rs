@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use lazy_static::lazy_static;
 use regex::Regex;
-use yansi::Paint;
+use yansi::{Color, Paint};
 
 use crate::{
     network::events::{NetworkInput, NetworkOutput},
@@ -14,8 +14,8 @@ use crate::{
 pub fn map(
     mut input: EventReader<NetworkInput>,
     mut output: EventWriter<NetworkOutput>,
-    players: Query<(&NetworkClient, &Position), With<Online>>,
-    sprites: Query<(&Position, &Sprite)>,
+    players: Query<(&NetworkClient, &Position, &Sprite), With<Online>>,
+    sprites: Query<(&Position, &Sprite), Without<NetworkClient>>,
 ) {
     lazy_static! {
         static ref CMD: Regex = Regex::new("^(map|m)$").unwrap();
@@ -23,42 +23,59 @@ pub fn map(
 
     for message in input.iter() {
         if CMD.is_match(&message.body.to_lowercase()) {
-            if let Some((client, position)) = players.iter().find(|(c, _)| c.id == message.id) {
-                const MAP_WIDTH: i32 = 80;
-                const MAP_HEIGHT: i32 = 10;
+            if let Some((client, position, player_sprite)) =
+                players.iter().find(|(c, _, _)| c.id == message.id)
+            {
+                let map_width = client.width;
+                let map_height = 16;
 
-                let mut map: [[Paint<&str>; MAP_WIDTH as usize]; MAP_HEIGHT as usize] =
-                    [[Paint::new(" "); MAP_WIDTH as usize]; MAP_HEIGHT as usize];
+                let mut map = vec![
+                    vec![Paint::new(" ").bg(Color::RGB(0, 0, 0)); map_width as usize];
+                    map_height as usize
+                ];
 
-                let start_x = position.0.x - (MAP_WIDTH as i32 / 2);
-                let end_x = position.0.x + (MAP_WIDTH as i32 / 2);
-                let start_y = position.0.y - (MAP_HEIGHT as i32 / 2);
-                let end_y = position.0.y + (MAP_HEIGHT as i32 / 2);
+                let start_x = position.0.x - (map_width as i32 / 2);
+                let end_x = position.0.x + (map_width as i32 / 2);
+                let start_y = position.0.y - (map_height as i32 / 2);
+                let end_y = position.0.y + (map_height as i32 / 2);
 
                 for x in start_x..=end_x {
                     for y in start_y..=end_y {
+                        // We'll use the background color of the first entity on this
+                        // space (usually the tile) in case the one below doesn't have one.
+                        let first = sprites.iter().find(|s| s.0 .0 == IVec2::new(x, y));
+
                         // Since we're creating the entities layer-by-layer,
                         // the last one at a given position is which should be rendered.
                         if let Some(sprite) =
                             sprites.iter().filter(|s| s.0 .0 == IVec2::new(x, y)).last()
                         {
                             let sprite = if sprite.0 .0 == position.0 {
-                                Paint::white("@").bold()
+                                player_sprite.paint(first.and_then(|s| s.1.background))
                             } else {
-                                sprite.1.paint()
+                                sprite.1.paint(first.and_then(|s| s.1.background))
                             };
 
-                            map[(y - start_y - 1).clamp(0, MAP_HEIGHT) as usize]
-                                [(x - start_x - 1).clamp(0, MAP_WIDTH) as usize] = sprite;
+                            map[(y - start_y - 1).clamp(0, map_height) as usize]
+                                [(x - start_x - 1).clamp(0, map_width) as usize] = sprite;
                         }
                     }
                 }
 
+                let display = map
+                    .iter()
+                    .map(|row| {
+                        row.iter()
+                            .map(|paint| paint.to_string())
+                            .collect::<Vec<String>>()
+                            .join("")
+                    })
+                    .collect::<Vec<String>>()
+                    .join("\n");
+
                 output.send(NetworkOutput {
                     id: client.id,
-                    body: map
-                        .map(|r| r.map(|c| format!("{}", c)).join(""))
-                        .join("\r\n"),
+                    body: format!("{}\r\n", display),
                 });
             }
         }

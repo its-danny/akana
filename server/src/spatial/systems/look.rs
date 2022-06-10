@@ -44,7 +44,7 @@ pub fn look(
                                     id: client.id,
                                     body: format!(
                                         "{} {}\r\n{}",
-                                        sprite.paint(),
+                                        sprite.paint(None),
                                         details.name,
                                         details.description
                                     ),
@@ -67,7 +67,7 @@ pub fn look(
                                 id: client.id,
                                 body: format!(
                                     "{} {}\r\n{}",
-                                    sprite.paint(),
+                                    sprite.paint(None),
                                     details.name,
                                     details.description
                                 ),

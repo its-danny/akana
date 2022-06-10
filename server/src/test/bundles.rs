@@ -39,7 +39,7 @@ pub mod utils {
 
     pub fn player_bundle(
         PlayerBundle { name, x, y, items }: PlayerBundle,
-    ) -> (NetworkClient, Character, Position, Backpack, Online) {
+    ) -> (NetworkClient, Character, Position, Sprite, Backpack, Online) {
         (
             NetworkClient {
                 id: ConnectionId {
@@ -55,6 +55,11 @@ pub mod utils {
                 id: 1,
             },
             Position(IVec2::new(x, y)),
+            Sprite {
+                character: "@".to_string(),
+                color: [255, 255, 255],
+                background: None,
+            },
             Backpack(items),
             Online,
         )
@@ -64,7 +69,7 @@ pub mod utils {
         pub name: String,
         pub description: String,
         pub character: String,
-        pub color: String,
+        pub color: [u8; 3],
         pub x: i32,
         pub y: i32,
     }
@@ -75,7 +80,7 @@ pub mod utils {
                 name: Sentence(1..2).fake::<String>(),
                 description: Paragraph(1..2).fake::<String>(),
                 character: ".".into(),
-                color: "black_bold".into(),
+                color: [0, 0, 0],
                 x: 0,
                 y: 0,
             }
@@ -98,7 +103,11 @@ pub mod utils {
                 name: name.into(),
                 description: description.into(),
             },
-            Sprite { character, color },
+            Sprite {
+                character,
+                color,
+                background: None,
+            },
             Position(IVec2::new(x, y)),
         )
     }
@@ -107,7 +116,7 @@ pub mod utils {
         pub name: String,
         pub description: String,
         pub character: String,
-        pub color: String,
+        pub color: [u8; 3],
         pub x: i32,
         pub y: i32,
     }
@@ -118,7 +127,7 @@ pub mod utils {
                 name: Sentence(1..2).fake::<String>(),
                 description: Paragraph(1..2).fake::<String>(),
                 character: "x".into(),
-                color: "white".into(),
+                color: [0, 0, 0],
                 x: 0,
                 y: 0,
             }
@@ -141,7 +150,11 @@ pub mod utils {
                 name: name.into(),
                 description: description.into(),
             },
-            Sprite { character, color },
+            Sprite {
+                character,
+                color,
+                background: None,
+            },
             Position(IVec2::new(x, y)),
             CanTake,
         )
@@ -163,7 +176,11 @@ pub mod utils {
                 name: name.into(),
                 description: description.into(),
             },
-            Sprite { character, color },
+            Sprite {
+                character,
+                color,
+                background: None,
+            },
             CanTake,
         )
     }
@@ -208,7 +225,8 @@ pub mod utils {
             },
             Sprite {
                 character: if is_horizontal { "|" } else { "-" }.into(),
-                color: "white".to_string(),
+                color: [255, 255, 255],
+                background: None,
             },
             Position(IVec2::new(x, y)),
             Collider,
@@ -235,7 +253,8 @@ pub mod utils {
             },
             Sprite {
                 character: "/".into(),
-                color: "white".to_string(),
+                color: [255, 255, 255],
+                background: None,
             },
             Position(IVec2::new(x, y)),
         )

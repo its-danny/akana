@@ -17,6 +17,7 @@ use crate::{
         events::prompt_event::PromptEvent,
     },
     spatial::components::position::Position,
+    visual::components::sprite::Sprite,
     world::resources::new_player_spawn::NewPlayerSpawn,
 };
 
@@ -128,6 +129,11 @@ pub fn perform_authentication(
                                 },
                                 Backpack(Vec::new()),
                                 Position(new_player_spawn.0),
+                                Sprite {
+                                    character: "@".to_string(),
+                                    color: [255, 255, 255],
+                                    background: None,
+                                },
                             ));
                         }
                         StatusCode::FORBIDDEN => {

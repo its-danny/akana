@@ -9,5 +9,6 @@ components:
   - type: Sprite
     value:
       character: "#"
-      color: "black_bold"
+      color: [98, 98, 98]
+      background: [48, 48, 48]
   - type: Collider
