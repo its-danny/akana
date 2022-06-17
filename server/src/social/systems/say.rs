@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use lazy_static::lazy_static;
 use regex::Regex;
-use yansi::Paint;
+use yansi::Color;
 
 use crate::{
     network::events::{NetworkInput, NetworkOutput},
@@ -27,7 +27,10 @@ pub fn say(
                 if let Some(phrase) = captures.get(4) {
                     output.send(NetworkOutput {
                         id: client.id,
-                        body: format!("You say \"{}\"", Paint::white(phrase.as_str()).bold()),
+                        body: format!(
+                            "You say \"{}\"",
+                            Color::RGB(255, 255, 255).paint(phrase.as_str()).bold()
+                        ),
                     });
 
                     players
@@ -38,8 +41,10 @@ pub fn say(
                                 id: c.id,
                                 body: format!(
                                     "{} says \"{}\"",
-                                    Paint::cyan(&character.name),
-                                    Paint::white(phrase.as_str().trim()).bold()
+                                    Color::RGB(46, 200, 238).paint(&character.name),
+                                    Color::RGB(255, 255, 255)
+                                        .paint(phrase.as_str().trim())
+                                        .bold()
                                 ),
                             });
                         });

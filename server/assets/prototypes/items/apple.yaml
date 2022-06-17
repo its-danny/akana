@@ -9,5 +9,5 @@ components:
   - type: Sprite
     value:
       character: "o"
-      color: [215, 0, 0]
+      color: [170, 36, 41]
   - type: CanTake

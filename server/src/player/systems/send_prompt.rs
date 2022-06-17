@@ -1,5 +1,5 @@
 use bevy::prelude::*;
-use yansi::Paint;
+use yansi::Color;
 
 use crate::{
     network::events::NetworkOutput,
@@ -23,10 +23,11 @@ pub fn send_prompt(
 
             let prompt = format!(
                 "{} [{}] >",
-                Paint::white(&character.name).bold(),
+                Color::RGB(255, 255, 255).paint(&character.name).bold(),
                 match world_time.part {
-                    WorldTimeTag::Dawn | WorldTimeTag::Day => Paint::yellow(time),
-                    WorldTimeTag::Dusk | WorldTimeTag::Night => Paint::blue(time),
+                    WorldTimeTag::Dawn | WorldTimeTag::Day => Color::RGB(255, 239, 92).paint(time),
+                    WorldTimeTag::Dusk | WorldTimeTag::Night =>
+                        Color::RGB(110, 86, 207).paint(time),
                 },
             );
 

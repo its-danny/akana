@@ -9,5 +9,5 @@ components:
   - type: Sprite
     value:
       character: "."
-      color: [178, 178, 178]
-      background: [178, 178, 178]
+      color: [112, 112, 112]
+      background: [80, 80, 80]

@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use lazy_static::lazy_static;
 use regex::Regex;
-use yansi::Paint;
+use yansi::Color;
 
 use crate::{
     network::events::{NetworkInput, NetworkOutput},
@@ -28,7 +28,9 @@ pub fn peer(
                 let ids = entities
                     .iter()
                     .filter(|(_, p, _)| p.0 == position.0)
-                    .map(|(e, _, d)| format!("{} {}", d.name, Paint::black(e.id()).bold()))
+                    .map(|(e, _, d)| {
+                        format!("{} {}", d.name, Color::RGB(0, 0, 0).paint(e.id()).bold())
+                    })
                     .collect::<Vec<_>>();
 
                 if !ids.is_empty() {

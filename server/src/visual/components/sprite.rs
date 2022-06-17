@@ -16,7 +16,7 @@ pub trait SpritePaint {
 
 impl SpritePaint for Sprite {
     fn paint(&self, background: Option<[u8; 3]>) -> Paint<&str> {
-        let background = background.unwrap_or_else(|| self.background.unwrap_or([0, 0, 0]));
+        let background = background.unwrap_or_else(|| self.background.unwrap_or([22, 22, 22]));
 
         Paint::new(self.character.as_str())
             .fg(Color::RGB(self.color[0], self.color[1], self.color[2]))

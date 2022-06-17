@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use lazy_static::lazy_static;
 use regex::Regex;
-use yansi::Paint;
+use yansi::Color;
 
 use crate::{
     network::events::{NetworkInput, NetworkOutput},
@@ -29,8 +29,8 @@ pub fn emote(
                         id: client.id,
                         body: format!(
                             "{} {}",
-                            Paint::cyan(&character.name),
-                            Paint::white(phrase.as_str().trim())
+                            Color::RGB(46, 200, 238).paint(&character.name),
+                            Color::RGB(255, 255, 255).paint(phrase.as_str().trim())
                         ),
                     });
 
@@ -42,8 +42,8 @@ pub fn emote(
                                 id: c.id,
                                 body: format!(
                                     "{} {}",
-                                    Paint::cyan(&character.name),
-                                    Paint::white(phrase.as_str().trim())
+                                    Color::RGB(46, 200, 238).paint(&character.name),
+                                    Color::RGB(255, 255, 255).paint(phrase.as_str().trim())
                                 ),
                             });
                         });

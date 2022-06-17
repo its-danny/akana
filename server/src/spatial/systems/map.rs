@@ -29,10 +29,11 @@ pub fn map(
                 let map_width = client.width;
                 let map_height = 16;
 
-                let mut map = vec![
-                    vec![Paint::new(" ").bg(Color::RGB(0, 0, 0)); map_width as usize];
-                    map_height as usize
-                ];
+                let mut map =
+                    vec![
+                        vec![Paint::new(" ").bg(Color::RGB(22, 22, 22)); map_width as usize];
+                        map_height as usize
+                    ];
 
                 let start_x = position.0.x - (map_width as i32 / 2);
                 let end_x = position.0.x + (map_width as i32 / 2);
