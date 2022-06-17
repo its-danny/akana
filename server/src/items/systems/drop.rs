@@ -30,7 +30,6 @@ pub fn drop(
             players.iter_mut().find(|(c, _, _)| c.id == message.id)
         {
             if let Some(captures) = CMD.captures(&message.body.to_lowercase()) {
-                debug!("XXXX {:?}", captures);
                 match captures.get(4) {
                     Some(name_or_id) => {
                         for i in 0..backpack.0.len() {

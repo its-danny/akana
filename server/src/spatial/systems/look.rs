@@ -32,7 +32,6 @@ pub fn look(
                     // Look at a specific entity by name or ID in the same tile
                     // as the player.
                     Some(name_or_id) => {
-                        debug!("Looking at {}", name_or_id.as_str());
                         match entities.iter().find(|(e, p, d, _)| {
                             p.0 == position.0
                                 && (d.name.to_lowercase()
