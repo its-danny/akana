@@ -1,12 +1,12 @@
 use bevy::prelude::*;
 use lazy_static::lazy_static;
 use regex::Regex;
-use yansi::Color;
 
 use crate::{
     network::events::{NetworkInput, NetworkOutput},
     player::components::{character::Character, client::NetworkClient, online::Online},
     spatial::components::position::Position,
+    visual::palette::Palette,
 };
 
 lazy_static! {
@@ -15,6 +15,7 @@ lazy_static! {
 
 /// Broadcasts a message to anyone on the same tile as the sender.
 pub fn emote(
+    palette: Res<Palette>,
     mut input: EventReader<NetworkInput>,
     mut output: EventWriter<NetworkOutput>,
     players: Query<(&NetworkClient, &Position, &Character), With<Online>>,
@@ -24,26 +25,17 @@ pub fn emote(
             if let Some((client, position, character)) =
                 players.iter().find(|(c, _, _)| c.id == message.id)
             {
-                if let Some(phrase) = captures.get(4) {
-                    output.send(NetworkOutput {
-                        id: client.id,
-                        body: format!(
-                            "{} {}",
-                            Color::RGB(46, 200, 238).paint(&character.name),
-                            Color::RGB(255, 255, 255).paint(phrase.as_str().trim())
-                        ),
-                    });
-
+                if let Some(action) = captures.get(4) {
                     players
                         .iter()
-                        .filter(|(c, p, _)| p.0 == position.0 && c.id != client.id)
+                        .filter(|(_, p, _)| p.0 == position.0)
                         .for_each(|(c, _, _)| {
                             output.send(NetworkOutput {
                                 id: c.id,
                                 body: format!(
                                     "{} {}",
-                                    Color::RGB(46, 200, 238).paint(&character.name),
-                                    Color::RGB(255, 255, 255).paint(phrase.as_str().trim())
+                                    palette.sky[4].paint(&character.name),
+                                    palette.neutral[0].paint(action.as_str().trim())
                                 ),
                             });
                         });
@@ -67,6 +59,7 @@ mod tests {
         network::events::{NetworkInput, NetworkOutput},
         player::components::{character::Character, client::NetworkClient},
         test::bundles::utils::{player_bundle, PlayerBundle},
+        visual::palette::Palette,
     };
 
     #[test]
@@ -75,6 +68,7 @@ mod tests {
 
         let mut app = App::new();
 
+        app.insert_resource(Palette::default());
         app.add_event::<NetworkInput>();
         app.add_event::<NetworkOutput>();
         app.add_system(super::emote);
@@ -137,6 +131,7 @@ mod tests {
     fn nothing_to_say() {
         let mut app = App::new();
 
+        app.insert_resource(Palette::default());
         app.add_event::<NetworkInput>();
         app.add_event::<NetworkOutput>();
         app.add_system(super::emote);

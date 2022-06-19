@@ -57,7 +57,7 @@ pub mod utils {
             Position(IVec2::new(x, y)),
             Sprite {
                 character: "@".to_string(),
-                color: [255, 255, 255],
+                color: "FFFFFF".to_string(),
                 background: None,
             },
             Backpack(items),
@@ -69,7 +69,7 @@ pub mod utils {
         pub name: String,
         pub description: String,
         pub character: String,
-        pub color: [u8; 3],
+        pub color: String,
         pub x: i32,
         pub y: i32,
     }
@@ -80,7 +80,7 @@ pub mod utils {
                 name: Sentence(1..2).fake::<String>(),
                 description: Paragraph(1..2).fake::<String>(),
                 character: ".".into(),
-                color: [0, 0, 0],
+                color: "0F172A".to_string(),
                 x: 0,
                 y: 0,
             }
@@ -116,7 +116,7 @@ pub mod utils {
         pub name: String,
         pub description: String,
         pub character: String,
-        pub color: [u8; 3],
+        pub color: String,
         pub x: i32,
         pub y: i32,
     }
@@ -127,7 +127,7 @@ pub mod utils {
                 name: Sentence(1..2).fake::<String>(),
                 description: Paragraph(1..2).fake::<String>(),
                 character: "x".into(),
-                color: [0, 0, 0],
+                color: "0F172A".to_string(),
                 x: 0,
                 y: 0,
             }
@@ -225,7 +225,7 @@ pub mod utils {
             },
             Sprite {
                 character: if is_horizontal { "|" } else { "-" }.into(),
-                color: [255, 255, 255],
+                color: "FAFAFA".to_string(),
                 background: None,
             },
             Position(IVec2::new(x, y)),
@@ -253,7 +253,7 @@ pub mod utils {
             },
             Sprite {
                 character: "/".into(),
-                color: [255, 255, 255],
+                color: "FAFAFA".to_string(),
                 background: None,
             },
             Position(IVec2::new(x, y)),

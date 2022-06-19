@@ -12,5 +12,5 @@ components:
   - type: Sprite
     value:
       character: "-"
-      color: [119, 89, 64]
+      color: "854D0E"
   - type: Collider

@@ -1,17 +1,17 @@
 use bevy::prelude::*;
 use lazy_static::lazy_static;
 use regex::Regex;
-use yansi::Color;
 
 use crate::{
     network::events::{NetworkInput, NetworkOutput},
     player::components::{character::Character, client::NetworkClient, online::Online},
     spatial::components::{position::Position, tile::Tile},
-    visual::components::details::Details,
+    visual::{components::details::Details, palette::Palette},
 };
 
 /// Lists all entities in a room, excluding tiles, with their entity ID.
 pub fn peer(
+    palette: Res<Palette>,
     mut input: EventReader<NetworkInput>,
     mut output: EventWriter<NetworkOutput>,
     players: Query<(&NetworkClient, &Position, &Character), With<Online>>,
@@ -29,7 +29,7 @@ pub fn peer(
                     .iter()
                     .filter(|(_, p, _)| p.0 == position.0)
                     .map(|(e, _, d)| {
-                        format!("{} {}", d.name, Color::RGB(0, 0, 0).paint(e.id()).bold())
+                        format!("{} {}", d.name, palette.slate[9].paint(e.id()).bold())
                     })
                     .collect::<Vec<_>>();
 

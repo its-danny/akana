@@ -56,7 +56,7 @@ pub fn backpack(
                 for (_, (details, sprite, count)) in counted.iter() {
                     items.push(format!(
                         "{} {} {}",
-                        sprite.paint(None),
+                        sprite.paint(),
                         count,
                         if *count > 1 {
                             details.name.to_plural()

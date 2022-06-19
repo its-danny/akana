@@ -1,17 +1,21 @@
 use bevy::prelude::*;
 use lazy_static::lazy_static;
 use regex::Regex;
-use yansi::{Color, Paint};
+use yansi::Paint;
 
 use crate::{
     network::events::{NetworkInput, NetworkOutput},
     player::components::{client::NetworkClient, online::Online},
     spatial::components::position::Position,
-    visual::components::sprite::{Sprite, SpritePaint},
+    visual::{
+        components::sprite::{Sprite, SpritePaint},
+        palette::{hex_to_rgb, rgb_to_color, Palette},
+    },
 };
 
 /// Handles the `map` command.
 pub fn map(
+    palette: Res<Palette>,
     mut input: EventReader<NetworkInput>,
     mut output: EventWriter<NetworkOutput>,
     players: Query<(&NetworkClient, &Position, &Sprite), With<Online>>,
@@ -29,11 +33,10 @@ pub fn map(
                 let map_width = client.width;
                 let map_height = 16;
 
-                let mut map =
-                    vec![
-                        vec![Paint::new(" ").bg(Color::RGB(22, 22, 22)); map_width as usize];
-                        map_height as usize
-                    ];
+                let mut map = vec![
+                    vec![Paint::new(" ").bg(palette.slate[9]); map_width as usize];
+                    map_height as usize
+                ];
 
                 let start_x = position.0.x - (map_width as i32 / 2);
                 let end_x = position.0.x + (map_width as i32 / 2);
@@ -51,11 +54,19 @@ pub fn map(
                         if let Some(sprite) =
                             sprites.iter().filter(|s| s.0 .0 == IVec2::new(x, y)).last()
                         {
-                            let sprite = if sprite.0 .0 == position.0 {
-                                player_sprite.paint(first.and_then(|s| s.1.background))
+                            let mut sprite = if sprite.0 .0 == position.0 {
+                                player_sprite.paint()
                             } else {
-                                sprite.1.paint(first.and_then(|s| s.1.background))
+                                sprite.1.paint()
                             };
+
+                            if let Some(background) = &player_sprite.background {
+                                sprite = sprite.bg(rgb_to_color(hex_to_rgb(background)));
+                            } else if let Some((_, s)) = first {
+                                if let Some(background) = &s.background {
+                                    sprite = sprite.bg(rgb_to_color(hex_to_rgb(background)));
+                                }
+                            }
 
                             map[(y - start_y - 1).clamp(0, map_height) as usize]
                                 [(x - start_x - 1).clamp(0, map_width) as usize] = sprite;
@@ -92,6 +103,7 @@ mod tests {
         network::events::{NetworkInput, NetworkOutput},
         player::components::client::NetworkClient,
         test::bundles::utils::{player_bundle, tile_bundle, PlayerBundle, TileBundle},
+        visual::palette::Palette,
     };
 
     #[test]
@@ -100,6 +112,7 @@ mod tests {
 
         let mut app = App::new();
 
+        app.insert_resource(Palette::default());
         app.add_event::<NetworkInput>();
         app.add_event::<NetworkOutput>();
         app.add_system(super::map);

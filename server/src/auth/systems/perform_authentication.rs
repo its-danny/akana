@@ -131,7 +131,7 @@ pub fn perform_authentication(
                                 Position(new_player_spawn.0),
                                 Sprite {
                                     character: "@".to_string(),
-                                    color: [255, 255, 255],
+                                    color: "FAFAFA".to_string(),
                                     background: None,
                                 },
                             ));

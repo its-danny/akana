@@ -20,6 +20,7 @@ use network::NetworkPlugin;
 use player::PlayerPlugin;
 use social::SocialPlugin;
 use spatial::SpatialPlugin;
+use visual::VisualPlugin;
 use world::WorldPlugin;
 
 fn main() {
@@ -46,5 +47,6 @@ fn main() {
         .add_plugin(SpatialPlugin)
         .add_plugin(SocialPlugin)
         .add_plugin(ItemsPlugin)
+        .add_plugin(VisualPlugin)
         .run();
 }

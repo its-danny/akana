@@ -1,5 +1,4 @@
 use bevy::prelude::*;
-use yansi::Color;
 
 use crate::{
     network::events::NetworkOutput,
@@ -7,12 +6,14 @@ use crate::{
         components::{character::Character, client::NetworkClient, online::Online},
         events::prompt_event::PromptEvent,
     },
+    visual::palette::Palette,
     world::resources::world_time::{WorldTime, WorldTimeTag},
 };
 
 /// Send a prompt to anyone who needs it.
 pub fn send_prompt(
     world_time: Res<WorldTime>,
+    palette: Res<Palette>,
     mut prompts: EventReader<PromptEvent>,
     mut output: EventWriter<NetworkOutput>,
     players: Query<(&NetworkClient, &Character), With<Online>>,
@@ -23,11 +24,10 @@ pub fn send_prompt(
 
             let prompt = format!(
                 "{} [{}] >",
-                Color::RGB(255, 255, 255).paint(&character.name).bold(),
+                palette.neutral[0].paint(&character.name).bold(),
                 match world_time.part {
-                    WorldTimeTag::Dawn | WorldTimeTag::Day => Color::RGB(255, 239, 92).paint(time),
-                    WorldTimeTag::Dusk | WorldTimeTag::Night =>
-                        Color::RGB(110, 86, 207).paint(time),
+                    WorldTimeTag::Dawn | WorldTimeTag::Day => palette.yellow[2].paint(time),
+                    WorldTimeTag::Dusk | WorldTimeTag::Night => palette.purple[8].paint(time),
                 },
             );
 
